@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIRE Calculator — Financial Independence, Retire Early</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:        #0b0b0f;
+      --surface:   #111118;
+      --card:      #16161f;
+      --border:    rgba(255,255,255,0.07);
+      --fire1:     #ff6b00;
+      --fire2:     #ff9f0a;
+      --fire3:     #ffcc02;
+      --text:      #f0f0f5;
+      --muted:     #888899;
+      --danger:    #ff4d4d;
+      --success:   #34d399;
+      --radius:    16px;
+      --shadow:    0 4px 40px rgba(0,0,0,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--fire1); border-radius: 3px; }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(255,107,0,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .flame-icon {
+      font-size: 42px;
+      filter: drop-shadow(0 0 16px rgba(255,107,0,0.8));
+      animation: flicker 2.5s ease-in-out infinite;
+    }
+    @keyframes flicker {
+      0%,100% { filter: drop-shadow(0 0 16px rgba(255,107,0,0.8)); transform: scale(1); }
+      50%      { filter: drop-shadow(0 0 24px rgba(255,159,10,1));   transform: scale(1.06); }
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--fire1), var(--fire2), var(--fire3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+    .tagline {
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 400;
+      margin-top: 6px;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fire2);
+      margin-bottom: 20px;
+    }
+
+    /* ── Grid ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } }
+
+    /* ── Inputs ── */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .prefix, .suffix {
+      position: absolute;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .prefix { left: 14px; }
+    .suffix { right: 14px; }
+    input[type="number"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 40px 11px 14px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--fire1);
+      box-shadow: 0 0 0 3px rgba(255,107,0,0.15);
+    }
+    .has-prefix input { padding-left: 30px; }
+
+    /* range slider */
+    .range-field { display: flex; flex-direction: column; gap: 8px; }
+    .range-header { display: flex; justify-content: space-between; align-items: center; }
+    .range-val {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--fire2);
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: var(--surface);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      background: linear-gradient(135deg, var(--fire1), var(--fire2));
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(255,107,0,0.6);
+      transition: transform 0.15s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px; height: 18px;
+      background: linear-gradient(135deg, var(--fire1), var(--fire2));
+      border: none; border-radius: 50%;
+    }
+
+    /* ── Stat cards ── */
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 48px rgba(0,0,0,0.4); }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--fire1), var(--fire2));
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      transition: color 0.3s;
+    }
+    .stat-value.highlight {
+      background: linear-gradient(135deg, var(--fire1), var(--fire3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .stat-icon {
+      position: absolute;
+      right: 16px; top: 16px;
+      font-size: 1.4rem;
+      opacity: 0.3;
+    }
+
+    /* ── Progress bar ── */
+    .progress-section { margin-bottom: 20px; }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 12px;
+    }
+    .progress-pct {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--fire1), var(--fire3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .progress-track {
+      width: 100%;
+      height: 12px;
+      background: var(--surface);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--fire1), var(--fire2), var(--fire3));
+      background-size: 200% 100%;
+      animation: shimmer 2s linear infinite;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 0;
+      width: 20px; height: 100%;
+      background: rgba(255,255,255,0.3);
+      filter: blur(4px);
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .milestone-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .milestone-labels span {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    /* ── Savings rate badge ── */
+    .rate-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,107,0,0.12);
+      border: 1px solid rgba(255,107,0,0.25);
+      border-radius: 50px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--fire2);
+    }
+    .rate-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--fire1);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── Chart ── */
+    .chart-wrap {
+      position: relative;
+      height: 300px;
+    }
+    @media (max-width: 520px) { .chart-wrap { height: 220px; } }
+
+    /* ── Milestones ── */
+    .milestone-list { display: flex; flex-direction: column; gap: 10px; }
+    .milestone-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .milestone-item.done { border-color: rgba(52,211,153,0.3); }
+    .milestone-item.done .m-dot { background: var(--success); box-shadow: 0 0 6px rgba(52,211,153,0.5); }
+    .m-dot {
+      width: 10px; height: 10px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+    .m-name { flex: 1; font-weight: 500; }
+    .m-pct { font-weight: 700; color: var(--muted); font-size: 0.8rem; }
+    .milestone-item.done .m-pct { color: var(--success); }
+
+    /* ── Quotes ── */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .quote-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-card::before {
+      content: '"';
+      position: absolute;
+      top: -10px; left: 16px;
+      font-size: 5rem;
+      font-weight: 900;
+      color: var(--fire1);
+      opacity: 0.15;
+      line-height: 1;
+      font-family: Georgia, serif;
+    }
+    .quote-text {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .quote-author {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--fire2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Tips ── */
+    .tips-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+    .tip {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid var(--border);
+    }
+    .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+    .tip-text { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .tip-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+    /* ── Alert ── */
+    .alert {
+      display: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 16px;
+    }
+    .alert.warn {
+      display: block;
+      background: rgba(255,77,77,0.1);
+      border: 1px solid rgba(255,77,77,0.3);
+      color: #ff8080;
+    }
+    .alert.info {
+      display: block;
+      background: rgba(52,211,153,0.1);
+      border: 1px solid rgba(52,211,153,0.3);
+      color: var(--success);
+    }
+
+    /* ── Section spacing ── */
+    section { margin-bottom: 20px; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.8;
+    }
+    footer a { color: var(--fire2); text-decoration: none; }
+
+    /* ── Divider ── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 32px 0 20px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .section-divider::before, .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Animate in ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeIn 0.5s ease forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in:nth-child(1) { animation-delay: 0.05s; }
+    .fade-in:nth-child(2) { animation-delay: 0.10s; }
+    .fade-in:nth-child(3) { animation-delay: 0.15s; }
+    .fade-in:nth-child(4) { animation-delay: 0.20s; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="flame-icon">🔥</span>
+    <h1>FIRE Calculator</h1>
+  </div>
+  <p class="tagline">Financial Independence, Retire Early — Know your number.</p>
+</header>
+
+<div class="container">
+
+  <!-- ── Inputs + Quick Stats ── -->
+  <div class="main-grid">
+    <div class="card">
+      <div class="card-title">Your Financial Profile</div>
+      <div class="grid-2" style="gap:14px;">
+        <div class="field">
+          <label>Current Age</label>
+          <div class="input-wrap">
+            <input type="number" id="age" value="28" min="18" max="80" />
+            <span class="suffix" style="right:12px">yrs</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Monthly Income</label>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="income" value="7000" min="0" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Monthly Expenses</label>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="expenses" value="4200" min="0" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Current Savings</label>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="savings" value="45000" min="0" />
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;flex-direction:column;gap:16px;">
+        <div class="range-field">
+          <div class="range-header">
+            <label>Expected Annual Return</label>
+            <span class="range-val" id="returnVal">7%</span>
+          </div>
+          <input type="range" id="returnRate" min="1" max="15" step="0.5" value="7" />
+        </div>
+        <div class="range-field">
+          <div class="range-header">
+            <label>Safe Withdrawal Rate</label>
+            <span class="range-val" id="swrVal">4%</span>
+          </div>
+          <input type="range" id="swr" min="2" max="6" step="0.25" value="4" />
+        </div>
+      </div>
+
+      <div id="alert" class="alert"></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="card" style="flex:1;">
+        <div class="card-title">Savings Rate</div>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+          <div id="savingsRateDisplay" class="progress-pct">40%</div>
+          <div>
+            <div class="rate-badge"><span class="rate-dot"></span><span id="savingsRateBadge">Saving $2,800/mo</span></div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;" id="savingsRateMsg">Great savings rate! You're on the path to FIRE. 🔥</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-section card">
+        <div class="card-title">Progress to FIRE</div>
+        <div class="progress-header">
+          <div>
+            <div class="progress-pct" id="progressPct">—</div>
+            <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">of FIRE number reached</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.8rem;color:var(--muted);">Target</div>
+            <div style="font-size:1rem;font-weight:700;color:var(--fire2)" id="fireNumSmall">—</div>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar" style="width:0%"></div>
+        </div>
+        <div class="milestone-labels">
+          <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Stat Cards ── -->
+  <div class="grid-4" style="margin-bottom:20px;">
+    <div class="stat-card fade-in">
+      <span class="stat-icon">🎯</span>
+      <div class="stat-label">FIRE Number</div>
+      <div class="stat-value highlight" id="fireNum">—</div>
+      <div class="stat-sub">Annual expenses ÷ SWR</div>
+    </div>
+    <div class="stat-card fade-in">
+      <span class="stat-icon">⏳</span>
+      <div class="stat-label">Years to FIRE</div>
+      <div class="stat-value" id="yearsToFire">—</div>
+      <div class="stat-sub" id="fireDate">—</div>
+    </div>
+    <div class="stat-card fade-in">
+      <span class="stat-icon">🏖️</span>
+      <div class="stat-label">Retirement Age</div>
+      <div class="stat-value" id="retireAge">—</div>
+      <div class="stat-sub" id="retireSubtext">—</div>
+    </div>
+    <div class="stat-card fade-in">
+      <span class="stat-icon">💰</span>
+      <div class="stat-label">Monthly Savings</div>
+      <div class="stat-value" id="monthlySavings">—</div>
+      <div class="stat-sub" id="monthlySavingsNote">After expenses</div>
+    </div>
+  </div>
+
+  <!-- ── Wealth Chart ── -->
+  <section class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+      <div class="card-title" style="margin-bottom:0">Projected Wealth Over Time</div>
+      <div style="display:flex;gap:16px;font-size:0.75rem;color:var(--muted);">
+        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio</span>
+        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(255,204,2,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--fire3);"></span>FIRE Target</span>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="wealthChart"></canvas>
+    </div>
+  </section>
+
+  <!-- ── Milestones ── -->
+  <section class="card">
+    <div class="card-title">Milestone Tracker</div>
+    <div class="milestone-list" id="milestoneList"></div>
+  </section>
+
+  <!-- ── Quotes ── -->
+  <div class="section-divider">Wisdom for the Journey</div>
+  <div class="quotes-grid">
+    <div class="quote-card">
+      <div class="quote-text">The best time to plant a tree was 20 years ago. The second best time is now.</div>
+      <div class="quote-author">— Chinese Proverb</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">Do not save what is left after spending, but spend what is left after saving.</div>
+      <div class="quote-author">— Warren Buffett</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">Financial freedom is available to those who learn about it and work for it.</div>
+      <div class="quote-author">— Robert Kiyosaki</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">A penny saved is a penny earned. But a penny invested is two pennies earned.</div>
+      <div class="quote-author">— Benjamin Franklin (adapted)</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">The goal of retirement is to live off your assets — not in spite of them.</div>
+      <div class="quote-author">— Frank Eberhart</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">Wealth is not about having a lot of money; it's about having a lot of options.</div>
+      <div class="quote-author">— Chris Rock</div>
+    </div>
+  </div>
+
+  <!-- ── Tips ── -->
+  <div class="section-divider">FIRE Principles</div>
+  <div class="tips-list">
+    <div class="tip">
+      <span class="tip-icon">📈</span>
+      <div class="tip-text"><strong>The 4% Rule</strong>Withdraw 4% of your portfolio annually. Historically safe for a 30-year retirement horizon (Trinity Study).</div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🗜️</span>
+      <div class="tip-text"><strong>Reduce Expenses First</strong>A $1 cut in monthly spending reduces your FIRE number by $300. Spend less AND retire sooner.</div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🏦</span>
+      <div class="tip-text"><strong>Maximize Tax-Advantaged Accounts</strong>Max out 401(k), IRA, and HSA first. Tax savings compound over decades.</div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">💼</span>
+      <div class="tip-text"><strong>Low-Cost Index Funds</strong>Vanguard, Fidelity ZERO, or Schwab index funds keep expense ratios near 0% — fees destroy returns.</div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🔁</span>
+      <div class="tip-text"><strong>Automate Savings</strong>Pay yourself first. Automate transfers on payday so you never spend what you intended to save.</div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">📊</span>
+      <div class="tip-text"><strong>Track Net Worth Monthly</strong>What gets measured gets managed. A simple spreadsheet is all you need.</div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🏠</span>
+      <div class="tip-text"><strong>Housing is Your Biggest Lever</strong>Reduce housing cost and you could shave years off your FIRE date. House hack, rent cheap, or relocate.</div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">⚡</span>
+      <div class="tip-text"><strong>Increase Income Too</strong>A raise, side hustle, or freelance work boosts savings rate multiplicatively. Both levers matter.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>🔥 FIRE Calculator — For educational purposes only. Past market returns do not guarantee future results.</p>
+  <p style="margin-top:6px;">Assumptions: constant real returns, inflation-adjusted expenses, no sequence-of-returns risk modeled.</p>
+</footer>
+
+<script>
+  // ── Helpers ──
+  const $ = id => document.getElementById(id);
+  const fmt = (n, d=0) => n >= 1e6
+    ? '$' + (n/1e6).toFixed(2) + 'M'
+    : n >= 1e3
+    ? '$' + (n/1e3).toFixed(d ? 1 : 0) + 'K'
+    : '$' + Math.round(n).toLocaleString();
+  const fmtFull = n => '$' + Math.round(n).toLocaleString();
+
+  // ── Chart setup ──
+  let chart;
+  const ctx = $('wealthChart').getContext('2d');
+
+  function buildGradient() {
+    const g = ctx.createLinearGradient(0, 0, 0, 300);
+    g.addColorStop(0, 'rgba(255,159,10,0.35)');
+    g.addColorStop(1, 'rgba(255,107,0,0.0)');
+    return g;
+  }
+
+  function initChart() {
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: [], datasets: [
+        {
+          label: 'Portfolio Value',
+          data: [],
+          borderColor: '#ff9f0a',
+          borderWidth: 2.5,
+          backgroundColor: buildGradient(),
+          fill: true,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#ff9f0a',
+          tension: 0.4,
+        },
+        {
+          label: 'FIRE Target',
+          data: [],
+          borderColor: 'rgba(255,204,2,0.5)',
+          borderWidth: 1.5,
+          borderDash: [6, 4],
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          fill: false,
+        }
+      ]},
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1a1a28',
+            borderColor: 'rgba(255,107,0,0.3)',
+            borderWidth: 1,
+            titleColor: '#888899',
+            bodyColor: '#f0f0f5',
+            padding: 12,
+            callbacks: {
+              label: c => ' ' + c.dataset.label + ': ' + fmtFull(c.parsed.y)
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+            ticks: { color: '#666677', font: { size: 11 }, maxTicksLimit: 8 }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+            ticks: {
+              color: '#666677',
+              font: { size: 11 },
+              callback: v => v >= 1e6 ? '$' + (v/1e6).toFixed(1)+'M' : '$'+(v/1e3).toFixed(0)+'K'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // ── Core calculation ──
+  function calculate() {
+    const age      = parseFloat($('age').value) || 28;
+    const income   = parseFloat($('income').value) || 0;
+    const expenses = parseFloat($('expenses').value) || 0;
+    const curSav   = parseFloat($('savings').value) || 0;
+    const annRet   = parseFloat($('returnRate').value) / 100;
+    const swrPct   = parseFloat($('swr').value) / 100;
+
+    const monthlySav = income - expenses;
+    const savRate    = income > 0 ? (monthlySav / income) * 100 : 0;
+    const fireNum    = (expenses * 12) / swrPct;
+    const monthlyR   = Math.pow(1 + annRet, 1/12) - 1;
+
+    // ── Alert ──
+    const alertEl = $('alert');
+    alertEl.className = 'alert';
+    alertEl.textContent = '';
+
+    let yearsToFire = null;
+    let valid = true;
+
+    if (income <= 0) {
+      alertEl.className = 'alert warn';
+      alertEl.textContent = '⚠️ Please enter a monthly income greater than $0.';
+      valid = false;
+    } else if (monthlySav <= 0) {
+      alertEl.className = 'alert warn';
+      alertEl.textContent = '⚠️ Your expenses exceed your income. Reduce expenses or increase income to reach FIRE.';
+      valid = false;
+    } else if (curSav >= fireNum) {
+      alertEl.className = 'alert info';
+      alertEl.textContent = '🎉 Congratulations! Your current savings already exceed your FIRE number. You\'re financially independent!';
+      yearsToFire = 0;
+    }
+
+    // Compute years using compound interest formula: solve for n
+    if (valid && yearsToFire === null) {
+      if (monthlyR === 0) {
+        // no return: simple linear
+        yearsToFire = (fireNum - curSav) / monthlySav / 12;
+      } else {
+        const ratio = (fireNum + monthlySav / monthlyR) / (curSav + monthlySav / monthlyR);
+        if (ratio <= 0) {
+          yearsToFire = 0;
+        } else {
+          const months = Math.log(ratio) / Math.log(1 + monthlyR);
+          yearsToFire = months / 12;
+        }
+      }
+    }
+
+    const retireAge = valid ? age + (yearsToFire || 0) : null;
+    const progress  = fireNum > 0 ? Math.min(curSav / fireNum * 100, 100) : 0;
+
+    // ── Update savings rate ──
+    $('savingsRateDisplay').textContent = savRate.toFixed(0) + '%';
+    $('savingsRateBadge').textContent   = 'Saving ' + fmt(Math.max(monthlySav,0)) + '/mo';
+    const msg = savRate >= 70 ? 'Extreme saver! FIRE is right around the corner. 🔥🔥🔥'
+              : savRate >= 50 ? 'Excellent savings rate! You\'re a FIRE superstar. 🔥🔥'
+              : savRate >= 30 ? 'Great savings rate! You\'re on the path to FIRE. 🔥'
+              : savRate >= 15 ? 'Good start. Push savings higher to accelerate FIRE.'
+              : savRate >  0  ? 'Low savings rate. Reduce expenses to speed up your timeline.'
+              :                  'Not saving yet. FIRE requires positive savings.';
+    $('savingsRateMsg').textContent = msg;
+
+    // ── Update progress ──
+    $('progressPct').textContent = progress.toFixed(1) + '%';
+    $('progressBar').style.width = progress + '%';
+    $('fireNumSmall').textContent = fmt(fireNum);
+
+    // ── Update stat cards ──
+    $('fireNum').textContent = fmt(fireNum);
+    if (!valid && yearsToFire === null) {
+      $('yearsToFire').textContent = '—';
+      $('fireDate').textContent    = '—';
+      $('retireAge').textContent   = '—';
+      $('retireSubtext').textContent = '—';
+    } else if (yearsToFire === 0) {
+      $('yearsToFire').textContent = '0';
+      $('fireDate').textContent    = 'Already there!';
+      $('retireAge').textContent   = age.toFixed(0);
+      $('retireSubtext').textContent = 'You\'re already FI!';
+    } else {
+      const y = yearsToFire.toFixed(1);
+      const m = Math.round((yearsToFire % 1) * 12);
+      const yInt = Math.floor(yearsToFire);
+      $('yearsToFire').textContent = y;
+      $('fireDate').textContent    = yInt + ' yrs ' + (m > 0 ? m + ' mo' : '');
+      $('retireAge').textContent   = retireAge.toFixed(1);
+      $('retireSubtext').textContent = retireAge < 40 ? 'Lean FIRE territory! 🔥'
+                                      : retireAge < 50 ? 'Excellent early retirement!'
+                                      : retireAge < 60 ? 'Early retirement achieved!'
+                                      : 'On track for retirement.';
+    }
+    $('monthlySavings').textContent = fmt(Math.max(monthlySav, 0));
+    $('monthlySavingsNote').textContent = savRate > 0
+      ? savRate.toFixed(0) + '% savings rate'
+      : 'Increase savings to progress';
+
+    // ── Build chart data ──
+    buildChartData(curSav, monthlySav, monthlyR, fireNum, yearsToFire, age, valid);
+
+    // ── Milestones ──
+    buildMilestones(curSav, fireNum, monthlySav, monthlyR, age);
+  }
+
+  function buildChartData(curSav, monthlySav, monthlyR, fireNum, yearsToFire, age, valid) {
+    const years = valid && yearsToFire !== null
+      ? Math.min(Math.ceil(yearsToFire) + 5, 60)
+      : 40;
+
+    const labels = [];
+    const portfolio = [];
+    const target = [];
+    let bal = curSav;
+
+    for (let m = 0; m <= years * 12; m += 3) {
+      const yr = m / 12;
+      labels.push((age + yr).toFixed(0) + ' yrs');
+      bal = curSav * Math.pow(1 + monthlyR, m) + (monthlyR > 0
+        ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
+        : monthlySav * m);
+      portfolio.push(Math.max(bal, 0));
+      target.push(fireNum);
+    }
+
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = portfolio;
+    chart.data.datasets[1].data = target;
+    chart.update('active');
+  }
+
+  function buildMilestones(curSav, fireNum, monthlySav, monthlyR, age) {
+    const milestones = [
+      { pct: 10,  label: '10% — Getting started' },
+      { pct: 25,  label: '25% — One quarter there' },
+      { pct: 50,  label: '50% — Halfway to freedom' },
+      { pct: 75,  label: '75% — In the home stretch' },
+      { pct: 90,  label: '90% — Almost there!' },
+      { pct: 100, label: '100% — FIRE achieved! 🔥' },
+    ];
+    const curPct = fireNum > 0 ? (curSav / fireNum * 100) : 0;
+    const list = $('milestoneList');
+    list.innerHTML = '';
+    milestones.forEach(m => {
+      const target = fireNum * m.pct / 100;
+      let ageLabel = '';
+      if (monthlySav > 0 && monthlyR >= 0) {
+        const ratio = (target + (monthlyR > 0 ? monthlySav / monthlyR : 0))
+                    / (curSav  + (monthlyR > 0 ? monthlySav / monthlyR : 0));
+        if (ratio > 0 && ratio !== Infinity) {
+          const months = monthlyR > 0
+            ? Math.log(ratio) / Math.log(1 + monthlyR)
+            : (target - curSav) / monthlySav;
+          if (months >= 0) {
+            const ageAt = age + months / 12;
+            ageLabel = 'Age ' + ageAt.toFixed(0);
+          }
+        }
+      }
+      const done = curPct >= m.pct;
+      const el = document.createElement('div');
+      el.className = 'milestone-item' + (done ? ' done' : '');
+      el.innerHTML = `
+        <div class="m-dot"></div>
+        <div class="m-name">${m.label}</div>
+        <div style="margin-left:auto;text-align:right;">
+          <div class="m-pct">${done ? '✓ Done' : ageLabel}</div>
+          <div style="font-size:0.7rem;color:var(--muted)">${fmt(target)}</div>
+        </div>`;
+      list.appendChild(el);
+    });
+  }
+
+  // ── Slider labels ──
+  $('returnRate').addEventListener('input', function() {
+    $('returnVal').textContent = this.value + '%';
+    calculate();
+  });
+  $('swr').addEventListener('input', function() {
+    $('swrVal').textContent = this.value + '%';
+    calculate();
+  });
+
+  // ── All inputs ──
+  ['age','income','expenses','savings'].forEach(id => {
+    $(id).addEventListener('input', calculate);
+  });
+
+  // ── Init ──
+  initChart();
+  calculate();
+</script>
+</body>
+</html>
