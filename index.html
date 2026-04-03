@@ -1210,7 +1210,20 @@
     currentLang = lang;
     document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
     updateStaticText();
+    retranslateExpenseItems();
     calculate();
+  }
+
+  function retranslateExpenseItems() {
+    if (expenseItems.length === 0) return;
+    let changed = false;
+    expenseItems.forEach(item => {
+      if (item.key) {
+        const newName = expName(item.key, item.kidNum);
+        if (newName !== item.name) { item.name = newName; changed = true; }
+      }
+    });
+    if (changed) renderExpenseList();
   }
 
   let currentMode = 'perpetual';
@@ -1636,46 +1649,46 @@
   $('expensesMult').addEventListener('input', syncExpenses);
 
   // --- Expense Breakdown ---
-  const DEFAULT_EXPENSES_EN = [
-    { name: 'Rent / Housing', amount: 1500, mult: 1 },
-    { name: 'Food / Meals', amount: 25, mult: 30 },
-    { name: 'Transportation', amount: 10, mult: 30 },
-    { name: 'Utilities', amount: 200, mult: 1 },
-    { name: 'Shopping', amount: 400, mult: 1 },
-    { name: 'Entertainment', amount: 200, mult: 1 },
-    { name: 'Insurance', amount: 300, mult: 1 },
-    { name: 'Other', amount: 500, mult: 1 },
-  ];
-  const DEFAULT_EXPENSES_ZH = [
-    { name: '房租／房貸', amount: 1500, mult: 1 },
-    { name: '餐飲／三餐', amount: 25, mult: 30 },
-    { name: '交通', amount: 10, mult: 30 },
-    { name: '水電瓦斯', amount: 200, mult: 1 },
-    { name: '購物', amount: 400, mult: 1 },
-    { name: '娛樂', amount: 200, mult: 1 },
-    { name: '保險', amount: 300, mult: 1 },
-    { name: '其他', amount: 500, mult: 1 },
-  ];
+  const EXP_NAMES = {
+    en: {
+      rent: 'Rent / Housing', food: 'Food / Meals', transport: 'Transportation',
+      utilities: 'Utilities', shopping: 'Shopping', entertainment: 'Entertainment',
+      insurance: 'Insurance', other: 'Other',
+      pFood: 'Partner — Food', pInsurance: 'Partner — Insurance', pPersonal: 'Partner — Personal',
+      kSchool: 'Kid {n} — Childcare / School', kFood: 'Kid {n} — Food', kActivities: 'Kid {n} — Activities / Supplies',
+    },
+    zh: {
+      rent: '房租／房貸', food: '餐飲／三餐', transport: '交通',
+      utilities: '水電瓦斯', shopping: '購物', entertainment: '娛樂',
+      insurance: '保險', other: '其他',
+      pFood: '伴侶 — 餐飲', pInsurance: '伴侶 — 保險', pPersonal: '伴侶 — 個人消費',
+      kSchool: '小孩{n} — 托育／學費', kFood: '小孩{n} — 餐飲', kActivities: '小孩{n} — 活動／用品',
+    }
+  };
+  function expName(key, kidNum) {
+    const s = (EXP_NAMES[currentLang] || EXP_NAMES.en)[key] || key;
+    return kidNum ? s.replace('{n}', kidNum) : s;
+  }
 
-  const PARTNER_EXPENSES_EN = [
-    { name: 'Partner — Food', amount: 25, mult: 30 },
-    { name: 'Partner — Insurance', amount: 300, mult: 1 },
-    { name: 'Partner — Personal', amount: 400, mult: 1 },
+  const DEFAULT_EXPENSES = [
+    { key: 'rent', amount: 1500, mult: 1 },
+    { key: 'food', amount: 25, mult: 30 },
+    { key: 'transport', amount: 10, mult: 30 },
+    { key: 'utilities', amount: 200, mult: 1 },
+    { key: 'shopping', amount: 400, mult: 1 },
+    { key: 'entertainment', amount: 200, mult: 1 },
+    { key: 'insurance', amount: 300, mult: 1 },
+    { key: 'other', amount: 500, mult: 1 },
   ];
-  const PARTNER_EXPENSES_ZH = [
-    { name: '伴侶 — 餐飲', amount: 25, mult: 30 },
-    { name: '伴侶 — 保險', amount: 300, mult: 1 },
-    { name: '伴侶 — 個人消費', amount: 400, mult: 1 },
+  const PARTNER_EXPENSES = [
+    { key: 'pFood', amount: 25, mult: 30 },
+    { key: 'pInsurance', amount: 300, mult: 1 },
+    { key: 'pPersonal', amount: 400, mult: 1 },
   ];
-  const KID_EXPENSES_EN = [
-    { name: 'Kid {n} — Childcare / School', amount: 800, mult: 1 },
-    { name: 'Kid {n} — Food', amount: 15, mult: 30 },
-    { name: 'Kid {n} — Activities / Supplies', amount: 200, mult: 1 },
-  ];
-  const KID_EXPENSES_ZH = [
-    { name: '小孩{n} — 托育／學費', amount: 800, mult: 1 },
-    { name: '小孩{n} — 餐飲', amount: 15, mult: 30 },
-    { name: '小孩{n} — 活動／用品', amount: 200, mult: 1 },
+  const KID_EXPENSES = [
+    { key: 'kSchool', amount: 800, mult: 1 },
+    { key: 'kFood', amount: 15, mult: 30 },
+    { key: 'kActivities', amount: 200, mult: 1 },
   ];
 
   let expenseItems = [];
@@ -1712,21 +1725,19 @@
   }
 
   function buildExpenseDefaults() {
-    const zh = currentLang === 'zh';
-    const base = (zh ? DEFAULT_EXPENSES_ZH : DEFAULT_EXPENSES_EN).map(d => ({...d}));
-    const items = [...base];
+    const items = DEFAULT_EXPENSES.map(d => ({ key: d.key, name: expName(d.key), amount: d.amount, mult: d.mult }));
 
     if (currentHousehold === 'partner' || currentHousehold === 'family') {
-      const pItems = zh ? PARTNER_EXPENSES_ZH : PARTNER_EXPENSES_EN;
-      items.push(...pItems.map(d => ({...d})));
+      PARTNER_EXPENSES.forEach(d => {
+        items.push({ key: d.key, name: expName(d.key), amount: d.amount, mult: d.mult });
+      });
     }
 
     if (currentHousehold === 'family') {
       const numKids = Math.max(parseInt($('kidsCount').value) || 1, 1);
-      const kItems = zh ? KID_EXPENSES_ZH : KID_EXPENSES_EN;
       for (let k = 1; k <= numKids; k++) {
-        kItems.forEach(d => {
-          items.push({ name: d.name.replace('{n}', k), amount: d.amount, mult: d.mult });
+        KID_EXPENSES.forEach(d => {
+          items.push({ key: d.key, kidNum: k, name: expName(d.key, k), amount: d.amount, mult: d.mult });
         });
       }
     }
@@ -1782,6 +1793,8 @@
 
   function updateExpenseName(i, val) {
     expenseItems[i].name = val;
+    delete expenseItems[i].key;
+    delete expenseItems[i].kidNum;
   }
 
   function updateExpenseAmount(i, val) {
