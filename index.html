@@ -808,6 +808,15 @@
           <div class="note" data-i18n="noteInflation"><strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.</div>
         </div>
 
+        <div class="range-field">
+          <div class="range-header">
+            <label data-i18n="lblIncomeGrowth">Annual Income Growth</label>
+            <span class="range-val" id="incomeGrowthVal">3%</span>
+          </div>
+          <input type="range" id="incomeGrowth" min="0" max="10" step="0.5" value="3" />
+          <div class="note" data-i18n="noteIncomeGrowth"><strong>Tip:</strong> Average salary growth is 3–5%/yr. Your savings contribution grows as income rises.</div>
+        </div>
+
         <div class="life-exp-row visible" id="lifeExpRow">
           <div class="field">
             <label data-i18n="lblLifeExp">Life Expectancy (for "Spend It All" mode)</label>
@@ -980,6 +989,8 @@
       noteReturn: '<strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.',
       lblInflation: 'Inflation Rate',
       noteInflation: '<strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.',
+      lblIncomeGrowth: 'Annual Income Growth',
+      noteIncomeGrowth: '<strong>Tip:</strong> Average salary growth is 3–5%/yr. Your savings contribution grows as income rises.',
       lblLifeExp: 'Life Expectancy (for "Spend It All" mode)',
       noteLifeExp: 'Your savings will be drawn down to $0 by this age. Plan conservatively!',
       sufYrs: 'yrs', sufYrs2: 'yrs',
@@ -1079,6 +1090,8 @@
       noteReturn: '<strong>提示：</strong>S&P 500 歷史平均約 10%／年（未扣通膨）。保守估計 6–8%。',
       lblInflation: '通貨膨脹率',
       noteInflation: '<strong>提示：</strong>歷史上約 2–3%／年。通膨會侵蝕你的購買力，所以我們會把它算進去。',
+      lblIncomeGrowth: '年收入成長率',
+      noteIncomeGrowth: '<strong>提示：</strong>平均薪資成長約 3–5%／年。收入增加時，每月存款也會跟著增加。',
       lblLifeExp: '預期壽命（用於「花到歸零」模式）',
       noteLifeExp: '你的存款會在這個年齡歸零。建議保守估計！',
       sufYrs: '歲', sufYrs2: '歲',
@@ -1282,16 +1295,18 @@
     });
   }
 
-  function solveYearsToTarget(curSav, monthlySav, monthlyR, target) {
+  function solveYearsToTarget(curSav, monthlySav, monthlyR, target, monthlyIncGrowth) {
     if (target <= 0) return 0;
     if (curSav >= target) return 0;
     if (monthlySav <= 0) return Infinity;
-    if (monthlyR <= 0) {
-      return (target - curSav) / monthlySav / 12;
+    let bal = curSav;
+    let sav = monthlySav;
+    for (let m = 0; m < 1200; m++) {
+      bal = bal * (1 + monthlyR) + sav;
+      if (m > 0 && m % 12 === 0) sav = sav * (1 + (monthlyIncGrowth || 0));
+      if (bal >= target) return (m + 1) / 12;
     }
-    const ratio = (target + monthlySav / monthlyR) / (curSav + monthlySav / monthlyR);
-    if (ratio <= 0) return 0;
-    return Math.log(ratio) / Math.log(1 + monthlyR) / 12;
+    return Infinity;
   }
 
   function pvAnnuity(annualExpense, realReturn, years) {
@@ -1307,6 +1322,7 @@
     const curSav    = parseFloat($('savings').value) || 0;
     const annReturn = parseFloat($('returnRate').value) / 100;
     const inflation = parseFloat($('inflationRate').value) / 100;
+    const incGrowth = parseFloat($('incomeGrowth').value) / 100;
     const lifeExp   = parseFloat($('lifeExp').value) || 85;
 
     const monthlySav   = Math.max(income - expenses, 0);
@@ -1314,6 +1330,7 @@
     const annualExp    = expenses * 12;
     const realReturn   = (1 + annReturn) / (1 + inflation) - 1;
     const monthlyRealR = Math.pow(1 + realReturn, 1/12) - 1;
+    const realIncGrowth = Math.max((1 + incGrowth) / (1 + inflation) - 1, 0);
     const hasIncome    = income > 0 && income > expenses;
 
     // Perpetual target: live off real returns forever
@@ -1323,23 +1340,22 @@
     const spendRetYearsNow = Math.max(lifeExp - age, 1);
     const spendTargetNow = pvAnnuity(annualExp, realReturn, spendRetYearsNow);
 
-    // Spend-down with accumulation: binary search for retirement age
+    // Spend-down with accumulation: simulation with growing income
     let spendYearsToRetire = 0;
     if (hasIncome) {
-      let lo = 0, hi = 100;
-      for (let i = 0; i < 100; i++) {
-        const mid = (lo + hi) / 2;
-        const retAge = age + mid;
+      let bal = curSav;
+      let sav = monthlySav;
+      let found = false;
+      for (let m = 0; m < 1200; m++) {
+        const yrs = m / 12;
+        const retAge = age + yrs;
         const retYears = Math.max(lifeExp - retAge, 1);
         const needed = pvAnnuity(annualExp, realReturn, retYears);
-        const accumulated = curSav * Math.pow(1 + monthlyRealR, mid * 12)
-          + (monthlyRealR > 0
-            ? monthlySav * (Math.pow(1 + monthlyRealR, mid * 12) - 1) / monthlyRealR
-            : monthlySav * mid * 12);
-        if (accumulated >= needed) hi = mid;
-        else lo = mid;
+        if (bal >= needed) { spendYearsToRetire = yrs; found = true; break; }
+        bal = bal * (1 + monthlyRealR) + sav;
+        if (m > 0 && m % 12 === 0) sav = sav * (1 + realIncGrowth);
       }
-      spendYearsToRetire = (lo + hi) / 2;
+      if (!found) spendYearsToRetire = 100;
     }
 
     const spendRetireAge = age + spendYearsToRetire;
@@ -1356,7 +1372,7 @@
       yearsToRetire = 0;
     } else if (hasIncome) {
       yearsToRetire = isPerp
-        ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget)
+        ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget, realIncGrowth)
         : spendYearsToRetire;
     } else {
       yearsToRetire = Infinity;
@@ -1460,7 +1476,7 @@
     }
 
     // Comparison table
-    const perpYearsForCmp = hasIncome ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget) : Infinity;
+    const perpYearsForCmp = hasIncome ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget, realIncGrowth) : Infinity;
     const canRetirePerp = curSav >= perpetualTarget;
     const canRetireSpend = curSav >= spendTargetNow;
     $('cmpTargetA').textContent = valid ? fmt(perpetualTarget) : '—';
@@ -1472,7 +1488,7 @@
     $('cmpLeftoverVal').textContent = currentLang === 'zh' ? ('$0（' + lifeExp + ' 歲歸零）') : ('$0 at age ' + lifeExp);
 
     // Chart
-    buildChart(curSav, monthlySav, monthlyRealR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome);
+    buildChart(curSav, monthlySav, monthlyRealR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome, realIncGrowth);
 
     // Legend
     const lgdDot = (c) => '<span style="width:12px;height:3px;background:' + c + ';display:inline-block;border-radius:2px;"></span>';
@@ -1489,7 +1505,7 @@
     }
   }
 
-  function buildChart(curSav, monthlySav, monthlyR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome) {
+  function buildChart(curSav, monthlySav, monthlyR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome, realIncGrowth) {
     if (!valid) {
       chart.data.labels = [];
       chart.data.datasets[0].data = [];
@@ -1505,6 +1521,17 @@
 
     const ap = t('agePrefix');
     const ageLbl = (a) => currentLang === 'zh' ? Math.round(a) + '歲' : ap + Math.round(a);
+
+    function simAccum(months) {
+      let bal = curSav, sav = monthlySav;
+      const pts = [{m: 0, bal: bal}];
+      for (let m = 1; m <= months; m++) {
+        bal = bal * (1 + monthlyR) + sav;
+        if (m % 12 === 0) sav = sav * (1 + (realIncGrowth || 0));
+        if (m % 3 === 0) pts.push({m: m, bal: bal});
+      }
+      return pts;
+    }
 
     if (canRetireNow && isPerp) {
       const showYears = 30;
@@ -1536,28 +1563,22 @@
       chart.data.datasets[1].borderColor = isPerp ? 'rgba(255,204,2,0.5)' : 'rgba(96,165,250,0.5)';
     } else if (isPerp) {
       const totalYears = Math.min(Math.ceil(yearsToRetire) + 10, 60);
-      for (let m = 0; m <= totalYears * 12; m += 3) {
-        labels.push(ageLbl(age + m / 12));
-        const bal = curSav * Math.pow(1 + monthlyR, m)
-          + (monthlyR > 0
-            ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
-            : monthlySav * m);
-        portfolio.push(Math.max(bal, 0));
+      const pts = simAccum(totalYears * 12);
+      pts.forEach(p => {
+        labels.push(ageLbl(age + p.m / 12));
+        portfolio.push(Math.max(p.bal, 0));
         targetLine.push(target);
-      }
+      });
       chart.data.datasets[1].borderColor = 'rgba(255,204,2,0.5)';
     } else {
       const retireMonth = Math.ceil(yearsToRetire * 12);
-      let bal = curSav;
-      for (let m = 0; m <= retireMonth; m += 3) {
-        labels.push(ageLbl(age + m / 12));
-        bal = curSav * Math.pow(1 + monthlyR, m)
-          + (monthlyR > 0
-            ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
-            : monthlySav * m);
-        portfolio.push(Math.max(bal, 0));
+      const pts = simAccum(retireMonth);
+      let bal = pts.length > 0 ? pts[pts.length - 1].bal : curSav;
+      pts.forEach(p => {
+        labels.push(ageLbl(age + p.m / 12));
+        portfolio.push(Math.max(p.bal, 0));
         targetLine.push(target);
-      }
+      });
       const retireAge = age + yearsToRetire;
       const monthsInRetirement = Math.ceil((lifeExp - retireAge) * 12);
       let drawBal = bal;
@@ -1585,6 +1606,10 @@
   });
   $('inflationRate').addEventListener('input', function() {
     $('inflationVal').textContent = this.value + '%';
+    calculate();
+  });
+  $('incomeGrowth').addEventListener('input', function() {
+    $('incomeGrowthVal').textContent = this.value + '%';
     calculate();
   });
 
