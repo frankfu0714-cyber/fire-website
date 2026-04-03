@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIRE Calculator — Financial Independence, Retire Early</title>
+  <title>Retirement Calculator — When Can I Retire?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -20,12 +20,12 @@
       --muted:     #888899;
       --danger:    #ff4d4d;
       --success:   #34d399;
+      --blue:      #60a5fa;
       --radius:    16px;
       --shadow:    0 4px 40px rgba(0,0,0,0.5);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -37,15 +37,13 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--fire1); border-radius: 3px; }
 
-    /* ── Header ── */
     header {
       text-align: center;
-      padding: 60px 20px 40px;
+      padding: 50px 20px 32px;
       position: relative;
       overflow: hidden;
     }
@@ -58,12 +56,7 @@
       background: radial-gradient(ellipse, rgba(255,107,0,0.18) 0%, transparent 70%);
       pointer-events: none;
     }
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+    .logo { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 12px; }
     .flame-icon {
       font-size: 42px;
       filter: drop-shadow(0 0 16px rgba(255,107,0,0.8));
@@ -74,7 +67,7 @@
       50%      { filter: drop-shadow(0 0 24px rgba(255,159,10,1));   transform: scale(1.06); }
     }
     h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
       font-weight: 800;
       background: linear-gradient(135deg, var(--fire1), var(--fire2), var(--fire3));
       -webkit-background-clip: text;
@@ -82,21 +75,10 @@
       background-clip: text;
       letter-spacing: -0.02em;
     }
-    .tagline {
-      color: var(--muted);
-      font-size: 1rem;
-      font-weight: 400;
-      margin-top: 6px;
-    }
+    .tagline { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
 
-    /* ── Layout ── */
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px 80px;
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
 
-    /* ── Card ── */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -113,19 +95,6 @@
       margin-bottom: 20px;
     }
 
-    /* ── Grid ── */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    @media (max-width: 900px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .grid-3 { grid-template-columns: 1fr 1fr; }
-      .grid-4 { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 520px) {
-      .grid-3, .grid-4 { grid-template-columns: 1fr; }
-    }
-
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -134,19 +103,16 @@
     }
     @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } }
 
-    /* ── Inputs ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 700px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+
     .field { display: flex; flex-direction: column; gap: 6px; }
-    label {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--muted);
-      letter-spacing: 0.03em;
-    }
-    .input-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
+    label { font-size: 0.8rem; font-weight: 500; color: var(--muted); letter-spacing: 0.03em; }
+    .input-wrap { position: relative; display: flex; align-items: center; }
     .prefix, .suffix {
       position: absolute;
       font-size: 0.9rem;
@@ -178,14 +144,9 @@
     }
     .has-prefix input { padding-left: 30px; }
 
-    /* range slider */
     .range-field { display: flex; flex-direction: column; gap: 8px; }
     .range-header { display: flex; justify-content: space-between; align-items: center; }
-    .range-val {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--fire2);
-    }
+    .range-val { font-size: 0.9rem; font-weight: 700; color: var(--fire2); }
     input[type="range"] {
       -webkit-appearance: none;
       width: 100%;
@@ -210,7 +171,54 @@
       border: none; border-radius: 50%;
     }
 
-    /* ── Stat cards ── */
+    .note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+    .note strong { color: #aaa; }
+
+    /* Mode tabs */
+    .mode-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .mode-tab {
+      flex: 1;
+      padding: 14px 16px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.25s;
+      border: none;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      position: relative;
+    }
+    .mode-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .mode-tab.active {
+      color: var(--text);
+      background: var(--card);
+    }
+    .mode-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--fire1), var(--fire2));
+    }
+    .mode-tab .tab-title { display: block; font-size: 0.85rem; margin-bottom: 2px; }
+    .mode-tab .tab-desc { display: block; font-size: 0.68rem; font-weight: 400; opacity: 0.7; }
+
+    /* Stat cards */
     .stat-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -241,7 +249,6 @@
       font-weight: 800;
       color: var(--text);
       line-height: 1;
-      transition: color 0.3s;
     }
     .stat-value.highlight {
       background: linear-gradient(135deg, var(--fire1), var(--fire3));
@@ -249,28 +256,12 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .stat-sub {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-    .stat-icon {
-      position: absolute;
-      right: 16px; top: 16px;
-      font-size: 1.4rem;
-      opacity: 0.3;
-    }
+    .stat-sub { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
+    .stat-icon { position: absolute; right: 16px; top: 16px; font-size: 1.4rem; opacity: 0.3; }
 
-    /* ── Progress bar ── */
-    .progress-section { margin-bottom: 20px; }
-    .progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 12px;
-    }
+    /* Progress bar */
     .progress-pct {
-      font-size: 2.4rem;
+      font-size: 2.2rem;
       font-weight: 800;
       background: linear-gradient(135deg, var(--fire1), var(--fire3));
       -webkit-background-clip: text;
@@ -284,7 +275,6 @@
       background: var(--surface);
       border-radius: 6px;
       overflow: hidden;
-      position: relative;
     }
     .progress-fill {
       height: 100%;
@@ -293,15 +283,6 @@
       background-size: 200% 100%;
       animation: shimmer 2s linear infinite;
       transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-    }
-    .progress-fill::after {
-      content: '';
-      position: absolute;
-      right: 0; top: 0;
-      width: 20px; height: 100%;
-      background: rgba(255,255,255,0.3);
-      filter: blur(4px);
     }
     @keyframes shimmer {
       0%   { background-position: 200% 0; }
@@ -312,12 +293,8 @@
       justify-content: space-between;
       margin-top: 8px;
     }
-    .milestone-labels span {
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
+    .milestone-labels span { font-size: 0.7rem; color: var(--muted); }
 
-    /* ── Savings rate badge ── */
     .rate-badge {
       display: inline-flex;
       align-items: center;
@@ -341,92 +318,50 @@
       50%      { opacity: 0.5; transform: scale(0.8); }
     }
 
-    /* ── Chart ── */
-    .chart-wrap {
-      position: relative;
-      height: 300px;
-    }
+    .chart-wrap { position: relative; height: 300px; }
     @media (max-width: 520px) { .chart-wrap { height: 220px; } }
 
-    /* ── Milestones ── */
-    .milestone-list { display: flex; flex-direction: column; gap: 10px; }
-    .milestone-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      background: var(--surface);
-      border-radius: 10px;
-      border: 1px solid var(--border);
+    /* Comparison table */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 0.85rem;
-      transition: border-color 0.2s;
     }
-    .milestone-item.done { border-color: rgba(52,211,153,0.3); }
-    .milestone-item.done .m-dot { background: var(--success); box-shadow: 0 0 6px rgba(52,211,153,0.5); }
-    .m-dot {
-      width: 10px; height: 10px; flex-shrink: 0;
-      border-radius: 50%;
-      background: var(--muted);
-    }
-    .m-name { flex: 1; font-weight: 500; }
-    .m-pct { font-weight: 700; color: var(--muted); font-size: 0.8rem; }
-    .milestone-item.done .m-pct { color: var(--success); }
-
-    /* ── Quotes ── */
-    .quotes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .quote-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .quote-card::before {
-      content: '"';
-      position: absolute;
-      top: -10px; left: 16px;
-      font-size: 5rem;
-      font-weight: 900;
-      color: var(--fire1);
-      opacity: 0.15;
-      line-height: 1;
-      font-family: Georgia, serif;
-    }
-    .quote-text {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--text);
-      margin-bottom: 12px;
-      position: relative;
-    }
-    .quote-author {
-      font-size: 0.75rem;
+    .compare-table th {
+      text-align: left;
+      font-size: 0.72rem;
       font-weight: 600;
-      color: var(--fire2);
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
     }
+    .compare-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table .val { font-weight: 700; font-size: 1rem; }
+    .compare-table .label-col { color: var(--muted); font-weight: 500; }
+    .compare-table .mode-a { color: var(--fire2); }
+    .compare-table .mode-b { color: var(--blue); }
 
-    /* ── Tips ── */
-    .tips-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
-    .tip {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
+    /* Info boxes */
+    .info-box {
       background: var(--surface);
-      border-radius: 10px;
-      padding: 14px;
       border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-top: 16px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
     }
-    .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
-    .tip-text { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
-    .tip-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+    .info-box strong { color: var(--text); }
+    .info-box .emoji { font-size: 1rem; margin-right: 6px; }
 
-    /* ── Alert ── */
     .alert {
       display: none;
       padding: 12px 18px;
@@ -448,10 +383,8 @@
       color: var(--success);
     }
 
-    /* ── Section spacing ── */
     section { margin-bottom: 20px; }
 
-    /* ── Footer ── */
     footer {
       text-align: center;
       padding: 40px 20px;
@@ -460,14 +393,19 @@
       font-size: 0.78rem;
       line-height: 1.8;
     }
-    footer a { color: var(--fire2); text-decoration: none; }
 
-    /* ── Divider ── */
+    .life-exp-row {
+      transition: opacity 0.3s, max-height 0.3s;
+      overflow: hidden;
+    }
+    .life-exp-row.hidden { opacity: 0; max-height: 0; margin: 0; padding: 0; }
+    .life-exp-row.visible { opacity: 1; max-height: 100px; }
+
     .section-divider {
       display: flex;
       align-items: center;
       gap: 16px;
-      margin: 32px 0 20px;
+      margin: 28px 0 16px;
       color: var(--muted);
       font-size: 0.72rem;
       font-weight: 700;
@@ -480,20 +418,6 @@
       height: 1px;
       background: var(--border);
     }
-
-    /* ── Animate in ── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeIn 0.5s ease forwards;
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in:nth-child(1) { animation-delay: 0.05s; }
-    .fade-in:nth-child(2) { animation-delay: 0.10s; }
-    .fade-in:nth-child(3) { animation-delay: 0.15s; }
-    .fade-in:nth-child(4) { animation-delay: 0.20s; }
   </style>
 </head>
 <body>
@@ -501,27 +425,39 @@
 <header>
   <div class="logo">
     <span class="flame-icon">🔥</span>
-    <h1>FIRE Calculator</h1>
+    <h1>Retirement Calculator</h1>
   </div>
-  <p class="tagline">Financial Independence, Retire Early — Know your number.</p>
+  <p class="tagline">When can you stop working? Find out with two strategies.</p>
 </header>
 
 <div class="container">
 
-  <!-- ── Inputs + Quick Stats ── -->
+  <!-- Mode Tabs -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="perpetual" onclick="setMode('perpetual')">
+      <span class="tab-title">♾️ Never Run Out</span>
+      <span class="tab-desc">Live off returns forever — keep your savings intact</span>
+    </button>
+    <button class="mode-tab" data-mode="spenddown" onclick="setMode('spenddown')">
+      <span class="tab-title">⏳ Spend It All</span>
+      <span class="tab-desc">Use all savings + returns until target age — $0 at the end</span>
+    </button>
+  </div>
+
+  <!-- Inputs + Summary -->
   <div class="main-grid">
     <div class="card">
       <div class="card-title">Your Financial Profile</div>
-      <div class="grid-2" style="gap:14px;">
+      <div class="grid-2">
         <div class="field">
           <label>Current Age</label>
           <div class="input-wrap">
             <input type="number" id="age" value="28" min="18" max="80" />
-            <span class="suffix" style="right:12px">yrs</span>
+            <span class="suffix">yrs</span>
           </div>
         </div>
         <div class="field">
-          <label>Monthly Income</label>
+          <label>Monthly Income (after tax)</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="income" value="7000" min="0" />
@@ -535,7 +471,7 @@
           </div>
         </div>
         <div class="field">
-          <label>Current Savings</label>
+          <label>Current Savings / Investments</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="savings" value="45000" min="0" />
@@ -550,19 +486,34 @@
             <span class="range-val" id="returnVal">7%</span>
           </div>
           <input type="range" id="returnRate" min="1" max="15" step="0.5" value="7" />
+          <div class="note"><strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.</div>
         </div>
+
         <div class="range-field">
           <div class="range-header">
-            <label>Safe Withdrawal Rate</label>
-            <span class="range-val" id="swrVal">4%</span>
+            <label>Inflation Rate</label>
+            <span class="range-val" id="inflationVal">3%</span>
           </div>
-          <input type="range" id="swr" min="2" max="6" step="0.25" value="4" />
+          <input type="range" id="inflationRate" min="0" max="8" step="0.5" value="3" />
+          <div class="note"><strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.</div>
+        </div>
+
+        <div class="life-exp-row visible" id="lifeExpRow">
+          <div class="field">
+            <label>Life Expectancy (for "Spend It All" mode)</label>
+            <div class="input-wrap">
+              <input type="number" id="lifeExp" value="85" min="50" max="120" />
+              <span class="suffix">yrs</span>
+            </div>
+            <div class="note">Your savings will be drawn down to $0 by this age. Plan conservatively!</div>
+          </div>
         </div>
       </div>
 
       <div id="alert" class="alert"></div>
     </div>
 
+    <!-- Right column: summary -->
     <div style="display:flex;flex-direction:column;gap:14px;">
       <div class="card" style="flex:1;">
         <div class="card-title">Savings Rate</div>
@@ -570,21 +521,21 @@
           <div id="savingsRateDisplay" class="progress-pct">40%</div>
           <div>
             <div class="rate-badge"><span class="rate-dot"></span><span id="savingsRateBadge">Saving $2,800/mo</span></div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;" id="savingsRateMsg">Great savings rate! You're on the path to FIRE. 🔥</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;" id="savingsRateMsg"></div>
           </div>
         </div>
       </div>
 
-      <div class="progress-section card">
-        <div class="card-title">Progress to FIRE</div>
-        <div class="progress-header">
+      <div class="card" style="flex:1;">
+        <div class="card-title">Progress to Retirement Target</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;">
           <div>
             <div class="progress-pct" id="progressPct">—</div>
-            <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">of FIRE number reached</div>
+            <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">of target reached</div>
           </div>
           <div style="text-align:right;">
             <div style="font-size:0.8rem;color:var(--muted);">Target</div>
-            <div style="font-size:1rem;font-weight:700;color:var(--fire2)" id="fireNumSmall">—</div>
+            <div style="font-size:1rem;font-weight:700;color:var(--fire2)" id="targetSmall">—</div>
           </div>
         </div>
         <div class="progress-track">
@@ -597,129 +548,115 @@
     </div>
   </div>
 
-  <!-- ── Stat Cards ── -->
-  <div class="grid-4" style="margin-bottom:20px;">
-    <div class="stat-card fade-in">
+  <!-- Stat Cards -->
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="stat-card">
       <span class="stat-icon">🎯</span>
-      <div class="stat-label">FIRE Number</div>
-      <div class="stat-value highlight" id="fireNum">—</div>
-      <div class="stat-sub">Annual expenses ÷ SWR</div>
+      <div class="stat-label" id="targetLabel">Retirement Target</div>
+      <div class="stat-value highlight" id="targetNum">—</div>
+      <div class="stat-sub" id="targetSub">—</div>
     </div>
-    <div class="stat-card fade-in">
+    <div class="stat-card">
       <span class="stat-icon">⏳</span>
-      <div class="stat-label">Years to FIRE</div>
-      <div class="stat-value" id="yearsToFire">—</div>
-      <div class="stat-sub" id="fireDate">—</div>
+      <div class="stat-label">Years to Retirement</div>
+      <div class="stat-value" id="yearsToRetire">—</div>
+      <div class="stat-sub" id="yearsToRetireSub">—</div>
     </div>
-    <div class="stat-card fade-in">
+    <div class="stat-card">
       <span class="stat-icon">🏖️</span>
       <div class="stat-label">Retirement Age</div>
       <div class="stat-value" id="retireAge">—</div>
-      <div class="stat-sub" id="retireSubtext">—</div>
-    </div>
-    <div class="stat-card fade-in">
-      <span class="stat-icon">💰</span>
-      <div class="stat-label">Monthly Savings</div>
-      <div class="stat-value" id="monthlySavings">—</div>
-      <div class="stat-sub" id="monthlySavingsNote">After expenses</div>
+      <div class="stat-sub" id="retireAgeSub">—</div>
     </div>
   </div>
 
-  <!-- ── Wealth Chart ── -->
+  <!-- Chart -->
   <section class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
-      <div class="card-title" style="margin-bottom:0">Projected Wealth Over Time</div>
-      <div style="display:flex;gap:16px;font-size:0.75rem;color:var(--muted);">
-        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio</span>
-        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(255,204,2,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--fire3);"></span>FIRE Target</span>
-      </div>
+      <div class="card-title" style="margin-bottom:0" id="chartTitle">Projected Wealth Over Time</div>
+      <div id="chartLegend" style="display:flex;gap:16px;font-size:0.75rem;color:var(--muted);"></div>
     </div>
     <div class="chart-wrap">
       <canvas id="wealthChart"></canvas>
     </div>
   </section>
 
-  <!-- ── Milestones ── -->
+  <!-- Comparison -->
   <section class="card">
-    <div class="card-title">Milestone Tracker</div>
-    <div class="milestone-list" id="milestoneList"></div>
+    <div class="card-title">Side-by-Side Comparison</div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th style="color:var(--fire2)">♾️ Never Run Out</th>
+          <th style="color:var(--blue)">⏳ Spend It All</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label-col">How it works</td>
+          <td>Live off investment returns. Your savings stay intact forever.</td>
+          <td>Gradually spend savings + returns until target age. $0 left at the end.</td>
+        </tr>
+        <tr>
+          <td class="label-col">Target amount</td>
+          <td class="val mode-a" id="cmpTargetA">—</td>
+          <td class="val mode-b" id="cmpTargetB">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">Years to retire</td>
+          <td class="val mode-a" id="cmpYearsA">—</td>
+          <td class="val mode-b" id="cmpYearsB">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">Retirement age</td>
+          <td class="val mode-a" id="cmpAgeA">—</td>
+          <td class="val mode-b" id="cmpAgeB">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">Leftover at death</td>
+          <td class="mode-a">All of it (infinite)</td>
+          <td class="mode-b" id="cmpLeftover">$0</td>
+        </tr>
+        <tr>
+          <td class="label-col">Risk</td>
+          <td>Very safe — but requires larger savings</td>
+          <td>Must estimate lifespan — risk of outliving money</td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 
-  <!-- ── Quotes ── -->
-  <div class="section-divider">Wisdom for the Journey</div>
-  <div class="quotes-grid">
-    <div class="quote-card">
-      <div class="quote-text">The best time to plant a tree was 20 years ago. The second best time is now.</div>
-      <div class="quote-author">— Chinese Proverb</div>
+  <!-- Explanation -->
+  <div class="section-divider">How It Works</div>
+  <div class="grid-2" style="gap:16px;">
+    <div class="info-box">
+      <span class="emoji">♾️</span><strong>Never Run Out (Perpetual)</strong><br><br>
+      This is the classic <strong>FIRE</strong> (Financial Independence, Retire Early) approach. You accumulate enough savings so that the <strong>annual investment returns alone</strong> cover your living expenses — forever.<br><br>
+      <strong>Formula:</strong> Target = Annual Expenses ÷ Real Return Rate<br>
+      <strong>Real Return</strong> = Investment Return − Inflation<br><br>
+      Example: If you spend $50,400/yr and earn 7% with 3% inflation (4% real return), you need $50,400 ÷ 0.04 = <strong>$1,260,000</strong>.
     </div>
-    <div class="quote-card">
-      <div class="quote-text">Do not save what is left after spending, but spend what is left after saving.</div>
-      <div class="quote-author">— Warren Buffett</div>
-    </div>
-    <div class="quote-card">
-      <div class="quote-text">Financial freedom is available to those who learn about it and work for it.</div>
-      <div class="quote-author">— Robert Kiyosaki</div>
-    </div>
-    <div class="quote-card">
-      <div class="quote-text">A penny saved is a penny earned. But a penny invested is two pennies earned.</div>
-      <div class="quote-author">— Benjamin Franklin (adapted)</div>
-    </div>
-    <div class="quote-card">
-      <div class="quote-text">The goal of retirement is to live off your assets — not in spite of them.</div>
-      <div class="quote-author">— Frank Eberhart</div>
-    </div>
-    <div class="quote-card">
-      <div class="quote-text">Wealth is not about having a lot of money; it's about having a lot of options.</div>
-      <div class="quote-author">— Chris Rock</div>
+    <div class="info-box">
+      <span class="emoji">⏳</span><strong>Spend It All (Drawdown)</strong><br><br>
+      You don't need as much saved because you'll <strong>spend both returns AND principal</strong> over your remaining years. You choose a life expectancy, and the calculator figures out how much you need so your money lasts exactly that long.<br><br>
+      <strong>Formula:</strong> Uses the Present Value of Annuity — it factors in your spending, returns, and years in retirement.<br><br>
+      Example: Same expenses, retire at 45, live to 85 (40 years) → you might only need <strong>~$1,060,000</strong> instead of $1.26M.
     </div>
   </div>
 
-  <!-- ── Tips ── -->
-  <div class="section-divider">FIRE Principles</div>
-  <div class="tips-list">
-    <div class="tip">
-      <span class="tip-icon">📈</span>
-      <div class="tip-text"><strong>The 4% Rule</strong>Withdraw 4% of your portfolio annually. Historically safe for a 30-year retirement horizon (Trinity Study).</div>
-    </div>
-    <div class="tip">
-      <span class="tip-icon">🗜️</span>
-      <div class="tip-text"><strong>Reduce Expenses First</strong>A $1 cut in monthly spending reduces your FIRE number by $300. Spend less AND retire sooner.</div>
-    </div>
-    <div class="tip">
-      <span class="tip-icon">🏦</span>
-      <div class="tip-text"><strong>Maximize Tax-Advantaged Accounts</strong>Max out 401(k), IRA, and HSA first. Tax savings compound over decades.</div>
-    </div>
-    <div class="tip">
-      <span class="tip-icon">💼</span>
-      <div class="tip-text"><strong>Low-Cost Index Funds</strong>Vanguard, Fidelity ZERO, or Schwab index funds keep expense ratios near 0% — fees destroy returns.</div>
-    </div>
-    <div class="tip">
-      <span class="tip-icon">🔁</span>
-      <div class="tip-text"><strong>Automate Savings</strong>Pay yourself first. Automate transfers on payday so you never spend what you intended to save.</div>
-    </div>
-    <div class="tip">
-      <span class="tip-icon">📊</span>
-      <div class="tip-text"><strong>Track Net Worth Monthly</strong>What gets measured gets managed. A simple spreadsheet is all you need.</div>
-    </div>
-    <div class="tip">
-      <span class="tip-icon">🏠</span>
-      <div class="tip-text"><strong>Housing is Your Biggest Lever</strong>Reduce housing cost and you could shave years off your FIRE date. House hack, rent cheap, or relocate.</div>
-    </div>
-    <div class="tip">
-      <span class="tip-icon">⚡</span>
-      <div class="tip-text"><strong>Increase Income Too</strong>A raise, side hustle, or freelance work boosts savings rate multiplicatively. Both levers matter.</div>
-    </div>
+  <div class="info-box" style="margin-top:16px;">
+    <span class="emoji">📊</span><strong>What is "Real Return"?</strong><br><br>
+    Your investments might grow at 7%/yr, but inflation eats away ~3%/yr of purchasing power. So your <strong>real (inflation-adjusted) return</strong> is roughly 4%. This calculator uses real returns so all numbers are in <strong>today's dollars</strong> — the amounts shown reflect actual purchasing power, not inflated future numbers.
   </div>
-
 </div>
 
 <footer>
-  <p>🔥 FIRE Calculator — For educational purposes only. Past market returns do not guarantee future results.</p>
-  <p style="margin-top:6px;">Assumptions: constant real returns, inflation-adjusted expenses, no sequence-of-returns risk modeled.</p>
+  <p>🔥 Retirement Calculator — For educational purposes only. Past market returns do not guarantee future results.</p>
+  <p style="margin-top:6px;">All values shown in today's dollars (inflation-adjusted). Assumes constant real returns and steady contributions.</p>
 </footer>
 
 <script>
-  // ── Helpers ──
   const $ = id => document.getElementById(id);
   const fmt = (n, d=0) => n >= 1e6
     ? '$' + (n/1e6).toFixed(2) + 'M'
@@ -728,14 +665,22 @@
     : '$' + Math.round(n).toLocaleString();
   const fmtFull = n => '$' + Math.round(n).toLocaleString();
 
-  // ── Chart setup ──
+  let currentMode = 'perpetual';
   let chart;
   const ctx = $('wealthChart').getContext('2d');
 
-  function buildGradient() {
+  function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.mode === mode);
+    });
+    calculate();
+  }
+
+  function buildGradient(color1, color2) {
     const g = ctx.createLinearGradient(0, 0, 0, 300);
-    g.addColorStop(0, 'rgba(255,159,10,0.35)');
-    g.addColorStop(1, 'rgba(255,107,0,0.0)');
+    g.addColorStop(0, color1);
+    g.addColorStop(1, color2);
     return g;
   }
 
@@ -748,7 +693,7 @@
           data: [],
           borderColor: '#ff9f0a',
           borderWidth: 2.5,
-          backgroundColor: buildGradient(),
+          backgroundColor: buildGradient('rgba(255,159,10,0.35)', 'rgba(255,107,0,0.0)'),
           fill: true,
           pointRadius: 0,
           pointHoverRadius: 5,
@@ -756,7 +701,7 @@
           tension: 0.4,
         },
         {
-          label: 'FIRE Target',
+          label: 'Target',
           data: [],
           borderColor: 'rgba(255,204,2,0.5)',
           borderWidth: 1.5,
@@ -787,14 +732,14 @@
         scales: {
           x: {
             grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-            ticks: { color: '#666677', font: { size: 11 }, maxTicksLimit: 8 }
+            ticks: { color: '#666677', font: { size: 11 }, maxTicksLimit: 10 }
           },
           y: {
             grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
             ticks: {
               color: '#666677',
               font: { size: 11 },
-              callback: v => v >= 1e6 ? '$' + (v/1e6).toFixed(1)+'M' : '$'+(v/1e3).toFixed(0)+'K'
+              callback: v => v >= 1e6 ? '$'+(v/1e6).toFixed(1)+'M' : v >= 1e3 ? '$'+(v/1e3).toFixed(0)+'K' : '$'+v
             }
           }
         }
@@ -802,197 +747,250 @@
     });
   }
 
-  // ── Core calculation ──
+  function solveYearsToTarget(curSav, monthlySav, monthlyR, target) {
+    if (target <= 0) return 0;
+    if (curSav >= target) return 0;
+    if (monthlySav <= 0) return Infinity;
+    if (monthlyR <= 0) {
+      return (target - curSav) / monthlySav / 12;
+    }
+    const ratio = (target + monthlySav / monthlyR) / (curSav + monthlySav / monthlyR);
+    if (ratio <= 0) return 0;
+    return Math.log(ratio) / Math.log(1 + monthlyR) / 12;
+  }
+
+  function pvAnnuity(annualExpense, realReturn, years) {
+    if (years <= 0) return 0;
+    if (realReturn <= 0.0001) return annualExpense * years;
+    return annualExpense * (1 - Math.pow(1 + realReturn, -years)) / realReturn;
+  }
+
   function calculate() {
-    const age      = parseFloat($('age').value) || 28;
-    const income   = parseFloat($('income').value) || 0;
-    const expenses = parseFloat($('expenses').value) || 0;
-    const curSav   = parseFloat($('savings').value) || 0;
-    const annRet   = parseFloat($('returnRate').value) / 100;
-    const swrPct   = parseFloat($('swr').value) / 100;
+    const age       = parseFloat($('age').value) || 28;
+    const income    = parseFloat($('income').value) || 0;
+    const expenses  = parseFloat($('expenses').value) || 0;
+    const curSav    = parseFloat($('savings').value) || 0;
+    const annReturn = parseFloat($('returnRate').value) / 100;
+    const inflation = parseFloat($('inflationRate').value) / 100;
+    const lifeExp   = parseFloat($('lifeExp').value) || 85;
 
-    const monthlySav = income - expenses;
-    const savRate    = income > 0 ? (monthlySav / income) * 100 : 0;
-    const fireNum    = (expenses * 12) / swrPct;
-    const monthlyR   = Math.pow(1 + annRet, 1/12) - 1;
+    const monthlySav   = income - expenses;
+    const savRate      = income > 0 ? (monthlySav / income) * 100 : 0;
+    const annualExp    = expenses * 12;
+    const realReturn   = (1 + annReturn) / (1 + inflation) - 1;
+    const monthlyRealR = Math.pow(1 + realReturn, 1/12) - 1;
 
-    // ── Alert ──
+    // Perpetual mode target: live off real returns forever
+    const perpetualTarget = realReturn > 0.001 ? annualExp / realReturn : annualExp * 100;
+
+    // Spend-down target: PV of annuity for (lifeExp - retireAge) years
+    // But retireAge depends on target, and target depends on retireAge...
+    // We iterate: compute target for each possible retirement age
+    const spendYearsToRetire = (() => {
+      // Binary search: find years to retire such that at retirement,
+      // accumulated savings = PV of annuity for remaining years
+      let lo = 0, hi = 100;
+      for (let i = 0; i < 100; i++) {
+        const mid = (lo + hi) / 2;
+        const retAge = age + mid;
+        const retYears = Math.max(lifeExp - retAge, 1);
+        const needed = pvAnnuity(annualExp, realReturn, retYears);
+        const accumulated = curSav * Math.pow(1 + monthlyRealR, mid * 12)
+          + (monthlyRealR > 0
+            ? monthlySav * (Math.pow(1 + monthlyRealR, mid * 12) - 1) / monthlyRealR
+            : monthlySav * mid * 12);
+        if (accumulated >= needed) hi = mid;
+        else lo = mid;
+      }
+      return (lo + hi) / 2;
+    })();
+
+    const spendRetireAge = age + spendYearsToRetire;
+    const spendRetYears = Math.max(lifeExp - spendRetireAge, 1);
+    const spendTarget = pvAnnuity(annualExp, realReturn, spendRetYears);
+
+    // Choose active mode
+    const isPerp = currentMode === 'perpetual';
+    const target = isPerp ? perpetualTarget : spendTarget;
+    const yearsToRetire = isPerp
+      ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget)
+      : spendYearsToRetire;
+    const retireAge = age + yearsToRetire;
+    const progress = target > 0 ? Math.min(curSav / target * 100, 100) : 0;
+
+    // Alert
     const alertEl = $('alert');
     alertEl.className = 'alert';
     alertEl.textContent = '';
-
-    let yearsToFire = null;
     let valid = true;
 
     if (income <= 0) {
       alertEl.className = 'alert warn';
-      alertEl.textContent = '⚠️ Please enter a monthly income greater than $0.';
+      alertEl.textContent = '⚠️ Enter a monthly income greater than $0.';
       valid = false;
     } else if (monthlySav <= 0) {
       alertEl.className = 'alert warn';
-      alertEl.textContent = '⚠️ Your expenses exceed your income. Reduce expenses or increase income to reach FIRE.';
+      alertEl.textContent = '⚠️ Expenses exceed income. Reduce expenses or increase income to retire.';
       valid = false;
-    } else if (curSav >= fireNum) {
+    } else if (realReturn <= 0) {
+      alertEl.className = 'alert warn';
+      alertEl.textContent = '⚠️ Your return rate is lower than inflation. Increase expected return or lower inflation.';
+      valid = false;
+    } else if (curSav >= target) {
       alertEl.className = 'alert info';
-      alertEl.textContent = '🎉 Congratulations! Your current savings already exceed your FIRE number. You\'re financially independent!';
-      yearsToFire = 0;
+      alertEl.textContent = '🎉 Your current savings already exceed your retirement target!';
     }
 
-    // Compute years using compound interest formula: solve for n
-    if (valid && yearsToFire === null) {
-      if (monthlyR === 0) {
-        // no return: simple linear
-        yearsToFire = (fireNum - curSav) / monthlySav / 12;
-      } else {
-        const ratio = (fireNum + monthlySav / monthlyR) / (curSav + monthlySav / monthlyR);
-        if (ratio <= 0) {
-          yearsToFire = 0;
-        } else {
-          const months = Math.log(ratio) / Math.log(1 + monthlyR);
-          yearsToFire = months / 12;
-        }
-      }
-    }
-
-    const retireAge = valid ? age + (yearsToFire || 0) : null;
-    const progress  = fireNum > 0 ? Math.min(curSav / fireNum * 100, 100) : 0;
-
-    // ── Update savings rate ──
+    // Savings rate
     $('savingsRateDisplay').textContent = savRate.toFixed(0) + '%';
-    $('savingsRateBadge').textContent   = 'Saving ' + fmt(Math.max(monthlySav,0)) + '/mo';
-    const msg = savRate >= 70 ? 'Extreme saver! FIRE is right around the corner. 🔥🔥🔥'
-              : savRate >= 50 ? 'Excellent savings rate! You\'re a FIRE superstar. 🔥🔥'
-              : savRate >= 30 ? 'Great savings rate! You\'re on the path to FIRE. 🔥'
-              : savRate >= 15 ? 'Good start. Push savings higher to accelerate FIRE.'
-              : savRate >  0  ? 'Low savings rate. Reduce expenses to speed up your timeline.'
-              :                  'Not saving yet. FIRE requires positive savings.';
-    $('savingsRateMsg').textContent = msg;
+    $('savingsRateBadge').textContent = 'Saving ' + fmt(Math.max(monthlySav, 0)) + '/mo';
+    $('savingsRateMsg').textContent =
+      savRate >= 70 ? 'Extreme saver! Retirement is right around the corner. 🔥🔥🔥'
+      : savRate >= 50 ? 'Excellent! You\'re on the fast track. 🔥🔥'
+      : savRate >= 30 ? 'Great savings rate! Keep it up. 🔥'
+      : savRate >= 15 ? 'Good start — push higher to retire sooner.'
+      : savRate > 0  ? 'Low savings rate. Try cutting expenses.'
+      : 'Not saving yet.';
 
-    // ── Update progress ──
+    // Progress
     $('progressPct').textContent = progress.toFixed(1) + '%';
-    $('progressBar').style.width = progress + '%';
-    $('fireNumSmall').textContent = fmt(fireNum);
+    $('progressBar').style.width = Math.min(progress, 100) + '%';
+    $('targetSmall').textContent = fmt(target);
 
-    // ── Update stat cards ──
-    $('fireNum').textContent = fmt(fireNum);
-    if (!valid && yearsToFire === null) {
-      $('yearsToFire').textContent = '—';
-      $('fireDate').textContent    = '—';
-      $('retireAge').textContent   = '—';
-      $('retireSubtext').textContent = '—';
-    } else if (yearsToFire === 0) {
-      $('yearsToFire').textContent = '0';
-      $('fireDate').textContent    = 'Already there!';
-      $('retireAge').textContent   = age.toFixed(0);
-      $('retireSubtext').textContent = 'You\'re already FI!';
+    // Stat cards
+    $('targetLabel').textContent = isPerp ? 'FIRE Number (Perpetual)' : 'Retirement Nest Egg';
+    $('targetNum').textContent = fmt(target);
+    $('targetSub').textContent = isPerp
+      ? 'Annual expenses ÷ real return (' + (realReturn * 100).toFixed(1) + '%)'
+      : 'Enough to last ' + Math.round(spendRetYears) + ' years in retirement';
+
+    if (!valid) {
+      $('yearsToRetire').textContent = '—';
+      $('yearsToRetireSub').textContent = '—';
+      $('retireAge').textContent = '—';
+      $('retireAgeSub').textContent = '—';
+    } else if (yearsToRetire <= 0 || curSav >= target) {
+      $('yearsToRetire').textContent = '0';
+      $('yearsToRetireSub').textContent = 'Already there!';
+      $('retireAge').textContent = age.toFixed(0);
+      $('retireAgeSub').textContent = 'You can retire now!';
+    } else if (!isFinite(yearsToRetire)) {
+      $('yearsToRetire').textContent = '∞';
+      $('yearsToRetireSub').textContent = 'Not reachable';
+      $('retireAge').textContent = '—';
+      $('retireAgeSub').textContent = 'Increase savings';
     } else {
-      const y = yearsToFire.toFixed(1);
-      const m = Math.round((yearsToFire % 1) * 12);
-      const yInt = Math.floor(yearsToFire);
-      $('yearsToFire').textContent = y;
-      $('fireDate').textContent    = yInt + ' yrs ' + (m > 0 ? m + ' mo' : '');
-      $('retireAge').textContent   = retireAge.toFixed(1);
-      $('retireSubtext').textContent = retireAge < 40 ? 'Lean FIRE territory! 🔥'
-                                      : retireAge < 50 ? 'Excellent early retirement!'
-                                      : retireAge < 60 ? 'Early retirement achieved!'
-                                      : 'On track for retirement.';
+      const yInt = Math.floor(yearsToRetire);
+      const mRem = Math.round((yearsToRetire % 1) * 12);
+      $('yearsToRetire').textContent = yearsToRetire.toFixed(1);
+      $('yearsToRetireSub').textContent = yInt + ' yrs' + (mRem > 0 ? ' ' + mRem + ' mo' : '');
+      $('retireAge').textContent = retireAge.toFixed(1);
+      $('retireAgeSub').textContent =
+        retireAge < 40 ? 'Super early retirement! 🔥'
+        : retireAge < 50 ? 'Excellent early retirement!'
+        : retireAge < 60 ? 'Early retirement!'
+        : retireAge < 65 ? 'On track for retirement.'
+        : 'Consider increasing savings.';
     }
-    $('monthlySavings').textContent = fmt(Math.max(monthlySav, 0));
-    $('monthlySavingsNote').textContent = savRate > 0
-      ? savRate.toFixed(0) + '% savings rate'
-      : 'Increase savings to progress';
 
-    // ── Build chart data ──
-    buildChartData(curSav, monthlySav, monthlyR, fireNum, yearsToFire, age, valid);
+    // Comparison table
+    const perpYears = solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget);
+    $('cmpTargetA').textContent = fmt(perpetualTarget);
+    $('cmpTargetB').textContent = fmt(spendTarget);
+    $('cmpYearsA').textContent = valid && isFinite(perpYears) ? perpYears.toFixed(1) + ' yrs' : '—';
+    $('cmpYearsB').textContent = valid && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' yrs' : '—';
+    $('cmpAgeA').textContent = valid && isFinite(perpYears) ? (age + perpYears).toFixed(1) : '—';
+    $('cmpAgeB').textContent = valid && isFinite(spendYearsToRetire) ? spendRetireAge.toFixed(1) : '—';
+    $('cmpLeftover').textContent = '$0 at age ' + lifeExp;
 
-    // ── Milestones ──
-    buildMilestones(curSav, fireNum, monthlySav, monthlyR, age);
+    // Chart
+    buildChart(curSav, monthlySav, monthlyRealR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn);
+
+    // Legend
+    $('chartLegend').innerHTML = isPerp
+      ? '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio</span>'
+        + '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(255,204,2,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--fire3);"></span>FIRE Target</span>'
+      : '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio (accumulate → spend)</span>'
+        + '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(96,165,250,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--blue);"></span>Retirement Nest Egg</span>';
   }
 
-  function buildChartData(curSav, monthlySav, monthlyR, fireNum, yearsToFire, age, valid) {
-    const years = valid && yearsToFire !== null
-      ? Math.min(Math.ceil(yearsToFire) + 5, 60)
-      : 40;
+  function buildChart(curSav, monthlySav, monthlyR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn) {
+    if (!valid || !isFinite(yearsToRetire)) {
+      chart.data.labels = [];
+      chart.data.datasets[0].data = [];
+      chart.data.datasets[1].data = [];
+      chart.update('active');
+      return;
+    }
 
     const labels = [];
     const portfolio = [];
-    const target = [];
-    let bal = curSav;
+    const targetLine = [];
 
-    for (let m = 0; m <= years * 12; m += 3) {
-      const yr = m / 12;
-      labels.push((age + yr).toFixed(0) + ' yrs');
-      bal = curSav * Math.pow(1 + monthlyR, m) + (monthlyR > 0
-        ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
-        : monthlySav * m);
-      portfolio.push(Math.max(bal, 0));
-      target.push(fireNum);
+    if (isPerp) {
+      const totalYears = Math.min(Math.ceil(yearsToRetire) + 10, 60);
+      let bal = curSav;
+      for (let m = 0; m <= totalYears * 12; m += 3) {
+        labels.push('Age ' + (age + m / 12).toFixed(0));
+        bal = curSav * Math.pow(1 + monthlyR, m)
+          + (monthlyR > 0
+            ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
+            : monthlySav * m);
+        portfolio.push(Math.max(bal, 0));
+        targetLine.push(target);
+      }
+      chart.data.datasets[1].borderColor = 'rgba(255,204,2,0.5)';
+    } else {
+      // Accumulation phase
+      const retireMonth = Math.ceil(yearsToRetire * 12);
+      let bal = curSav;
+      for (let m = 0; m <= retireMonth; m += 3) {
+        labels.push('Age ' + (age + m / 12).toFixed(0));
+        bal = curSav * Math.pow(1 + monthlyR, m)
+          + (monthlyR > 0
+            ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
+            : monthlySav * m);
+        portfolio.push(Math.max(bal, 0));
+        targetLine.push(target);
+      }
+
+      // Drawdown phase
+      const retireAge = age + yearsToRetire;
+      const monthsInRetirement = Math.ceil((lifeExp - retireAge) * 12);
+      const monthlyExpense = annualExp / 12;
+      let drawBal = bal;
+      for (let m = 3; m <= monthsInRetirement; m += 3) {
+        labels.push('Age ' + (retireAge + m / 12).toFixed(0));
+        for (let k = 0; k < 3; k++) {
+          drawBal = drawBal * (1 + monthlyR) - monthlyExpense;
+        }
+        portfolio.push(Math.max(drawBal, 0));
+        targetLine.push(target);
+      }
+      chart.data.datasets[1].borderColor = 'rgba(96,165,250,0.5)';
     }
 
     chart.data.labels = labels;
     chart.data.datasets[0].data = portfolio;
-    chart.data.datasets[1].data = target;
+    chart.data.datasets[1].data = targetLine;
     chart.update('active');
   }
 
-  function buildMilestones(curSav, fireNum, monthlySav, monthlyR, age) {
-    const milestones = [
-      { pct: 10,  label: '10% — Getting started' },
-      { pct: 25,  label: '25% — One quarter there' },
-      { pct: 50,  label: '50% — Halfway to freedom' },
-      { pct: 75,  label: '75% — In the home stretch' },
-      { pct: 90,  label: '90% — Almost there!' },
-      { pct: 100, label: '100% — FIRE achieved! 🔥' },
-    ];
-    const curPct = fireNum > 0 ? (curSav / fireNum * 100) : 0;
-    const list = $('milestoneList');
-    list.innerHTML = '';
-    milestones.forEach(m => {
-      const target = fireNum * m.pct / 100;
-      let ageLabel = '';
-      if (monthlySav > 0 && monthlyR >= 0) {
-        const ratio = (target + (monthlyR > 0 ? monthlySav / monthlyR : 0))
-                    / (curSav  + (monthlyR > 0 ? monthlySav / monthlyR : 0));
-        if (ratio > 0 && ratio !== Infinity) {
-          const months = monthlyR > 0
-            ? Math.log(ratio) / Math.log(1 + monthlyR)
-            : (target - curSav) / monthlySav;
-          if (months >= 0) {
-            const ageAt = age + months / 12;
-            ageLabel = 'Age ' + ageAt.toFixed(0);
-          }
-        }
-      }
-      const done = curPct >= m.pct;
-      const el = document.createElement('div');
-      el.className = 'milestone-item' + (done ? ' done' : '');
-      el.innerHTML = `
-        <div class="m-dot"></div>
-        <div class="m-name">${m.label}</div>
-        <div style="margin-left:auto;text-align:right;">
-          <div class="m-pct">${done ? '✓ Done' : ageLabel}</div>
-          <div style="font-size:0.7rem;color:var(--muted)">${fmt(target)}</div>
-        </div>`;
-      list.appendChild(el);
-    });
-  }
-
-  // ── Slider labels ──
+  // Slider labels
   $('returnRate').addEventListener('input', function() {
     $('returnVal').textContent = this.value + '%';
     calculate();
   });
-  $('swr').addEventListener('input', function() {
-    $('swrVal').textContent = this.value + '%';
+  $('inflationRate').addEventListener('input', function() {
+    $('inflationVal').textContent = this.value + '%';
     calculate();
   });
 
-  // ── All inputs ──
-  ['age','income','expenses','savings'].forEach(id => {
+  // All inputs
+  ['age', 'income', 'expenses', 'savings', 'lifeExp'].forEach(id => {
     $(id).addEventListener('input', calculate);
   });
 
-  // ── Init ──
   initChart();
   calculate();
 </script>
