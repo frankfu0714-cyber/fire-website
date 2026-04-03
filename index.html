@@ -795,7 +795,7 @@
             <label data-i18n="lblReturn">Expected Annual Return</label>
             <span class="range-val" id="returnVal">7%</span>
           </div>
-          <input type="range" id="returnRate" min="1" max="100" step="0.5" value="7" />
+          <input type="range" id="returnRate" min="0" max="100" step="0.5" value="7" />
           <div class="note" data-i18n="noteReturn"><strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.</div>
         </div>
 
@@ -1049,7 +1049,8 @@
       considerMore: 'Consider increasing savings.',
       now: '(now!)',
       atAge: 'at age',
-      alertReturn: '⚠️ Return rate is lower than inflation. Increase return or lower inflation.',
+      alertReturn: '⚠️ Return is below inflation — your money loses value over time. "Never Run Out" mode requires positive real return. Try "Spend It All" mode instead.',
+      alertReturnShort: 'Real return ≤ 0 — not possible in perpetual mode',
       alertExpenses: '⚠️ Enter monthly expenses greater than $0.',
       alertRetireNow: '🎉 You can retire now! Your savings ({0}) exceed the target ({1}).',
       alertNeedMore: '💡 You need {0} more to retire. Add monthly income to see how long it will take.',
@@ -1149,7 +1150,8 @@
       considerMore: '考慮增加存款。',
       now: '（現在！）',
       atAge: '在',
-      alertReturn: '⚠️ 報酬率低於通膨率。請提高報酬或降低通膨。',
+      alertReturn: '⚠️ 報酬低於通膨 — 你的錢會持續貶值。「永遠花不完」模式需要正實質報酬。可以試試「花到歸零」模式。',
+      alertReturnShort: '實質報酬 ≤ 0 — 永續模式不可行',
       alertExpenses: '⚠️ 請輸入大於 $0 的每月支出。',
       alertRetireNow: '🎉 你現在就可以退休了！你的存款（{0}）超過目標（{1}）。',
       alertNeedMore: '💡 你還需要 {0} 才能退休。填入每月收入來計算需要多久。',
@@ -1324,8 +1326,9 @@
 
   function pvAnnuity(annualExpense, realReturn, years) {
     if (years <= 0) return 0;
-    if (realReturn <= 0.0001) return annualExpense * years;
-    return annualExpense * (1 - Math.pow(1 + realReturn, -years)) / realReturn;
+    if (Math.abs(realReturn) < 0.0001) return annualExpense * years;
+    const pv = annualExpense * (1 - Math.pow(1 + realReturn, -years)) / realReturn;
+    return Math.max(pv, annualExpense * years);
   }
 
   function calculate() {
@@ -1347,7 +1350,7 @@
     const hasIncome    = income > 0 && income > expenses;
 
     // Perpetual target: live off real returns forever
-    const perpetualTarget = realReturn > 0.001 ? annualExp / realReturn : annualExp * 100;
+    const perpetualTarget = realReturn > 0.001 ? annualExp / realReturn : Infinity;
 
     // Spend-down target: if retiring NOW at current age
     const spendRetYearsNow = Math.max(lifeExp - age, 1);
@@ -1393,7 +1396,7 @@
 
     const retireAge = age + (isFinite(yearsToRetire) ? yearsToRetire : 0);
     const progress = target > 0 ? Math.min(curSav / target * 100, 100) : 0;
-    const gap = Math.max(target - curSav, 0);
+    const gap = isFinite(target) ? Math.max(target - curSav, 0) : Infinity;
 
     // Annual passive income from current savings
     const annualPassiveIncome = curSav * realReturn;
@@ -1404,10 +1407,7 @@
     alertEl.className = 'alert';
     alertEl.textContent = '';
 
-    if (realReturn <= 0) {
-      alertEl.className = 'alert warn';
-      alertEl.textContent = t('alertReturn');
-    } else if (expenses <= 0) {
+    if (expenses <= 0) {
       alertEl.className = 'alert warn';
       alertEl.textContent = t('alertExpenses');
     } else if (canRetireNow) {
@@ -1417,8 +1417,13 @@
       alertEl.className = 'alert warn';
       alertEl.textContent = tFmt('alertNeedMore', fmt(gap));
     }
+    if (realReturn <= 0 && expenses > 0) {
+      const warnEl = alertEl.className === 'alert' ? alertEl : document.createElement('div');
+      alertEl.className = 'alert warn';
+      alertEl.textContent = t('alertReturn');
+    }
 
-    const valid = expenses > 0 && realReturn > 0;
+    const valid = expenses > 0;
 
     // Summary card (top-right)
     if (hasIncome) {
@@ -1443,15 +1448,16 @@
     }
 
     // Progress
-    $('progressPct').textContent = progress.toFixed(1) + '%';
-    $('progressBar').style.width = Math.min(progress, 100) + '%';
-    $('targetSmall').textContent = fmt(target);
+    const targetFinite = isFinite(target);
+    $('progressPct').textContent = targetFinite ? progress.toFixed(1) + '%' : '—';
+    $('progressBar').style.width = targetFinite ? Math.min(progress, 100) + '%' : '0%';
+    $('targetSmall').textContent = targetFinite ? fmt(target) : '∞';
 
     // Stat cards
     $('targetLabel').textContent = isPerp ? t('fireNum') : t('nestEgg');
-    $('targetNum').textContent = valid ? fmt(target) : '—';
+    $('targetNum').textContent = valid ? (targetFinite ? fmt(target) : '∞') : '—';
     $('targetSub').textContent = isPerp
-      ? t('annExpDiv') + ' (' + (realReturn * 100).toFixed(1) + '%)'
+      ? (realReturn > 0.001 ? t('annExpDiv') + ' (' + (realReturn * 100).toFixed(1) + '%)' : t('alertReturnShort'))
       : tFmt('enoughFor', Math.round(spendRetYears));
 
     if (!valid) {
@@ -1466,7 +1472,7 @@
       $('retireAgeSub').textContent = t('retireNow');
     } else if (!hasIncome) {
       $('yearsToRetire').textContent = '—';
-      $('yearsToRetireSub').textContent = tFmt('needMore', fmt(gap));
+      $('yearsToRetireSub').textContent = isFinite(gap) ? tFmt('needMore', fmt(gap)) : t('alertReturnShort');
       $('retireAge').textContent = '—';
       $('retireAgeSub').textContent = t('addIncome');
     } else if (!isFinite(yearsToRetire)) {
@@ -1492,7 +1498,7 @@
     const perpYearsForCmp = hasIncome ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget, realIncGrowth) : Infinity;
     const canRetirePerp = curSav >= perpetualTarget;
     const canRetireSpend = curSav >= spendTargetNow;
-    $('cmpTargetA').textContent = valid ? fmt(perpetualTarget) : '—';
+    $('cmpTargetA').textContent = valid ? (isFinite(perpetualTarget) ? fmt(perpetualTarget) : '∞') : '—';
     $('cmpTargetB').textContent = valid ? fmt(hasIncome ? spendTarget : spendTargetNow) : '—';
     $('cmpYearsA').textContent = canRetirePerp ? '0 ' + t('now') : (hasIncome && isFinite(perpYearsForCmp) ? perpYearsForCmp.toFixed(1) + ' ' + t('yrs') : '—');
     $('cmpYearsB').textContent = canRetireSpend ? '0 ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' ' + t('yrs') : '—');
