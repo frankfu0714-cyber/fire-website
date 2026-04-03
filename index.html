@@ -661,10 +661,18 @@
 
       <div style="margin-top:14px;" class="field">
         <label data-i18n="lblExpenses">Monthly Expenses</label>
-        <div class="input-wrap has-prefix">
-          <span class="prefix">$</span>
-          <input type="number" id="expenses" value="4200" min="0" />
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="input-wrap has-prefix" style="flex:1;">
+            <span class="prefix">$</span>
+            <input type="number" id="expensesBase" value="4200" min="0" />
+          </div>
+          <span style="color:var(--muted);font-size:0.8rem;font-weight:600;flex-shrink:0;">×</span>
+          <input type="number" id="expensesMult" value="1" min="0.1" max="5" step="0.05" style="width:64px;text-align:center;padding:11px 6px;font-size:0.9rem;border-radius:10px;" />
+          <span style="color:var(--muted);font-size:0.78rem;flex-shrink:0;">=</span>
+          <span id="expensesFinal" style="font-size:0.9rem;font-weight:700;color:var(--fire2);min-width:70px;text-align:right;flex-shrink:0;">$4,200</span>
         </div>
+        <div class="note" data-i18n="noteExpMult">Set multiplier > 1 for a safety buffer (e.g. ×1.1 = 10% extra for flexibility).</div>
+        <input type="hidden" id="expenses" value="4200" />
         <button class="expense-toggle" onclick="toggleExpensePanel()">
           <span class="arrow" id="expArrow">▶</span>
           <span data-i18n="expToggle">Break down expenses</span>
@@ -947,6 +955,7 @@
       expToggle: 'Break down expenses',
       expAdd: '+ Add item',
       expTotal: 'Total',
+      noteExpMult: 'Set multiplier > 1 for a safety buffer (e.g. ×1.1 = 10% extra for flexibility).',
     },
     zh: {
       title: '退休計算機',
@@ -1037,6 +1046,7 @@
       expToggle: '展開支出明細',
       expAdd: '+ 新增項目',
       expTotal: '合計',
+      noteExpMult: '倍數設 > 1 可預留彈性空間（例如 ×1.1 = 多 10% 備用金）。',
     }
   };
 
@@ -1469,9 +1479,18 @@
   ['age', 'income', 'savings', 'lifeExp'].forEach(id => {
     $(id).addEventListener('input', calculate);
   });
-  $('expenses').addEventListener('input', function() {
+  function syncExpenses() {
+    const base = parseFloat($('expensesBase').value) || 0;
+    const mult = parseFloat($('expensesMult').value) || 1;
+    const final_ = Math.round(base * mult);
+    $('expenses').value = final_;
+    $('expensesFinal').textContent = '$' + final_.toLocaleString();
+    calculate();
+  }
+
+  $('expensesBase').addEventListener('input', function() {
     if (expensePanelOpen && expenseItems.length > 0) {
-      const total = expenseItems.reduce((s, item) => s + item.amount, 0);
+      const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
       const typed = parseFloat(this.value) || 0;
       if (typed !== total) {
         expenseItems = [];
@@ -1481,8 +1500,9 @@
         $('expenseList').innerHTML = '';
       }
     }
-    calculate();
+    syncExpenses();
   });
+  $('expensesMult').addEventListener('input', syncExpenses);
 
   // --- Expense Breakdown ---
   const DEFAULT_EXPENSES_EN = [
@@ -1582,14 +1602,14 @@
     const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
     $('expenseTotal').textContent = '$' + total.toLocaleString();
     if (expensePanelOpen) {
-      $('expenses').value = total;
-      calculate();
+      $('expensesBase').value = total;
+      syncExpenses();
     }
   }
 
   initChart();
   updateStaticText();
-  calculate();
+  syncExpenses();
 </script>
 </body>
 </html>
