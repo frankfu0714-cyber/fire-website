@@ -457,13 +457,6 @@
           </div>
         </div>
         <div class="field">
-          <label>Monthly Income (after tax)</label>
-          <div class="input-wrap has-prefix">
-            <span class="prefix">$</span>
-            <input type="number" id="income" value="7000" min="0" />
-          </div>
-        </div>
-        <div class="field">
           <label>Monthly Expenses</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
@@ -476,6 +469,14 @@
             <span class="prefix">$</span>
             <input type="number" id="savings" value="45000" min="0" />
           </div>
+        </div>
+        <div class="field">
+          <label>Monthly Income (optional — $0 if not working)</label>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="income" value="7000" min="0" />
+          </div>
+          <div class="note">Leave at $0 if you just want to know how much you need to retire. Only needed to calculate "years until retirement".</div>
         </div>
       </div>
 
@@ -515,13 +516,13 @@
 
     <!-- Right column: summary -->
     <div style="display:flex;flex-direction:column;gap:14px;">
-      <div class="card" style="flex:1;">
-        <div class="card-title">Savings Rate</div>
+      <div class="card" style="flex:1;" id="summaryCard">
+        <div class="card-title" id="summaryTitle">Savings Rate</div>
         <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-          <div id="savingsRateDisplay" class="progress-pct">40%</div>
+          <div id="summaryBigNum" class="progress-pct">40%</div>
           <div>
-            <div class="rate-badge"><span class="rate-dot"></span><span id="savingsRateBadge">Saving $2,800/mo</span></div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;" id="savingsRateMsg"></div>
+            <div class="rate-badge"><span class="rate-dot"></span><span id="summaryBadge">Saving $2,800/mo</span></div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;" id="summaryMsg"></div>
           </div>
         </div>
       </div>
@@ -774,21 +775,23 @@
     const inflation = parseFloat($('inflationRate').value) / 100;
     const lifeExp   = parseFloat($('lifeExp').value) || 85;
 
-    const monthlySav   = income - expenses;
+    const monthlySav   = Math.max(income - expenses, 0);
     const savRate      = income > 0 ? (monthlySav / income) * 100 : 0;
     const annualExp    = expenses * 12;
     const realReturn   = (1 + annReturn) / (1 + inflation) - 1;
     const monthlyRealR = Math.pow(1 + realReturn, 1/12) - 1;
+    const hasIncome    = income > 0 && income > expenses;
 
-    // Perpetual mode target: live off real returns forever
+    // Perpetual target: live off real returns forever
     const perpetualTarget = realReturn > 0.001 ? annualExp / realReturn : annualExp * 100;
 
-    // Spend-down target: PV of annuity for (lifeExp - retireAge) years
-    // But retireAge depends on target, and target depends on retireAge...
-    // We iterate: compute target for each possible retirement age
-    const spendYearsToRetire = (() => {
-      // Binary search: find years to retire such that at retirement,
-      // accumulated savings = PV of annuity for remaining years
+    // Spend-down target: if retiring NOW at current age
+    const spendRetYearsNow = Math.max(lifeExp - age, 1);
+    const spendTargetNow = pvAnnuity(annualExp, realReturn, spendRetYearsNow);
+
+    // Spend-down with accumulation: binary search for retirement age
+    let spendYearsToRetire = 0;
+    if (hasIncome) {
       let lo = 0, hi = 100;
       for (let i = 0; i < 100; i++) {
         const mid = (lo + hi) / 2;
@@ -802,55 +805,79 @@
         if (accumulated >= needed) hi = mid;
         else lo = mid;
       }
-      return (lo + hi) / 2;
-    })();
+      spendYearsToRetire = (lo + hi) / 2;
+    }
 
     const spendRetireAge = age + spendYearsToRetire;
-    const spendRetYears = Math.max(lifeExp - spendRetireAge, 1);
-    const spendTarget = pvAnnuity(annualExp, realReturn, spendRetYears);
+    const spendRetYears = hasIncome ? Math.max(lifeExp - spendRetireAge, 1) : spendRetYearsNow;
+    const spendTarget = hasIncome ? pvAnnuity(annualExp, realReturn, spendRetYears) : spendTargetNow;
 
     // Choose active mode
     const isPerp = currentMode === 'perpetual';
     const target = isPerp ? perpetualTarget : spendTarget;
-    const yearsToRetire = isPerp
-      ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget)
-      : spendYearsToRetire;
-    const retireAge = age + yearsToRetire;
+    const canRetireNow = curSav >= target;
+
+    let yearsToRetire;
+    if (canRetireNow) {
+      yearsToRetire = 0;
+    } else if (hasIncome) {
+      yearsToRetire = isPerp
+        ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget)
+        : spendYearsToRetire;
+    } else {
+      yearsToRetire = Infinity;
+    }
+
+    const retireAge = age + (isFinite(yearsToRetire) ? yearsToRetire : 0);
     const progress = target > 0 ? Math.min(curSav / target * 100, 100) : 0;
+    const gap = Math.max(target - curSav, 0);
+
+    // Annual passive income from current savings
+    const annualPassiveIncome = curSav * realReturn;
+    const monthlyPassiveIncome = annualPassiveIncome / 12;
 
     // Alert
     const alertEl = $('alert');
     alertEl.className = 'alert';
     alertEl.textContent = '';
-    let valid = true;
 
-    if (income <= 0) {
+    if (realReturn <= 0) {
       alertEl.className = 'alert warn';
-      alertEl.textContent = '⚠️ Enter a monthly income greater than $0.';
-      valid = false;
-    } else if (monthlySav <= 0) {
+      alertEl.textContent = '⚠️ Return rate is lower than inflation. Increase return or lower inflation.';
+    } else if (expenses <= 0) {
       alertEl.className = 'alert warn';
-      alertEl.textContent = '⚠️ Expenses exceed income. Reduce expenses or increase income to retire.';
-      valid = false;
-    } else if (realReturn <= 0) {
-      alertEl.className = 'alert warn';
-      alertEl.textContent = '⚠️ Your return rate is lower than inflation. Increase expected return or lower inflation.';
-      valid = false;
-    } else if (curSav >= target) {
+      alertEl.textContent = '⚠️ Enter monthly expenses greater than $0.';
+    } else if (canRetireNow) {
       alertEl.className = 'alert info';
-      alertEl.textContent = '🎉 Your current savings already exceed your retirement target!';
+      alertEl.textContent = '🎉 You can retire now! Your savings (' + fmt(curSav) + ') exceed the target (' + fmt(target) + ').';
+    } else if (!hasIncome) {
+      alertEl.className = 'alert warn';
+      alertEl.textContent = '💡 You need ' + fmt(gap) + ' more to retire. Add monthly income to see how long it will take.';
     }
 
-    // Savings rate
-    $('savingsRateDisplay').textContent = savRate.toFixed(0) + '%';
-    $('savingsRateBadge').textContent = 'Saving ' + fmt(Math.max(monthlySav, 0)) + '/mo';
-    $('savingsRateMsg').textContent =
-      savRate >= 70 ? 'Extreme saver! Retirement is right around the corner. 🔥🔥🔥'
-      : savRate >= 50 ? 'Excellent! You\'re on the fast track. 🔥🔥'
-      : savRate >= 30 ? 'Great savings rate! Keep it up. 🔥'
-      : savRate >= 15 ? 'Good start — push higher to retire sooner.'
-      : savRate > 0  ? 'Low savings rate. Try cutting expenses.'
-      : 'Not saving yet.';
+    const valid = expenses > 0 && realReturn > 0;
+
+    // Summary card (top-right)
+    if (hasIncome) {
+      $('summaryTitle').textContent = 'Savings Rate';
+      $('summaryBigNum').textContent = savRate.toFixed(0) + '%';
+      $('summaryBadge').textContent = 'Saving ' + fmt(monthlySav) + '/mo';
+      $('summaryMsg').textContent =
+        savRate >= 70 ? 'Extreme saver! Retirement is close. 🔥🔥🔥'
+        : savRate >= 50 ? 'Excellent! Fast track to retirement. 🔥🔥'
+        : savRate >= 30 ? 'Great savings rate! 🔥'
+        : savRate >= 15 ? 'Good start — push higher to retire sooner.'
+        : 'Low savings rate. Try cutting expenses.';
+    } else {
+      $('summaryTitle').textContent = 'Passive Income from Savings';
+      $('summaryBigNum').textContent = fmt(Math.max(monthlyPassiveIncome, 0)) + '/mo';
+      $('summaryBadge').textContent = fmt(Math.max(annualPassiveIncome, 0)) + '/yr at ' + (realReturn * 100).toFixed(1) + '% real return';
+      if (canRetireNow) {
+        $('summaryMsg').textContent = 'Covers your ' + fmt(expenses) + '/mo expenses — you\'re free! 🔥';
+      } else {
+        $('summaryMsg').textContent = 'Need ' + fmt(expenses) + '/mo but only generating ' + fmt(Math.max(monthlyPassiveIncome, 0)) + '/mo.';
+      }
+    }
 
     // Progress
     $('progressPct').textContent = progress.toFixed(1) + '%';
@@ -859,7 +886,7 @@
 
     // Stat cards
     $('targetLabel').textContent = isPerp ? 'FIRE Number (Perpetual)' : 'Retirement Nest Egg';
-    $('targetNum').textContent = fmt(target);
+    $('targetNum').textContent = valid ? fmt(target) : '—';
     $('targetSub').textContent = isPerp
       ? 'Annual expenses ÷ real return (' + (realReturn * 100).toFixed(1) + '%)'
       : 'Enough to last ' + Math.round(spendRetYears) + ' years in retirement';
@@ -869,16 +896,21 @@
       $('yearsToRetireSub').textContent = '—';
       $('retireAge').textContent = '—';
       $('retireAgeSub').textContent = '—';
-    } else if (yearsToRetire <= 0 || curSav >= target) {
+    } else if (canRetireNow) {
       $('yearsToRetire').textContent = '0';
       $('yearsToRetireSub').textContent = 'Already there!';
       $('retireAge').textContent = age.toFixed(0);
-      $('retireAgeSub').textContent = 'You can retire now!';
+      $('retireAgeSub').textContent = 'You can retire now! 🎉';
+    } else if (!hasIncome) {
+      $('yearsToRetire').textContent = '—';
+      $('yearsToRetireSub').textContent = 'Need ' + fmt(gap) + ' more';
+      $('retireAge').textContent = '—';
+      $('retireAgeSub').textContent = 'Add income to calculate';
     } else if (!isFinite(yearsToRetire)) {
       $('yearsToRetire').textContent = '∞';
       $('yearsToRetireSub').textContent = 'Not reachable';
       $('retireAge').textContent = '—';
-      $('retireAgeSub').textContent = 'Increase savings';
+      $('retireAgeSub').textContent = 'Increase savings rate';
     } else {
       const yInt = Math.floor(yearsToRetire);
       const mRem = Math.round((yearsToRetire % 1) * 12);
@@ -894,28 +926,36 @@
     }
 
     // Comparison table
-    const perpYears = solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget);
-    $('cmpTargetA').textContent = fmt(perpetualTarget);
-    $('cmpTargetB').textContent = fmt(spendTarget);
-    $('cmpYearsA').textContent = valid && isFinite(perpYears) ? perpYears.toFixed(1) + ' yrs' : '—';
-    $('cmpYearsB').textContent = valid && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' yrs' : '—';
-    $('cmpAgeA').textContent = valid && isFinite(perpYears) ? (age + perpYears).toFixed(1) : '—';
-    $('cmpAgeB').textContent = valid && isFinite(spendYearsToRetire) ? spendRetireAge.toFixed(1) : '—';
+    const perpYearsForCmp = hasIncome ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget) : Infinity;
+    const canRetirePerp = curSav >= perpetualTarget;
+    const canRetireSpend = curSav >= spendTargetNow;
+    $('cmpTargetA').textContent = valid ? fmt(perpetualTarget) : '—';
+    $('cmpTargetB').textContent = valid ? fmt(hasIncome ? spendTarget : spendTargetNow) : '—';
+    $('cmpYearsA').textContent = canRetirePerp ? '0 (now!)' : (hasIncome && isFinite(perpYearsForCmp) ? perpYearsForCmp.toFixed(1) + ' yrs' : '—');
+    $('cmpYearsB').textContent = canRetireSpend ? '0 (now!)' : (hasIncome && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' yrs' : '—');
+    $('cmpAgeA').textContent = canRetirePerp ? age.toFixed(0) + ' (now!)' : (hasIncome && isFinite(perpYearsForCmp) ? (age + perpYearsForCmp).toFixed(1) : '—');
+    $('cmpAgeB').textContent = canRetireSpend ? age.toFixed(0) + ' (now!)' : (hasIncome && isFinite(spendYearsToRetire) ? spendRetireAge.toFixed(1) : '—');
     $('cmpLeftover').textContent = '$0 at age ' + lifeExp;
 
     // Chart
-    buildChart(curSav, monthlySav, monthlyRealR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn);
+    buildChart(curSav, monthlySav, monthlyRealR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome);
 
     // Legend
-    $('chartLegend').innerHTML = isPerp
-      ? '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio</span>'
-        + '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(255,204,2,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--fire3);"></span>FIRE Target</span>'
-      : '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio (accumulate → spend)</span>'
-        + '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(96,165,250,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--blue);"></span>Retirement Nest Egg</span>';
+    if (canRetireNow && !hasIncome) {
+      $('chartLegend').innerHTML = isPerp
+        ? '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio (living off returns)</span>'
+        : '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio (spending down)</span>';
+    } else {
+      $('chartLegend').innerHTML = isPerp
+        ? '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio</span>'
+          + '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(255,204,2,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--fire3);"></span>FIRE Target</span>'
+        : '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio</span>'
+          + '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(96,165,250,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--blue);"></span>Retirement Nest Egg</span>';
+    }
   }
 
-  function buildChart(curSav, monthlySav, monthlyR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn) {
-    if (!valid || !isFinite(yearsToRetire)) {
+  function buildChart(curSav, monthlySav, monthlyR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome) {
+    if (!valid) {
       chart.data.labels = [];
       chart.data.datasets[0].data = [];
       chart.data.datasets[1].data = [];
@@ -926,13 +966,44 @@
     const labels = [];
     const portfolio = [];
     const targetLine = [];
+    const monthlyExpense = annualExp / 12;
 
-    if (isPerp) {
-      const totalYears = Math.min(Math.ceil(yearsToRetire) + 10, 60);
+    if (canRetireNow && isPerp) {
+      // Already can retire perpetually: show portfolio staying flat (living off returns)
+      const showYears = 30;
+      for (let m = 0; m <= showYears * 12; m += 3) {
+        labels.push('Age ' + (age + m / 12).toFixed(0));
+        portfolio.push(curSav);
+        targetLine.push(target);
+      }
+      chart.data.datasets[1].borderColor = 'rgba(255,204,2,0.5)';
+    } else if (canRetireNow && !isPerp) {
+      // Already can retire spend-down: show drawdown from now
+      const monthsLeft = Math.ceil((lifeExp - age) * 12);
       let bal = curSav;
+      for (let m = 0; m <= monthsLeft; m += 3) {
+        labels.push('Age ' + (age + m / 12).toFixed(0));
+        portfolio.push(Math.max(bal, 0));
+        targetLine.push(target);
+        for (let k = 0; k < 3; k++) {
+          bal = bal * (1 + monthlyR) - monthlyExpense;
+        }
+      }
+      chart.data.datasets[1].borderColor = 'rgba(96,165,250,0.5)';
+    } else if (!hasIncome) {
+      // No income, not enough: show current savings vs target
+      labels.push('Now');
+      portfolio.push(curSav);
+      targetLine.push(target);
+      labels.push('Target');
+      portfolio.push(curSav);
+      targetLine.push(target);
+      chart.data.datasets[1].borderColor = isPerp ? 'rgba(255,204,2,0.5)' : 'rgba(96,165,250,0.5)';
+    } else if (isPerp) {
+      const totalYears = Math.min(Math.ceil(yearsToRetire) + 10, 60);
       for (let m = 0; m <= totalYears * 12; m += 3) {
         labels.push('Age ' + (age + m / 12).toFixed(0));
-        bal = curSav * Math.pow(1 + monthlyR, m)
+        const bal = curSav * Math.pow(1 + monthlyR, m)
           + (monthlyR > 0
             ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
             : monthlySav * m);
@@ -953,11 +1024,9 @@
         portfolio.push(Math.max(bal, 0));
         targetLine.push(target);
       }
-
       // Drawdown phase
       const retireAge = age + yearsToRetire;
       const monthsInRetirement = Math.ceil((lifeExp - retireAge) * 12);
-      const monthlyExpense = annualExp / 12;
       let drawBal = bal;
       for (let m = 3; m <= monthsInRetirement; m += 3) {
         labels.push('Age ' + (retireAge + m / 12).toFixed(0));
