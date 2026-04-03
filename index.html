@@ -535,6 +535,61 @@
     }
     .expense-row .del-btn:hover { color: var(--danger); background: rgba(255,77,77,0.1); }
 
+    /* Household selector */
+    .hh-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    .hh-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .hh-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+    .hh-btn.active {
+      background: rgba(255,107,0,0.12);
+      border-color: rgba(255,107,0,0.3);
+      color: var(--fire2);
+    }
+    .hh-kids-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hh-kids-wrap input {
+      width: 42px;
+      padding: 6px 4px;
+      text-align: center;
+      font-size: 0.82rem;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
+    .hh-kids-wrap input:focus {
+      outline: none;
+      border-color: var(--fire1);
+      box-shadow: 0 0 0 2px rgba(255,107,0,0.12);
+    }
+    .hh-kids-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
     .sync-btn {
       display: inline-flex;
       align-items: center;
@@ -699,11 +754,27 @@
           <span data-i18n="expToggle">Break down expenses</span>
         </button>
         <div class="expense-panel" id="expensePanel">
-          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:6px;flex-wrap:wrap;">
             <button class="sync-btn" id="syncBtn" onclick="toggleSync()">
               <span id="syncIcon">🔗</span>
               <span id="syncLabel" data-i18n="expSync">Sync with breakdown</span>
             </button>
+          </div>
+          <div class="hh-selector">
+            <span class="hh-kids-label" data-i18n="hhLabel">Household:</span>
+            <button class="hh-btn active" data-hh="solo" onclick="setHousehold('solo')">
+              <span data-i18n="hhSolo">Solo</span>
+            </button>
+            <button class="hh-btn" data-hh="partner" onclick="setHousehold('partner')">
+              <span data-i18n="hhPartner">With Partner</span>
+            </button>
+            <button class="hh-btn" data-hh="family" onclick="setHousehold('family')">
+              <span data-i18n="hhFamily">Partner + Kids</span>
+            </button>
+            <div class="hh-kids-wrap" id="kidsWrap" style="display:none;">
+              <span class="hh-kids-label" data-i18n="hhKids">Kids:</span>
+              <input type="number" id="kidsCount" value="1" min="1" max="10" onchange="applyHousehold()" oninput="applyHousehold()" />
+            </div>
           </div>
           <div class="expense-list" id="expenseList"></div>
           <div class="expense-footer">
@@ -985,6 +1056,11 @@
       noteExpMult: 'Multiplier > 1 = safety buffer (e.g. ×1.1 adds 10% extra).',
       expSync: 'Sync with breakdown',
       expUnsync: 'Not synced — edit freely',
+      hhLabel: 'Household:',
+      hhSolo: 'Solo',
+      hhPartner: 'With Partner',
+      hhFamily: 'Partner + Kids',
+      hhKids: 'Kids:',
     },
     zh: {
       title: '退休計算機',
@@ -1078,6 +1154,11 @@
       noteExpMult: '倍數 > 1 = 彈性預留（例如 ×1.1 多 10% 備用金）。',
       expSync: '與明細同步',
       expUnsync: '未同步 — 自由輸入',
+      hhLabel: '家庭組合：',
+      hhSolo: '一個人',
+      hhPartner: '有伴侶',
+      hhFamily: '伴侶＋小孩',
+      hhKids: '小孩人數：',
     }
   };
 
@@ -1551,9 +1632,31 @@
     { name: '其他', amount: 500, mult: 1 },
   ];
 
+  const PARTNER_EXPENSES_EN = [
+    { name: 'Partner — Food', amount: 25, mult: 30 },
+    { name: 'Partner — Insurance', amount: 300, mult: 1 },
+    { name: 'Partner — Personal', amount: 400, mult: 1 },
+  ];
+  const PARTNER_EXPENSES_ZH = [
+    { name: '伴侶 — 餐飲', amount: 25, mult: 30 },
+    { name: '伴侶 — 保險', amount: 300, mult: 1 },
+    { name: '伴侶 — 個人消費', amount: 400, mult: 1 },
+  ];
+  const KID_EXPENSES_EN = [
+    { name: 'Kid {n} — Childcare / School', amount: 800, mult: 1 },
+    { name: 'Kid {n} — Food', amount: 15, mult: 30 },
+    { name: 'Kid {n} — Activities / Supplies', amount: 200, mult: 1 },
+  ];
+  const KID_EXPENSES_ZH = [
+    { name: '小孩{n} — 托育／學費', amount: 800, mult: 1 },
+    { name: '小孩{n} — 餐飲', amount: 15, mult: 30 },
+    { name: '小孩{n} — 活動／用品', amount: 200, mult: 1 },
+  ];
+
   let expenseItems = [];
   let expensePanelOpen = false;
   let expSynced = true;
+  let currentHousehold = 'solo';
 
   function toggleSync() {
     expSynced = !expSynced;
@@ -1577,12 +1680,45 @@
     $('expensePanel').classList.toggle('open', expensePanelOpen);
     $('expArrow').classList.toggle('open', expensePanelOpen);
     if (expensePanelOpen && expenseItems.length === 0) {
-      const defaults = currentLang === 'zh' ? DEFAULT_EXPENSES_ZH : DEFAULT_EXPENSES_EN;
-      expenseItems = defaults.map(d => ({ name: d.name, amount: d.amount, mult: d.mult }));
       expSynced = true;
       updateSyncUI();
-      renderExpenseList();
+      applyHousehold();
     }
+  }
+
+  function buildExpenseDefaults() {
+    const zh = currentLang === 'zh';
+    const base = (zh ? DEFAULT_EXPENSES_ZH : DEFAULT_EXPENSES_EN).map(d => ({...d}));
+    const items = [...base];
+
+    if (currentHousehold === 'partner' || currentHousehold === 'family') {
+      const pItems = zh ? PARTNER_EXPENSES_ZH : PARTNER_EXPENSES_EN;
+      items.push(...pItems.map(d => ({...d})));
+    }
+
+    if (currentHousehold === 'family') {
+      const numKids = Math.max(parseInt($('kidsCount').value) || 1, 1);
+      const kItems = zh ? KID_EXPENSES_ZH : KID_EXPENSES_EN;
+      for (let k = 1; k <= numKids; k++) {
+        kItems.forEach(d => {
+          items.push({ name: d.name.replace('{n}', k), amount: d.amount, mult: d.mult });
+        });
+      }
+    }
+
+    return items;
+  }
+
+  function setHousehold(mode) {
+    currentHousehold = mode;
+    document.querySelectorAll('.hh-btn').forEach(b => b.classList.toggle('active', b.dataset.hh === mode));
+    $('kidsWrap').style.display = mode === 'family' ? 'inline-flex' : 'none';
+    applyHousehold();
+  }
+
+  function applyHousehold() {
+    expenseItems = buildExpenseDefaults();
+    renderExpenseList();
   }
 
   function renderExpenseList() {
