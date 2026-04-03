@@ -418,16 +418,51 @@
       height: 1px;
       background: var(--border);
     }
+
+    .lang-toggle {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 100;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 6px 4px;
+      display: flex;
+      gap: 2px;
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: linear-gradient(135deg, var(--fire1), var(--fire2));
+      color: #fff;
+    }
+    .lang-btn:hover:not(.active) { color: var(--text); }
   </style>
 </head>
 <body>
 
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('zh')">中文</button>
+</div>
+
 <header>
   <div class="logo">
     <span class="flame-icon">🔥</span>
-    <h1>Retirement Calculator</h1>
+    <h1 data-i18n="title">Retirement Calculator</h1>
   </div>
-  <p class="tagline">When can you stop working? Find out with two strategies.</p>
+  <p class="tagline" data-i18n="tagline">When can you stop working? Find out with two strategies.</p>
 </header>
 
 <div class="container">
@@ -435,78 +470,78 @@
   <!-- Mode Tabs -->
   <div class="mode-tabs">
     <button class="mode-tab active" data-mode="perpetual" onclick="setMode('perpetual')">
-      <span class="tab-title">♾️ Never Run Out</span>
-      <span class="tab-desc">Live off returns forever — keep your savings intact</span>
+      <span class="tab-title" data-i18n="modePerp">♾️ Never Run Out</span>
+      <span class="tab-desc" data-i18n="modePerpDesc">Live off returns forever — keep your savings intact</span>
     </button>
     <button class="mode-tab" data-mode="spenddown" onclick="setMode('spenddown')">
-      <span class="tab-title">⏳ Spend It All</span>
-      <span class="tab-desc">Use all savings + returns until target age — $0 at the end</span>
+      <span class="tab-title" data-i18n="modeSpend">⏳ Spend It All</span>
+      <span class="tab-desc" data-i18n="modeSpendDesc">Use all savings + returns until target age — $0 at the end</span>
     </button>
   </div>
 
   <!-- Inputs + Summary -->
   <div class="main-grid">
     <div class="card">
-      <div class="card-title">Your Financial Profile</div>
+      <div class="card-title" data-i18n="profile">Your Financial Profile</div>
       <div class="grid-2">
         <div class="field">
-          <label>Current Age</label>
+          <label data-i18n="lblAge">Current Age</label>
           <div class="input-wrap">
             <input type="number" id="age" value="28" min="18" max="80" />
-            <span class="suffix">yrs</span>
+            <span class="suffix" data-i18n="sufYrs">yrs</span>
           </div>
         </div>
         <div class="field">
-          <label>Monthly Expenses</label>
+          <label data-i18n="lblExpenses">Monthly Expenses</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="expenses" value="4200" min="0" />
           </div>
         </div>
         <div class="field">
-          <label>Current Savings / Investments</label>
+          <label data-i18n="lblSavings">Current Savings / Investments</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="savings" value="45000" min="0" />
           </div>
         </div>
         <div class="field">
-          <label>Monthly Income (optional — $0 if not working)</label>
+          <label data-i18n="lblIncome">Monthly Income (optional — $0 if not working)</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="income" value="7000" min="0" />
           </div>
-          <div class="note">Leave at $0 if you just want to know how much you need to retire. Only needed to calculate "years until retirement".</div>
+          <div class="note" data-i18n="noteIncome">Leave at $0 if you just want to know how much you need to retire. Only needed to calculate "years until retirement".</div>
         </div>
       </div>
 
       <div style="margin-top:18px;display:flex;flex-direction:column;gap:16px;">
         <div class="range-field">
           <div class="range-header">
-            <label>Expected Annual Return</label>
+            <label data-i18n="lblReturn">Expected Annual Return</label>
             <span class="range-val" id="returnVal">7%</span>
           </div>
           <input type="range" id="returnRate" min="1" max="15" step="0.5" value="7" />
-          <div class="note"><strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.</div>
+          <div class="note" data-i18n="noteReturn"><strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.</div>
         </div>
 
         <div class="range-field">
           <div class="range-header">
-            <label>Inflation Rate</label>
+            <label data-i18n="lblInflation">Inflation Rate</label>
             <span class="range-val" id="inflationVal">3%</span>
           </div>
           <input type="range" id="inflationRate" min="0" max="8" step="0.5" value="3" />
-          <div class="note"><strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.</div>
+          <div class="note" data-i18n="noteInflation"><strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.</div>
         </div>
 
         <div class="life-exp-row visible" id="lifeExpRow">
           <div class="field">
-            <label>Life Expectancy (for "Spend It All" mode)</label>
+            <label data-i18n="lblLifeExp">Life Expectancy (for "Spend It All" mode)</label>
             <div class="input-wrap">
               <input type="number" id="lifeExp" value="85" min="50" max="120" />
-              <span class="suffix">yrs</span>
+              <span class="suffix" data-i18n="sufYrs2">yrs</span>
             </div>
-            <div class="note">Your savings will be drawn down to $0 by this age. Plan conservatively!</div>
+            <div class="note" data-i18n="noteLifeExp">Your savings will be drawn down to $0 by this age. Plan conservatively!</div>
           </div>
         </div>
       </div>
@@ -528,14 +563,14 @@
       </div>
 
       <div class="card" style="flex:1;">
-        <div class="card-title">Progress to Retirement Target</div>
+        <div class="card-title" data-i18n="progressTitle">Progress to Retirement Target</div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;">
           <div>
             <div class="progress-pct" id="progressPct">—</div>
-            <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">of target reached</div>
+            <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;" data-i18n="ofTarget">of target reached</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:0.8rem;color:var(--muted);">Target</div>
+            <div style="font-size:0.8rem;color:var(--muted);" data-i18n="targetWord">Target</div>
             <div style="font-size:1rem;font-weight:700;color:var(--fire2)" id="targetSmall">—</div>
           </div>
         </div>
@@ -559,13 +594,13 @@
     </div>
     <div class="stat-card">
       <span class="stat-icon">⏳</span>
-      <div class="stat-label">Years to Retirement</div>
+      <div class="stat-label" data-i18n="statYears">Years to Retirement</div>
       <div class="stat-value" id="yearsToRetire">—</div>
       <div class="stat-sub" id="yearsToRetireSub">—</div>
     </div>
     <div class="stat-card">
       <span class="stat-icon">🏖️</span>
-      <div class="stat-label">Retirement Age</div>
+      <div class="stat-label" data-i18n="statRetireAge">Retirement Age</div>
       <div class="stat-value" id="retireAge">—</div>
       <div class="stat-sub" id="retireAgeSub">—</div>
     </div>
@@ -574,7 +609,7 @@
   <!-- Chart -->
   <section class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
-      <div class="card-title" style="margin-bottom:0" id="chartTitle">Projected Wealth Over Time</div>
+      <div class="card-title" style="margin-bottom:0" id="chartTitle" data-i18n="chartTitle">Projected Wealth Over Time</div>
       <div id="chartLegend" style="display:flex;gap:16px;font-size:0.75rem;color:var(--muted);"></div>
     </div>
     <div class="chart-wrap">
@@ -584,77 +619,63 @@
 
   <!-- Comparison -->
   <section class="card">
-    <div class="card-title">Side-by-Side Comparison</div>
+    <div class="card-title" data-i18n="cmpTitle">Side-by-Side Comparison</div>
     <table class="compare-table">
       <thead>
         <tr>
           <th></th>
-          <th style="color:var(--fire2)">♾️ Never Run Out</th>
-          <th style="color:var(--blue)">⏳ Spend It All</th>
+          <th style="color:var(--fire2)" data-i18n="cmpColA">♾️ Never Run Out</th>
+          <th style="color:var(--blue)" data-i18n="cmpColB">⏳ Spend It All</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="label-col">How it works</td>
-          <td>Live off investment returns. Your savings stay intact forever.</td>
-          <td>Gradually spend savings + returns until target age. $0 left at the end.</td>
+          <td class="label-col" data-i18n="cmpHow">How it works</td>
+          <td data-i18n="cmpHowA">Live off investment returns. Your savings stay intact forever.</td>
+          <td data-i18n="cmpHowB">Gradually spend savings + returns until target age. $0 left at the end.</td>
         </tr>
         <tr>
-          <td class="label-col">Target amount</td>
+          <td class="label-col" data-i18n="cmpTarget">Target amount</td>
           <td class="val mode-a" id="cmpTargetA">—</td>
           <td class="val mode-b" id="cmpTargetB">—</td>
         </tr>
         <tr>
-          <td class="label-col">Years to retire</td>
+          <td class="label-col" data-i18n="cmpYears">Years to retire</td>
           <td class="val mode-a" id="cmpYearsA">—</td>
           <td class="val mode-b" id="cmpYearsB">—</td>
         </tr>
         <tr>
-          <td class="label-col">Retirement age</td>
+          <td class="label-col" data-i18n="cmpAge">Retirement age</td>
           <td class="val mode-a" id="cmpAgeA">—</td>
           <td class="val mode-b" id="cmpAgeB">—</td>
         </tr>
         <tr>
-          <td class="label-col">Leftover at death</td>
-          <td class="mode-a">All of it (infinite)</td>
-          <td class="mode-b" id="cmpLeftover">$0</td>
+          <td class="label-col" data-i18n="cmpLeftover">Leftover at death</td>
+          <td class="mode-a" data-i18n="cmpLeftA">All of it (infinite)</td>
+          <td class="mode-b" id="cmpLeftoverVal">$0</td>
         </tr>
         <tr>
-          <td class="label-col">Risk</td>
-          <td>Very safe — but requires larger savings</td>
-          <td>Must estimate lifespan — risk of outliving money</td>
+          <td class="label-col" data-i18n="cmpRisk">Risk</td>
+          <td data-i18n="cmpRiskA">Very safe — but requires larger savings</td>
+          <td data-i18n="cmpRiskB">Must estimate lifespan — risk of outliving money</td>
         </tr>
       </tbody>
     </table>
   </section>
 
   <!-- Explanation -->
-  <div class="section-divider">How It Works</div>
+  <div class="section-divider" data-i18n="howTitle">How It Works</div>
   <div class="grid-2" style="gap:16px;">
-    <div class="info-box">
-      <span class="emoji">♾️</span><strong>Never Run Out (Perpetual)</strong><br><br>
-      This is the classic <strong>FIRE</strong> (Financial Independence, Retire Early) approach. You accumulate enough savings so that the <strong>annual investment returns alone</strong> cover your living expenses — forever.<br><br>
-      <strong>Formula:</strong> Target = Annual Expenses ÷ Real Return Rate<br>
-      <strong>Real Return</strong> = Investment Return − Inflation<br><br>
-      Example: If you spend $50,400/yr and earn 7% with 3% inflation (4% real return), you need $50,400 ÷ 0.04 = <strong>$1,260,000</strong>.
-    </div>
-    <div class="info-box">
-      <span class="emoji">⏳</span><strong>Spend It All (Drawdown)</strong><br><br>
-      You don't need as much saved because you'll <strong>spend both returns AND principal</strong> over your remaining years. You choose a life expectancy, and the calculator figures out how much you need so your money lasts exactly that long.<br><br>
-      <strong>Formula:</strong> Uses the Present Value of Annuity — it factors in your spending, returns, and years in retirement.<br><br>
-      Example: Same expenses, retire at 45, live to 85 (40 years) → you might only need <strong>~$1,060,000</strong> instead of $1.26M.
-    </div>
+    <div class="info-box" id="explainPerp" data-i18n-html="explainPerp"></div>
+    <div class="info-box" id="explainSpend" data-i18n-html="explainSpend"></div>
   </div>
 
-  <div class="info-box" style="margin-top:16px;">
-    <span class="emoji">📊</span><strong>What is "Real Return"?</strong><br><br>
-    Your investments might grow at 7%/yr, but inflation eats away ~3%/yr of purchasing power. So your <strong>real (inflation-adjusted) return</strong> is roughly 4%. This calculator uses real returns so all numbers are in <strong>today's dollars</strong> — the amounts shown reflect actual purchasing power, not inflated future numbers.
-  </div>
+  <div class="info-box" style="margin-top:16px;" id="explainReal" data-i18n-html="explainReal"></div>
 </div>
 
 <footer>
-  <p>🔥 Retirement Calculator — For educational purposes only. Past market returns do not guarantee future results.</p>
-  <p style="margin-top:6px;">All values shown in today's dollars (inflation-adjusted). Assumes constant real returns and steady contributions.</p>
+  <p data-i18n="footer1">🔥 Retirement Calculator — For educational purposes only. Past market returns do not guarantee future results.</p>
+  <p style="margin-top:6px;" data-i18n="footer2">All values shown in today's dollars (inflation-adjusted). Assumes constant real returns and steady contributions.</p>
 </footer>
 
 <script>
@@ -665,6 +686,222 @@
     ? '$' + (n/1e3).toFixed(d ? 1 : 0) + 'K'
     : '$' + Math.round(n).toLocaleString();
   const fmtFull = n => '$' + Math.round(n).toLocaleString();
+
+  let currentLang = 'en';
+  const I18N = {
+    en: {
+      title: 'Retirement Calculator',
+      tagline: 'When can you stop working? Find out with two strategies.',
+      modePerp: '♾️ Never Run Out',
+      modePerpDesc: 'Live off returns forever — keep your savings intact',
+      modeSpend: '⏳ Spend It All',
+      modeSpendDesc: 'Use all savings + returns until target age — $0 at the end',
+      profile: 'Your Financial Profile',
+      lblAge: 'Current Age',
+      lblExpenses: 'Monthly Expenses',
+      lblSavings: 'Current Savings / Investments',
+      lblIncome: 'Monthly Income (optional — $0 if not working)',
+      noteIncome: 'Leave at $0 if you just want to know how much you need to retire. Only needed to calculate "years until retirement".',
+      lblReturn: 'Expected Annual Return',
+      noteReturn: '<strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.',
+      lblInflation: 'Inflation Rate',
+      noteInflation: '<strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.',
+      lblLifeExp: 'Life Expectancy (for "Spend It All" mode)',
+      noteLifeExp: 'Your savings will be drawn down to $0 by this age. Plan conservatively!',
+      sufYrs: 'yrs', sufYrs2: 'yrs',
+      progressTitle: 'Progress to Retirement Target',
+      ofTarget: 'of target reached',
+      targetWord: 'Target',
+      statYears: 'Years to Retirement',
+      statRetireAge: 'Retirement Age',
+      chartTitle: 'Projected Wealth Over Time',
+      cmpTitle: 'Side-by-Side Comparison',
+      cmpColA: '♾️ Never Run Out', cmpColB: '⏳ Spend It All',
+      cmpHow: 'How it works',
+      cmpHowA: 'Live off investment returns. Your savings stay intact forever.',
+      cmpHowB: 'Gradually spend savings + returns until target age. $0 left at the end.',
+      cmpTarget: 'Target amount', cmpYears: 'Years to retire', cmpAge: 'Retirement age',
+      cmpLeftover: 'Leftover at death',
+      cmpLeftA: 'All of it (infinite)',
+      cmpRisk: 'Risk',
+      cmpRiskA: 'Very safe — but requires larger savings',
+      cmpRiskB: 'Must estimate lifespan — risk of outliving money',
+      howTitle: 'How It Works',
+      explainPerp: '<span class="emoji">♾️</span><strong>Never Run Out (Perpetual)</strong><br><br>This is the classic <strong>FIRE</strong> (Financial Independence, Retire Early) approach. You accumulate enough savings so that the <strong>annual investment returns alone</strong> cover your living expenses — forever.<br><br><strong>Formula:</strong> Target = Annual Expenses ÷ Real Return Rate<br><strong>Real Return</strong> = Investment Return − Inflation<br><br>Example: If you spend $50,400/yr and earn 7% with 3% inflation (4% real return), you need $50,400 ÷ 0.04 = <strong>$1,260,000</strong>.',
+      explainSpend: '<span class="emoji">⏳</span><strong>Spend It All (Drawdown)</strong><br><br>You don\'t need as much saved because you\'ll <strong>spend both returns AND principal</strong> over your remaining years. You choose a life expectancy, and the calculator figures out how much you need so your money lasts exactly that long.<br><br><strong>Formula:</strong> Uses the Present Value of Annuity — it factors in your spending, returns, and years in retirement.<br><br>Example: Same expenses, retire at 45, live to 85 (40 years) → you might only need <strong>~$1,060,000</strong> instead of $1.26M.',
+      explainReal: '<span class="emoji">📊</span><strong>What is "Real Return"?</strong><br><br>Your investments might grow at 7%/yr, but inflation eats away ~3%/yr of purchasing power. So your <strong>real (inflation-adjusted) return</strong> is roughly 4%. This calculator uses real returns so all numbers are in <strong>today\'s dollars</strong> — the amounts shown reflect actual purchasing power, not inflated future numbers.',
+      footer1: '🔥 Retirement Calculator — For educational purposes only. Past market returns do not guarantee future results.',
+      footer2: 'All values shown in today\'s dollars (inflation-adjusted). Assumes constant real returns and steady contributions.',
+      // Dynamic strings used in calculate()
+      savingsRate: 'Savings Rate',
+      passiveIncome: 'Passive Income from Savings',
+      saving: 'Saving',
+      perMo: '/mo', perYr: '/yr',
+      atRealReturn: 'at',
+      realReturn: 'real return',
+      coversExpenses: 'Covers your {0}/mo expenses — you\'re free! 🔥',
+      needButOnly: 'Need {0}/mo but only generating {1}/mo.',
+      savMsg70: 'Extreme saver! Retirement is close. 🔥🔥🔥',
+      savMsg50: 'Excellent! Fast track to retirement. 🔥🔥',
+      savMsg30: 'Great savings rate! 🔥',
+      savMsg15: 'Good start — push higher to retire sooner.',
+      savMsgLow: 'Low savings rate. Try cutting expenses.',
+      fireNum: 'FIRE Number (Perpetual)',
+      nestEgg: 'Retirement Nest Egg',
+      annExpDiv: 'Annual expenses ÷ real return',
+      enoughFor: 'Enough to last {0} years in retirement',
+      alreadyThere: 'Already there!',
+      retireNow: 'You can retire now! 🎉',
+      needMore: 'Need {0} more',
+      addIncome: 'Add income to calculate',
+      notReachable: 'Not reachable',
+      increaseSav: 'Increase savings rate',
+      yrs: 'yrs', mo: 'mo',
+      superEarly: 'Super early retirement! 🔥',
+      excellent: 'Excellent early retirement!',
+      early: 'Early retirement!',
+      onTrack: 'On track for retirement.',
+      considerMore: 'Consider increasing savings.',
+      now: '(now!)',
+      atAge: 'at age',
+      alertReturn: '⚠️ Return rate is lower than inflation. Increase return or lower inflation.',
+      alertExpenses: '⚠️ Enter monthly expenses greater than $0.',
+      alertRetireNow: '🎉 You can retire now! Your savings ({0}) exceed the target ({1}).',
+      alertNeedMore: '💡 You need {0} more to retire. Add monthly income to see how long it will take.',
+      lgdPortfolio: 'Portfolio',
+      lgdTarget: 'FIRE Target',
+      lgdNestEgg: 'Retirement Nest Egg',
+      lgdLivingOff: 'Portfolio (living off returns)',
+      lgdSpending: 'Portfolio (spending down)',
+      agePrefix: 'Age ',
+      nowLabel: 'Now',
+      targetLabel2: 'Target',
+    },
+    zh: {
+      title: '退休計算機',
+      tagline: '什麼時候可以不再工作？兩種策略幫你算清楚。',
+      modePerp: '♾️ 永遠花不完',
+      modePerpDesc: '靠投資報酬過活，本金永遠不動',
+      modeSpend: '⏳ 花到歸零',
+      modeSpendDesc: '把存款＋報酬全部花完，到目標年齡剩 $0',
+      profile: '你的財務狀況',
+      lblAge: '目前年齡',
+      lblExpenses: '每月支出',
+      lblSavings: '目前存款／投資',
+      lblIncome: '每月收入（選填 — 沒工作填 $0）',
+      noteIncome: '如果只想知道「需要存多少才能退休」，收入填 $0 即可。有收入才會計算「幾年後可退休」。',
+      lblReturn: '預期年化報酬率',
+      noteReturn: '<strong>提示：</strong>S&P 500 歷史平均約 10%／年（未扣通膨）。保守估計 6–8%。',
+      lblInflation: '通貨膨脹率',
+      noteInflation: '<strong>提示：</strong>歷史上約 2–3%／年。通膨會侵蝕你的購買力，所以我們會把它算進去。',
+      lblLifeExp: '預期壽命（用於「花到歸零」模式）',
+      noteLifeExp: '你的存款會在這個年齡歸零。建議保守估計！',
+      sufYrs: '歲', sufYrs2: '歲',
+      progressTitle: '退休目標進度',
+      ofTarget: '已達成目標',
+      targetWord: '目標',
+      statYears: '距離退休年數',
+      statRetireAge: '退休年齡',
+      chartTitle: '預估資產走勢',
+      cmpTitle: '兩種模式比較',
+      cmpColA: '♾️ 永遠花不完', cmpColB: '⏳ 花到歸零',
+      cmpHow: '運作方式',
+      cmpHowA: '靠投資報酬生活，本金永遠不動。',
+      cmpHowB: '逐步花掉存款＋報酬，到目標年齡剩 $0。',
+      cmpTarget: '目標金額', cmpYears: '幾年退休', cmpAge: '退休年齡',
+      cmpLeftover: '身後餘額',
+      cmpLeftA: '全部保留（無限）',
+      cmpRisk: '風險',
+      cmpRiskA: '非常安全 — 但需要更多存款',
+      cmpRiskB: '須估算壽命 — 有花光的風險',
+      howTitle: '計算原理',
+      explainPerp: '<span class="emoji">♾️</span><strong>永遠花不完（永續模式）</strong><br><br>這是經典的 <strong>FIRE</strong>（財務自由、提早退休）方法。你累積足夠的存款，讓<strong>每年的投資報酬</strong>就能支付你的生活費 — 永遠不用動到本金。<br><br><strong>公式：</strong>目標 = 年支出 ÷ 實質報酬率<br><strong>實質報酬</strong> = 投資報酬 − 通膨<br><br>範例：年支出 $50,400、報酬 7%、通膨 3%（實質報酬 4%），你需要 $50,400 ÷ 0.04 = <strong>$1,260,000</strong>。',
+      explainSpend: '<span class="emoji">⏳</span><strong>花到歸零（提領模式）</strong><br><br>你不需要存那麼多，因為你會在退休後<strong>同時花掉報酬和本金</strong>。選擇一個預期壽命，計算機會算出你需要多少錢才能撐到那時候。<br><br><strong>公式：</strong>使用年金現值公式 — 考慮支出、報酬和退休年數。<br><br>範例：同樣的支出，45 歲退休、活到 85 歲（40 年）→ 你可能只需要 <strong>~$1,060,000</strong>，而不是 $1.26M。',
+      explainReal: '<span class="emoji">📊</span><strong>什麼是「實質報酬」？</strong><br><br>你的投資可能每年成長 7%，但通膨每年吃掉約 3% 的購買力。所以你的<strong>實質（扣除通膨後）報酬</strong>大約是 4%。本計算機使用實質報酬，所有金額都是<strong>今天的幣值</strong> — 反映的是實際購買力，而非膨脹後的未來金額。',
+      footer1: '🔥 退休計算機 — 僅供教育用途。過去的市場報酬不保證未來結果。',
+      footer2: '所有金額皆以今日幣值顯示（已扣通膨）。假設固定實質報酬與穩定投入。',
+      savingsRate: '儲蓄率',
+      passiveIncome: '被動收入（來自存款）',
+      saving: '每月存',
+      perMo: '/月', perYr: '/年',
+      atRealReturn: '以',
+      realReturn: '實質報酬',
+      coversExpenses: '涵蓋你的 {0}/月 支出 — 你自由了！🔥',
+      needButOnly: '需要 {0}/月，但目前只產生 {1}/月。',
+      savMsg70: '超級存錢王！退休就在眼前 🔥🔥🔥',
+      savMsg50: '太棒了！快速邁向退休 🔥🔥',
+      savMsg30: '很好的儲蓄率！繼續加油 🔥',
+      savMsg15: '不錯的開始 — 再提高一點就更快。',
+      savMsgLow: '儲蓄率偏低，試著減少支出。',
+      fireNum: 'FIRE 數字（永續）',
+      nestEgg: '退休所需資金',
+      annExpDiv: '年支出 ÷ 實質報酬率',
+      enoughFor: '足夠支撐退休後 {0} 年',
+      alreadyThere: '已經達標！',
+      retireNow: '你現在就可以退休了！🎉',
+      needMore: '還差 {0}',
+      addIncome: '填入收入來計算',
+      notReachable: '無法達成',
+      increaseSav: '提高儲蓄率',
+      yrs: '年', mo: '個月',
+      superEarly: '超級提前退休！🔥',
+      excellent: '非常好的提前退休！',
+      early: '提前退休！',
+      onTrack: '正在退休軌道上。',
+      considerMore: '考慮增加存款。',
+      now: '（現在！）',
+      atAge: '在',
+      alertReturn: '⚠️ 報酬率低於通膨率。請提高報酬或降低通膨。',
+      alertExpenses: '⚠️ 請輸入大於 $0 的每月支出。',
+      alertRetireNow: '🎉 你現在就可以退休了！你的存款（{0}）超過目標（{1}）。',
+      alertNeedMore: '💡 你還需要 {0} 才能退休。填入每月收入來計算需要多久。',
+      lgdPortfolio: '資產',
+      lgdTarget: 'FIRE 目標',
+      lgdNestEgg: '退休所需資金',
+      lgdLivingOff: '資產（靠報酬生活）',
+      lgdSpending: '資產（逐步花完）',
+      agePrefix: '',
+      nowLabel: '現在',
+      targetLabel2: '目標',
+    }
+  };
+
+  function t(key) { return I18N[currentLang][key] || I18N.en[key] || key; }
+  function tFmt(key, ...args) {
+    let s = t(key);
+    args.forEach((a, i) => { s = s.replace('{' + i + '}', a); });
+    return s;
+  }
+
+  function updateStaticText() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const val = t(key);
+      if (val) el.textContent = val;
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      const val = t(key);
+      if (val) el.innerHTML = val;
+    });
+    // Also update note fields that have HTML
+    document.querySelectorAll('.note[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const val = t(key);
+      if (val) el.innerHTML = val;
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', (btn.textContent.trim() === 'EN' && currentLang === 'en') || (btn.textContent.trim() === '中文' && currentLang === 'zh'));
+    });
+    document.title = currentLang === 'zh' ? '退休計算機 — 什麼時候可以退休？' : 'Retirement Calculator — When Can I Retire?';
+  }
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+    updateStaticText();
+    calculate();
+  }
 
   let currentMode = 'perpetual';
   let chart;
@@ -843,39 +1080,39 @@
 
     if (realReturn <= 0) {
       alertEl.className = 'alert warn';
-      alertEl.textContent = '⚠️ Return rate is lower than inflation. Increase return or lower inflation.';
+      alertEl.textContent = t('alertReturn');
     } else if (expenses <= 0) {
       alertEl.className = 'alert warn';
-      alertEl.textContent = '⚠️ Enter monthly expenses greater than $0.';
+      alertEl.textContent = t('alertExpenses');
     } else if (canRetireNow) {
       alertEl.className = 'alert info';
-      alertEl.textContent = '🎉 You can retire now! Your savings (' + fmt(curSav) + ') exceed the target (' + fmt(target) + ').';
+      alertEl.textContent = tFmt('alertRetireNow', fmt(curSav), fmt(target));
     } else if (!hasIncome) {
       alertEl.className = 'alert warn';
-      alertEl.textContent = '💡 You need ' + fmt(gap) + ' more to retire. Add monthly income to see how long it will take.';
+      alertEl.textContent = tFmt('alertNeedMore', fmt(gap));
     }
 
     const valid = expenses > 0 && realReturn > 0;
 
     // Summary card (top-right)
     if (hasIncome) {
-      $('summaryTitle').textContent = 'Savings Rate';
+      $('summaryTitle').textContent = t('savingsRate');
       $('summaryBigNum').textContent = savRate.toFixed(0) + '%';
-      $('summaryBadge').textContent = 'Saving ' + fmt(monthlySav) + '/mo';
+      $('summaryBadge').textContent = t('saving') + ' ' + fmt(monthlySav) + t('perMo');
       $('summaryMsg').textContent =
-        savRate >= 70 ? 'Extreme saver! Retirement is close. 🔥🔥🔥'
-        : savRate >= 50 ? 'Excellent! Fast track to retirement. 🔥🔥'
-        : savRate >= 30 ? 'Great savings rate! 🔥'
-        : savRate >= 15 ? 'Good start — push higher to retire sooner.'
-        : 'Low savings rate. Try cutting expenses.';
+        savRate >= 70 ? t('savMsg70')
+        : savRate >= 50 ? t('savMsg50')
+        : savRate >= 30 ? t('savMsg30')
+        : savRate >= 15 ? t('savMsg15')
+        : t('savMsgLow');
     } else {
-      $('summaryTitle').textContent = 'Passive Income from Savings';
-      $('summaryBigNum').textContent = fmt(Math.max(monthlyPassiveIncome, 0)) + '/mo';
-      $('summaryBadge').textContent = fmt(Math.max(annualPassiveIncome, 0)) + '/yr at ' + (realReturn * 100).toFixed(1) + '% real return';
+      $('summaryTitle').textContent = t('passiveIncome');
+      $('summaryBigNum').textContent = fmt(Math.max(monthlyPassiveIncome, 0)) + t('perMo');
+      $('summaryBadge').textContent = fmt(Math.max(annualPassiveIncome, 0)) + t('perYr') + ' ' + t('atRealReturn') + ' ' + (realReturn * 100).toFixed(1) + '% ' + t('realReturn');
       if (canRetireNow) {
-        $('summaryMsg').textContent = 'Covers your ' + fmt(expenses) + '/mo expenses — you\'re free! 🔥';
+        $('summaryMsg').textContent = tFmt('coversExpenses', fmt(expenses));
       } else {
-        $('summaryMsg').textContent = 'Need ' + fmt(expenses) + '/mo but only generating ' + fmt(Math.max(monthlyPassiveIncome, 0)) + '/mo.';
+        $('summaryMsg').textContent = tFmt('needButOnly', fmt(expenses), fmt(Math.max(monthlyPassiveIncome, 0)));
       }
     }
 
@@ -885,11 +1122,11 @@
     $('targetSmall').textContent = fmt(target);
 
     // Stat cards
-    $('targetLabel').textContent = isPerp ? 'FIRE Number (Perpetual)' : 'Retirement Nest Egg';
+    $('targetLabel').textContent = isPerp ? t('fireNum') : t('nestEgg');
     $('targetNum').textContent = valid ? fmt(target) : '—';
     $('targetSub').textContent = isPerp
-      ? 'Annual expenses ÷ real return (' + (realReturn * 100).toFixed(1) + '%)'
-      : 'Enough to last ' + Math.round(spendRetYears) + ' years in retirement';
+      ? t('annExpDiv') + ' (' + (realReturn * 100).toFixed(1) + '%)'
+      : tFmt('enoughFor', Math.round(spendRetYears));
 
     if (!valid) {
       $('yearsToRetire').textContent = '—';
@@ -898,31 +1135,31 @@
       $('retireAgeSub').textContent = '—';
     } else if (canRetireNow) {
       $('yearsToRetire').textContent = '0';
-      $('yearsToRetireSub').textContent = 'Already there!';
+      $('yearsToRetireSub').textContent = t('alreadyThere');
       $('retireAge').textContent = age.toFixed(0);
-      $('retireAgeSub').textContent = 'You can retire now! 🎉';
+      $('retireAgeSub').textContent = t('retireNow');
     } else if (!hasIncome) {
       $('yearsToRetire').textContent = '—';
-      $('yearsToRetireSub').textContent = 'Need ' + fmt(gap) + ' more';
+      $('yearsToRetireSub').textContent = tFmt('needMore', fmt(gap));
       $('retireAge').textContent = '—';
-      $('retireAgeSub').textContent = 'Add income to calculate';
+      $('retireAgeSub').textContent = t('addIncome');
     } else if (!isFinite(yearsToRetire)) {
       $('yearsToRetire').textContent = '∞';
-      $('yearsToRetireSub').textContent = 'Not reachable';
+      $('yearsToRetireSub').textContent = t('notReachable');
       $('retireAge').textContent = '—';
-      $('retireAgeSub').textContent = 'Increase savings rate';
+      $('retireAgeSub').textContent = t('increaseSav');
     } else {
       const yInt = Math.floor(yearsToRetire);
       const mRem = Math.round((yearsToRetire % 1) * 12);
       $('yearsToRetire').textContent = yearsToRetire.toFixed(1);
-      $('yearsToRetireSub').textContent = yInt + ' yrs' + (mRem > 0 ? ' ' + mRem + ' mo' : '');
+      $('yearsToRetireSub').textContent = yInt + ' ' + t('yrs') + (mRem > 0 ? ' ' + mRem + ' ' + t('mo') : '');
       $('retireAge').textContent = retireAge.toFixed(1);
       $('retireAgeSub').textContent =
-        retireAge < 40 ? 'Super early retirement! 🔥'
-        : retireAge < 50 ? 'Excellent early retirement!'
-        : retireAge < 60 ? 'Early retirement!'
-        : retireAge < 65 ? 'On track for retirement.'
-        : 'Consider increasing savings.';
+        retireAge < 40 ? t('superEarly')
+        : retireAge < 50 ? t('excellent')
+        : retireAge < 60 ? t('early')
+        : retireAge < 65 ? t('onTrack')
+        : t('considerMore');
     }
 
     // Comparison table
@@ -931,26 +1168,27 @@
     const canRetireSpend = curSav >= spendTargetNow;
     $('cmpTargetA').textContent = valid ? fmt(perpetualTarget) : '—';
     $('cmpTargetB').textContent = valid ? fmt(hasIncome ? spendTarget : spendTargetNow) : '—';
-    $('cmpYearsA').textContent = canRetirePerp ? '0 (now!)' : (hasIncome && isFinite(perpYearsForCmp) ? perpYearsForCmp.toFixed(1) + ' yrs' : '—');
-    $('cmpYearsB').textContent = canRetireSpend ? '0 (now!)' : (hasIncome && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' yrs' : '—');
-    $('cmpAgeA').textContent = canRetirePerp ? age.toFixed(0) + ' (now!)' : (hasIncome && isFinite(perpYearsForCmp) ? (age + perpYearsForCmp).toFixed(1) : '—');
-    $('cmpAgeB').textContent = canRetireSpend ? age.toFixed(0) + ' (now!)' : (hasIncome && isFinite(spendYearsToRetire) ? spendRetireAge.toFixed(1) : '—');
-    $('cmpLeftover').textContent = '$0 at age ' + lifeExp;
+    $('cmpYearsA').textContent = canRetirePerp ? '0 ' + t('now') : (hasIncome && isFinite(perpYearsForCmp) ? perpYearsForCmp.toFixed(1) + ' ' + t('yrs') : '—');
+    $('cmpYearsB').textContent = canRetireSpend ? '0 ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' ' + t('yrs') : '—');
+    $('cmpAgeA').textContent = canRetirePerp ? age.toFixed(0) + ' ' + t('now') : (hasIncome && isFinite(perpYearsForCmp) ? (age + perpYearsForCmp).toFixed(1) : '—');
+    $('cmpAgeB').textContent = canRetireSpend ? age.toFixed(0) + ' ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendRetireAge.toFixed(1) : '—');
+    $('cmpLeftoverVal').textContent = currentLang === 'zh' ? ('$0（' + lifeExp + ' 歲歸零）') : ('$0 at age ' + lifeExp);
 
     // Chart
     buildChart(curSav, monthlySav, monthlyRealR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome);
 
     // Legend
+    const lgdDot = (c) => '<span style="width:12px;height:3px;background:' + c + ';display:inline-block;border-radius:2px;"></span>';
+    const lgdDash = (c, bc) => '<span style="width:12px;height:3px;background:' + c + ';display:inline-block;border-radius:2px;border:1px dashed ' + bc + ';"></span>';
+    const lgdItem = (dot, text) => '<span style="display:flex;align-items:center;gap:6px;">' + dot + text + '</span>';
     if (canRetireNow && !hasIncome) {
       $('chartLegend').innerHTML = isPerp
-        ? '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio (living off returns)</span>'
-        : '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio (spending down)</span>';
+        ? lgdItem(lgdDot('var(--fire2)'), t('lgdLivingOff'))
+        : lgdItem(lgdDot('var(--fire2)'), t('lgdSpending'));
     } else {
       $('chartLegend').innerHTML = isPerp
-        ? '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio</span>'
-          + '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(255,204,2,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--fire3);"></span>FIRE Target</span>'
-        : '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:var(--fire2);display:inline-block;border-radius:2px;"></span>Portfolio</span>'
-          + '<span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:3px;background:rgba(96,165,250,0.5);display:inline-block;border-radius:2px;border:1px dashed var(--blue);"></span>Retirement Nest Egg</span>';
+        ? lgdItem(lgdDot('var(--fire2)'), t('lgdPortfolio')) + lgdItem(lgdDash('rgba(255,204,2,0.5)', 'var(--fire3)'), t('lgdTarget'))
+        : lgdItem(lgdDot('var(--fire2)'), t('lgdPortfolio')) + lgdItem(lgdDash('rgba(96,165,250,0.5)', 'var(--blue)'), t('lgdNestEgg'));
     }
   }
 
@@ -968,21 +1206,22 @@
     const targetLine = [];
     const monthlyExpense = annualExp / 12;
 
+    const ap = t('agePrefix');
+    const ageLbl = (a) => currentLang === 'zh' ? Math.round(a) + '歲' : ap + Math.round(a);
+
     if (canRetireNow && isPerp) {
-      // Already can retire perpetually: show portfolio staying flat (living off returns)
       const showYears = 30;
       for (let m = 0; m <= showYears * 12; m += 3) {
-        labels.push('Age ' + (age + m / 12).toFixed(0));
+        labels.push(ageLbl(age + m / 12));
         portfolio.push(curSav);
         targetLine.push(target);
       }
       chart.data.datasets[1].borderColor = 'rgba(255,204,2,0.5)';
     } else if (canRetireNow && !isPerp) {
-      // Already can retire spend-down: show drawdown from now
       const monthsLeft = Math.ceil((lifeExp - age) * 12);
       let bal = curSav;
       for (let m = 0; m <= monthsLeft; m += 3) {
-        labels.push('Age ' + (age + m / 12).toFixed(0));
+        labels.push(ageLbl(age + m / 12));
         portfolio.push(Math.max(bal, 0));
         targetLine.push(target);
         for (let k = 0; k < 3; k++) {
@@ -991,18 +1230,17 @@
       }
       chart.data.datasets[1].borderColor = 'rgba(96,165,250,0.5)';
     } else if (!hasIncome) {
-      // No income, not enough: show current savings vs target
-      labels.push('Now');
+      labels.push(t('nowLabel'));
       portfolio.push(curSav);
       targetLine.push(target);
-      labels.push('Target');
+      labels.push(t('targetLabel2'));
       portfolio.push(curSav);
       targetLine.push(target);
       chart.data.datasets[1].borderColor = isPerp ? 'rgba(255,204,2,0.5)' : 'rgba(96,165,250,0.5)';
     } else if (isPerp) {
       const totalYears = Math.min(Math.ceil(yearsToRetire) + 10, 60);
       for (let m = 0; m <= totalYears * 12; m += 3) {
-        labels.push('Age ' + (age + m / 12).toFixed(0));
+        labels.push(ageLbl(age + m / 12));
         const bal = curSav * Math.pow(1 + monthlyR, m)
           + (monthlyR > 0
             ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
@@ -1012,11 +1250,10 @@
       }
       chart.data.datasets[1].borderColor = 'rgba(255,204,2,0.5)';
     } else {
-      // Accumulation phase
       const retireMonth = Math.ceil(yearsToRetire * 12);
       let bal = curSav;
       for (let m = 0; m <= retireMonth; m += 3) {
-        labels.push('Age ' + (age + m / 12).toFixed(0));
+        labels.push(ageLbl(age + m / 12));
         bal = curSav * Math.pow(1 + monthlyR, m)
           + (monthlyR > 0
             ? monthlySav * (Math.pow(1 + monthlyR, m) - 1) / monthlyR
@@ -1024,12 +1261,11 @@
         portfolio.push(Math.max(bal, 0));
         targetLine.push(target);
       }
-      // Drawdown phase
       const retireAge = age + yearsToRetire;
       const monthsInRetirement = Math.ceil((lifeExp - retireAge) * 12);
       let drawBal = bal;
       for (let m = 3; m <= monthsInRetirement; m += 3) {
-        labels.push('Age ' + (retireAge + m / 12).toFixed(0));
+        labels.push(ageLbl(retireAge + m / 12));
         for (let k = 0; k < 3; k++) {
           drawBal = drawBal * (1 + monthlyR) - monthlyExpense;
         }
@@ -1061,6 +1297,7 @@
   });
 
   initChart();
+  updateStaticText();
   calculate();
 </script>
 </body>
