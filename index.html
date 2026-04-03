@@ -535,6 +535,29 @@
     }
     .expense-row .del-btn:hover { color: var(--danger); background: rgba(255,77,77,0.1); }
 
+    .sync-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,107,0,0.1);
+      border: 1px solid rgba(255,107,0,0.25);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      color: var(--fire2);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sync-btn:hover { background: rgba(255,107,0,0.18); }
+    .sync-btn.off {
+      background: rgba(255,255,255,0.03);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+    .sync-btn.off:hover { color: var(--text); }
+
     .expense-footer {
       display: flex;
       justify-content: space-between;
@@ -661,23 +684,27 @@
 
       <div style="margin-top:14px;" class="field">
         <label data-i18n="lblExpenses">Monthly Expenses</label>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div class="input-wrap has-prefix" style="flex:1;">
-            <span class="prefix">$</span>
+        <div class="expense-row" style="margin-top:2px;">
+          <div class="exp-input-wrap" style="flex:1;"><span class="exp-prefix">$</span>
             <input type="number" id="expensesBase" value="4200" min="0" />
           </div>
-          <span style="color:var(--muted);font-size:0.8rem;font-weight:600;flex-shrink:0;">×</span>
-          <input type="number" id="expensesMult" value="1" min="0.1" max="5" step="0.05" style="width:64px;text-align:center;padding:11px 6px;font-size:0.9rem;border-radius:10px;" />
-          <span style="color:var(--muted);font-size:0.78rem;flex-shrink:0;">=</span>
-          <span id="expensesFinal" style="font-size:0.9rem;font-weight:700;color:var(--fire2);min-width:70px;text-align:right;flex-shrink:0;">$4,200</span>
+          <span class="times">×</span>
+          <input type="number" class="mult-input" id="expensesMult" value="1" min="0.1" max="5" step="0.05" />
+          <span class="row-subtotal" id="expensesFinal">$4,200</span>
         </div>
-        <div class="note" data-i18n="noteExpMult">Set multiplier > 1 for a safety buffer (e.g. ×1.1 = 10% extra for flexibility).</div>
+        <div class="note" data-i18n="noteExpMult">Multiplier > 1 = safety buffer (e.g. ×1.1 adds 10% extra).</div>
         <input type="hidden" id="expenses" value="4200" />
         <button class="expense-toggle" onclick="toggleExpensePanel()">
           <span class="arrow" id="expArrow">▶</span>
           <span data-i18n="expToggle">Break down expenses</span>
         </button>
         <div class="expense-panel" id="expensePanel">
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:6px;">
+            <button class="sync-btn" id="syncBtn" onclick="toggleSync()">
+              <span id="syncIcon">🔗</span>
+              <span id="syncLabel" data-i18n="expSync">Sync with breakdown</span>
+            </button>
+          </div>
           <div class="expense-list" id="expenseList"></div>
           <div class="expense-footer">
             <button class="add-expense-btn" onclick="addExpenseRow()">
@@ -955,7 +982,9 @@
       expToggle: 'Break down expenses',
       expAdd: '+ Add item',
       expTotal: 'Total',
-      noteExpMult: 'Set multiplier > 1 for a safety buffer (e.g. ×1.1 = 10% extra for flexibility).',
+      noteExpMult: 'Multiplier > 1 = safety buffer (e.g. ×1.1 adds 10% extra).',
+      expSync: 'Sync with breakdown',
+      expUnsync: 'Not synced — edit freely',
     },
     zh: {
       title: '退休計算機',
@@ -1046,7 +1075,9 @@
       expToggle: '展開支出明細',
       expAdd: '+ 新增項目',
       expTotal: '合計',
-      noteExpMult: '倍數設 > 1 可預留彈性空間（例如 ×1.1 = 多 10% 備用金）。',
+      noteExpMult: '倍數 > 1 = 彈性預留（例如 ×1.1 多 10% 備用金）。',
+      expSync: '與明細同步',
+      expUnsync: '未同步 — 自由輸入',
     }
   };
 
@@ -1078,6 +1109,7 @@
       btn.classList.toggle('active', (btn.textContent.trim() === 'EN' && currentLang === 'en') || (btn.textContent.trim() === '中文' && currentLang === 'zh'));
     });
     document.title = currentLang === 'zh' ? '退休計算機 — 什麼時候可以退休？' : 'Retirement Calculator — When Can I Retire?';
+    if ($('syncLabel')) $('syncLabel').textContent = expSynced ? t('expSync') : t('expUnsync');
   }
 
   function setLang(lang) {
@@ -1489,16 +1521,9 @@
   }
 
   $('expensesBase').addEventListener('input', function() {
-    if (expensePanelOpen && expenseItems.length > 0) {
-      const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
-      const typed = parseFloat(this.value) || 0;
-      if (typed !== total) {
-        expenseItems = [];
-        expensePanelOpen = false;
-        $('expensePanel').classList.remove('open');
-        $('expArrow').classList.remove('open');
-        $('expenseList').innerHTML = '';
-      }
+    if (expSynced) {
+      expSynced = false;
+      updateSyncUI();
     }
     syncExpenses();
   });
@@ -1528,6 +1553,24 @@
 
   let expenseItems = [];
   let expensePanelOpen = false;
+  let expSynced = true;
+
+  function toggleSync() {
+    expSynced = !expSynced;
+    updateSyncUI();
+    if (expSynced && expenseItems.length > 0) {
+      const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
+      $('expensesBase').value = total;
+      syncExpenses();
+    }
+  }
+
+  function updateSyncUI() {
+    const btn = $('syncBtn');
+    btn.classList.toggle('off', !expSynced);
+    $('syncIcon').textContent = expSynced ? '🔗' : '🔓';
+    $('syncLabel').textContent = expSynced ? t('expSync') : t('expUnsync');
+  }
 
   function toggleExpensePanel() {
     expensePanelOpen = !expensePanelOpen;
@@ -1536,6 +1579,8 @@
     if (expensePanelOpen && expenseItems.length === 0) {
       const defaults = currentLang === 'zh' ? DEFAULT_EXPENSES_ZH : DEFAULT_EXPENSES_EN;
       expenseItems = defaults.map(d => ({ name: d.name, amount: d.amount, mult: d.mult }));
+      expSynced = true;
+      updateSyncUI();
       renderExpenseList();
     }
   }
@@ -1601,7 +1646,7 @@
   function sumExpenses() {
     const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
     $('expenseTotal').textContent = '$' + total.toLocaleString();
-    if (expensePanelOpen) {
+    if (expensePanelOpen && expSynced) {
       $('expensesBase').value = total;
       syncExpenses();
     }
