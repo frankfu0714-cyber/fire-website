@@ -462,7 +462,7 @@
     .expense-row {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .expense-row input[type="text"] {
       flex: 1;
@@ -482,7 +482,7 @@
       box-shadow: 0 0 0 2px rgba(255,107,0,0.12);
     }
     .expense-row input[type="number"] {
-      width: 100px;
+      width: 80px;
       padding: 8px 10px 8px 24px;
       font-size: 0.82rem;
       border-radius: 8px;
@@ -500,6 +500,27 @@
       display: flex;
       align-items: center;
     }
+    .expense-row .times {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .expense-row .mult-input {
+      width: 46px;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 0.82rem;
+      border-radius: 8px;
+    }
+    .expense-row .row-subtotal {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--fire2);
+      min-width: 58px;
+      text-align: right;
+      flex-shrink: 0;
+    }
     .expense-row .del-btn {
       background: none;
       border: none;
@@ -510,6 +531,7 @@
       border-radius: 6px;
       transition: all 0.15s;
       line-height: 1;
+      flex-shrink: 0;
     }
     .expense-row .del-btn:hover { color: var(--danger); background: rgba(255,77,77,0.1); }
 
@@ -1464,24 +1486,24 @@
 
   // --- Expense Breakdown ---
   const DEFAULT_EXPENSES_EN = [
-    { name: 'Rent / Housing', amount: 1500 },
-    { name: 'Food / Meals', amount: 800 },
-    { name: 'Transportation', amount: 300 },
-    { name: 'Utilities', amount: 200 },
-    { name: 'Shopping', amount: 400 },
-    { name: 'Entertainment', amount: 200 },
-    { name: 'Insurance', amount: 300 },
-    { name: 'Other', amount: 500 },
+    { name: 'Rent / Housing', amount: 1500, mult: 1 },
+    { name: 'Food / Meals', amount: 25, mult: 30 },
+    { name: 'Transportation', amount: 10, mult: 30 },
+    { name: 'Utilities', amount: 200, mult: 1 },
+    { name: 'Shopping', amount: 400, mult: 1 },
+    { name: 'Entertainment', amount: 200, mult: 1 },
+    { name: 'Insurance', amount: 300, mult: 1 },
+    { name: 'Other', amount: 500, mult: 1 },
   ];
   const DEFAULT_EXPENSES_ZH = [
-    { name: '房租／房貸', amount: 1500 },
-    { name: '餐飲／三餐', amount: 800 },
-    { name: '交通', amount: 300 },
-    { name: '水電瓦斯', amount: 200 },
-    { name: '購物', amount: 400 },
-    { name: '娛樂', amount: 200 },
-    { name: '保險', amount: 300 },
-    { name: '其他', amount: 500 },
+    { name: '房租／房貸', amount: 1500, mult: 1 },
+    { name: '餐飲／三餐', amount: 25, mult: 30 },
+    { name: '交通', amount: 10, mult: 30 },
+    { name: '水電瓦斯', amount: 200, mult: 1 },
+    { name: '購物', amount: 400, mult: 1 },
+    { name: '娛樂', amount: 200, mult: 1 },
+    { name: '保險', amount: 300, mult: 1 },
+    { name: '其他', amount: 500, mult: 1 },
   ];
 
   let expenseItems = [];
@@ -1493,7 +1515,7 @@
     $('expArrow').classList.toggle('open', expensePanelOpen);
     if (expensePanelOpen && expenseItems.length === 0) {
       const defaults = currentLang === 'zh' ? DEFAULT_EXPENSES_ZH : DEFAULT_EXPENSES_EN;
-      expenseItems = defaults.map(d => ({ name: d.name, amount: d.amount }));
+      expenseItems = defaults.map(d => ({ name: d.name, amount: d.amount, mult: d.mult }));
       renderExpenseList();
     }
   }
@@ -1502,12 +1524,16 @@
     const list = $('expenseList');
     list.innerHTML = '';
     expenseItems.forEach((item, i) => {
+      const sub = item.amount * item.mult;
       const row = document.createElement('div');
       row.className = 'expense-row';
       row.innerHTML =
         '<input type="text" value="' + item.name.replace(/"/g, '&quot;') + '" onchange="updateExpenseName(' + i + ', this.value)" />' +
         '<div class="exp-input-wrap"><span class="exp-prefix">$</span>' +
         '<input type="number" value="' + item.amount + '" min="0" oninput="updateExpenseAmount(' + i + ', this.value)" /></div>' +
+        '<span class="times">×</span>' +
+        '<input type="number" class="mult-input" value="' + item.mult + '" min="1" max="365" oninput="updateExpenseMult(' + i + ', this.value)" />' +
+        '<span class="row-subtotal">$' + sub.toLocaleString() + '</span>' +
         '<button class="del-btn" onclick="removeExpenseRow(' + i + ')">✕</button>';
       list.appendChild(row);
     });
@@ -1516,7 +1542,7 @@
 
   function addExpenseRow() {
     const name = currentLang === 'zh' ? '新項目' : 'New item';
-    expenseItems.push({ name: name, amount: 0 });
+    expenseItems.push({ name: name, amount: 0, mult: 1 });
     renderExpenseList();
     const list = $('expenseList');
     const lastRow = list.lastElementChild;
@@ -1534,11 +1560,26 @@
 
   function updateExpenseAmount(i, val) {
     expenseItems[i].amount = parseFloat(val) || 0;
+    updateRowSubtotal(i);
     sumExpenses();
   }
 
+  function updateExpenseMult(i, val) {
+    expenseItems[i].mult = Math.max(parseFloat(val) || 1, 1);
+    updateRowSubtotal(i);
+    sumExpenses();
+  }
+
+  function updateRowSubtotal(i) {
+    const rows = $('expenseList').children;
+    if (rows[i]) {
+      const sub = expenseItems[i].amount * expenseItems[i].mult;
+      rows[i].querySelector('.row-subtotal').textContent = '$' + sub.toLocaleString();
+    }
+  }
+
   function sumExpenses() {
-    const total = expenseItems.reduce((s, item) => s + item.amount, 0);
+    const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
     $('expenseTotal').textContent = '$' + total.toLocaleString();
     if (expensePanelOpen) {
       $('expenses').value = total;
