@@ -659,14 +659,17 @@
       padding: 6px 4px;
       display: flex;
       gap: 2px;
+      flex-wrap: wrap;
+      max-width: 340px;
+      justify-content: center;
     }
     .lang-btn {
       border: none;
       background: transparent;
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      padding: 5px 12px;
+      padding: 5px 10px;
       border-radius: 50px;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
@@ -684,6 +687,9 @@
 <div class="lang-toggle">
   <button class="lang-btn active" onclick="setLang('en')">EN</button>
   <button class="lang-btn" onclick="setLang('zh')">中文</button>
+  <button class="lang-btn" onclick="setLang('ja')">日本語</button>
+  <button class="lang-btn" onclick="setLang('ko')">한국어</button>
+  <button class="lang-btn" onclick="setLang('vi')">Tiếng Việt</button>
 </div>
 
 <header>
@@ -970,7 +976,7 @@
     : '$' + Math.round(n).toLocaleString();
   const fmtFull = n => '$' + Math.round(n).toLocaleString();
 
-  let currentLang = 'en';
+  let currentLang = localStorage.getItem('fire-lang') || 'en';
   const I18N = {
     en: {
       title: 'Retirement Calculator',
@@ -1174,6 +1180,309 @@
       hhPartner: '有伴侶',
       hhFamily: '伴侶＋小孩',
       hhKids: '小孩人數：',
+    },
+    ja: {
+      title: 'リタイア計算機',
+      tagline: 'いつ仕事を辞められる？2つの戦略で計算します。',
+      modePerp: '♾️ 永久に使い切らない',
+      modePerpDesc: '投資リターンだけで生活 — 元本はそのまま',
+      modeSpend: '⏳ 全部使い切る',
+      modeSpendDesc: '貯蓄＋リターンを目標年齢まで使い切る — 最終残高$0',
+      profile: 'あなたの財務プロフィール',
+      lblAge: '現在の年齢',
+      lblExpenses: '月間支出',
+      lblSavings: '現在の貯蓄／投資額',
+      lblIncome: '月間収入（任意 — 無職なら$0）',
+      noteIncome: 'リタイアに必要な金額だけ知りたい場合は$0のままで。「リタイアまで何年」の計算には収入が必要です。',
+      lblReturn: '期待年間リターン',
+      noteReturn: '<strong>ヒント：</strong>S&P 500の平均は約10%／年（インフレ前）。保守的な見積もりは6–8%。',
+      lblInflation: 'インフレ率',
+      noteInflation: '<strong>ヒント：</strong>歴史的に約2–3%／年。購買力を徐々に減少させるため、計算に含めます。',
+      lblIncomeGrowth: '年間収入成長率',
+      noteIncomeGrowth: '<strong>ヒント：</strong>平均昇給率は3–5%／年。収入が増えると毎月の貯蓄も増えます。',
+      lblLifeExp: '予想寿命（「全部使い切る」モード用）',
+      noteLifeExp: 'この年齢で貯蓄がゼロになります。保守的に設定しましょう！',
+      sufYrs: '歳', sufYrs2: '歳',
+      progressTitle: 'リタイア目標への進捗',
+      ofTarget: '目標達成率',
+      targetWord: '目標',
+      statYears: 'リタイアまでの年数',
+      statRetireAge: 'リタイア年齢',
+      chartTitle: '資産推移予測',
+      cmpTitle: '2つのモード比較',
+      cmpColA: '♾️ 永久に使い切らない', cmpColB: '⏳ 全部使い切る',
+      cmpHow: '仕組み',
+      cmpHowA: '投資リターンで生活。元本は永遠にそのまま。',
+      cmpHowB: '貯蓄＋リターンを徐々に使い切る。目標年齢で残高$0。',
+      cmpTarget: '目標金額', cmpYears: 'リタイアまで', cmpAge: 'リタイア年齢',
+      cmpLeftover: '死後の残高',
+      cmpLeftA: '全額残る（無限）',
+      cmpRisk: 'リスク',
+      cmpRiskA: '非常に安全 — ただし多額の貯蓄が必要',
+      cmpRiskB: '寿命の見積もりが必要 — 資金が尽きるリスクあり',
+      howTitle: '計算の仕組み',
+      explainPerp: '<span class="emoji">♾️</span><strong>永久に使い切らない（永続モード）</strong><br><br>これは典型的な<strong>FIRE</strong>（経済的自立・早期リタイア）のアプローチです。<strong>年間の投資リターンだけ</strong>で生活費を賄えるだけの貯蓄を築きます — 元本には一切手をつけません。<br><br><strong>公式：</strong>目標 = 年間支出 ÷ 実質リターン率<br><strong>実質リターン</strong> = 投資リターン − インフレ<br><br>例：年間支出$50,400、リターン7%、インフレ3%（実質リターン4%）の場合、$50,400 ÷ 0.04 = <strong>$1,260,000</strong>が必要。',
+      explainSpend: '<span class="emoji">⏳</span><strong>全部使い切る（取崩モード）</strong><br><br>リターン<strong>と元本の両方</strong>を使うため、必要な貯蓄額は少なくなります。予想寿命を設定すると、その期間ちょうど持つ金額を計算します。<br><br><strong>公式：</strong>年金現在価値を使用 — 支出、リターン、リタイア年数を考慮。<br><br>例：同じ支出で45歳リタイア、85歳まで（40年）→ <strong>約$1,060,000</strong>で済みます（$1.26Mではなく）。',
+      explainReal: '<span class="emoji">📊</span><strong>「実質リターン」とは？</strong><br><br>投資が年7%成長しても、インフレが年約3%の購買力を奪います。つまり<strong>実質（インフレ調整後）リターン</strong>は約4%です。この計算機は実質リターンを使用し、全金額を<strong>今日の価値</strong>で表示します。',
+      footer1: '🔥 リタイア計算機 — 教育目的のみ。過去の市場リターンは将来の結果を保証しません。',
+      footer2: 'すべての金額は今日の価値で表示（インフレ調整済み）。一定の実質リターンと安定した拠出を前提。',
+      savingsRate: '貯蓄率',
+      passiveIncome: '不労所得（貯蓄から）',
+      saving: '毎月貯蓄',
+      perMo: '/月', perYr: '/年',
+      atRealReturn: '実質',
+      realReturn: 'リターン',
+      coversExpenses: '月{0}の支出をカバー — 経済的自由達成！🔥',
+      needButOnly: '月{0}必要ですが、現在{1}/月しか生成していません。',
+      savMsg70: '超貯蓄家！リタイアはすぐそこ 🔥🔥🔥',
+      savMsg50: '素晴らしい！リタイアへの最短ルート 🔥🔥',
+      savMsg30: '良い貯蓄率！🔥',
+      savMsg15: '良いスタート — もう少し上げるとさらに早く。',
+      savMsgLow: '貯蓄率が低いです。支出の削減を検討してください。',
+      fireNum: 'FIRE目標額（永続）',
+      nestEgg: 'リタイア必要資金',
+      annExpDiv: '年間支出 ÷ 実質リターン率',
+      enoughFor: 'リタイア後{0}年分に十分',
+      alreadyThere: '既に達成！',
+      retireNow: '今すぐリタイアできます！🎉',
+      needMore: 'あと{0}必要',
+      addIncome: '収入を入力して計算',
+      notReachable: '達成不可',
+      increaseSav: '貯蓄率を上げましょう',
+      yrs: '年', mo: 'ヶ月',
+      superEarly: '超早期リタイア！🔥',
+      excellent: '素晴らしい早期リタイア！',
+      early: '早期リタイア！',
+      onTrack: 'リタイアの軌道に乗っています。',
+      considerMore: '貯蓄の増加を検討しましょう。',
+      now: '（今すぐ！）',
+      atAge: '',
+      alertReturn: '⚠️ リターンがインフレを下回っています — お金の価値が下がり続けます。「永久に使い切らない」モードには正の実質リターンが必要です。「全部使い切る」モードをお試しください。',
+      alertReturnShort: '実質リターン ≤ 0 — 永続モードでは不可能',
+      alertExpenses: '⚠️ 月間支出を$0より大きい値で入力してください。',
+      alertRetireNow: '🎉 今すぐリタイアできます！貯蓄（{0}）が目標（{1}）を超えています。',
+      alertNeedMore: '💡 リタイアにはあと{0}必要です。月間収入を入力すると必要期間を計算します。',
+      lgdPortfolio: '資産',
+      lgdTarget: 'FIRE目標',
+      lgdNestEgg: 'リタイア必要資金',
+      lgdLivingOff: '資産（リターンで生活）',
+      lgdSpending: '資産（取崩し中）',
+      agePrefix: '',
+      nowLabel: '現在',
+      targetLabel2: '目標',
+      expToggle: '支出の内訳',
+      expAdd: '+ 項目追加',
+      expTotal: '合計',
+      noteExpMult: '倍率 > 1 = 安全マージン（例：×1.1で10%の余裕）。',
+      expSync: '内訳と同期',
+      expUnsync: '非同期 — 自由に編集',
+      hhLabel: '世帯構成：',
+      hhSolo: '単身',
+      hhPartner: 'パートナーあり',
+      hhFamily: 'パートナー＋子供',
+      hhKids: '子供の数：',
+    },
+    ko: {
+      title: '은퇴 계산기',
+      tagline: '언제 일을 그만둘 수 있을까? 두 가지 전략으로 알아보세요.',
+      modePerp: '♾️ 절대 바닥나지 않는',
+      modePerpDesc: '투자 수익만으로 생활 — 원금은 영원히 유지',
+      modeSpend: '⏳ 전부 사용하기',
+      modeSpendDesc: '저축 + 수익을 목표 나이까지 모두 사용 — 최종 잔액 $0',
+      profile: '재정 프로필',
+      lblAge: '현재 나이',
+      lblExpenses: '월 지출',
+      lblSavings: '현재 저축/투자액',
+      lblIncome: '월 수입 (선택 — 미취업 시 $0)',
+      noteIncome: '은퇴에 필요한 금액만 알고 싶다면 $0으로 두세요. "은퇴까지 몇 년" 계산에만 수입이 필요합니다.',
+      lblReturn: '예상 연간 수익률',
+      noteReturn: '<strong>팁:</strong> S&P 500 평균은 연 약 10% (인플레이션 전). 보수적 추정치는 6–8%.',
+      lblInflation: '인플레이션율',
+      noteInflation: '<strong>팁:</strong> 역사적으로 연 약 2–3%. 구매력을 서서히 감소시키므로 계산에 포함합니다.',
+      lblIncomeGrowth: '연간 수입 성장률',
+      noteIncomeGrowth: '<strong>팁:</strong> 평균 급여 인상률은 연 3–5%. 수입이 늘면 매월 저축도 증가합니다.',
+      lblLifeExp: '기대 수명 ("전부 사용하기" 모드용)',
+      noteLifeExp: '이 나이에 저축이 0이 됩니다. 보수적으로 설정하세요!',
+      sufYrs: '세', sufYrs2: '세',
+      progressTitle: '은퇴 목표 진행률',
+      ofTarget: '목표 달성률',
+      targetWord: '목표',
+      statYears: '은퇴까지 남은 기간',
+      statRetireAge: '은퇴 나이',
+      chartTitle: '자산 추이 예측',
+      cmpTitle: '두 모드 비교',
+      cmpColA: '♾️ 절대 바닥나지 않는', cmpColB: '⏳ 전부 사용하기',
+      cmpHow: '작동 방식',
+      cmpHowA: '투자 수익으로 생활. 원금은 영원히 유지.',
+      cmpHowB: '저축 + 수익을 점차 소진. 목표 나이에 잔액 $0.',
+      cmpTarget: '목표 금액', cmpYears: '은퇴까지', cmpAge: '은퇴 나이',
+      cmpLeftover: '사망 후 잔액',
+      cmpLeftA: '전액 보존 (무한)',
+      cmpRisk: '위험',
+      cmpRiskA: '매우 안전 — 단, 더 많은 저축 필요',
+      cmpRiskB: '수명 예측 필요 — 자금 소진 위험 있음',
+      howTitle: '계산 원리',
+      explainPerp: '<span class="emoji">♾️</span><strong>절대 바닥나지 않는 (영구 모드)</strong><br><br>이것은 전형적인 <strong>FIRE</strong>(경제적 자립, 조기 은퇴) 접근법입니다. <strong>연간 투자 수익만으로</strong> 생활비를 충당할 수 있는 저축을 쌓습니다 — 원금은 절대 건드리지 않습니다.<br><br><strong>공식:</strong> 목표 = 연간 지출 ÷ 실질 수익률<br><strong>실질 수익</strong> = 투자 수익 − 인플레이션<br><br>예: 연간 지출 $50,400, 수익률 7%, 인플레이션 3% (실질 수익 4%), 필요액 $50,400 ÷ 0.04 = <strong>$1,260,000</strong>.',
+      explainSpend: '<span class="emoji">⏳</span><strong>전부 사용하기 (인출 모드)</strong><br><br>수익<strong>과 원금 모두</strong>를 사용하므로 필요한 저축이 적습니다. 기대 수명을 선택하면, 그 기간 동안 정확히 지속되는 금액을 계산합니다.<br><br><strong>공식:</strong> 연금 현재 가치 사용 — 지출, 수익, 은퇴 기간을 고려.<br><br>예: 같은 지출로 45세 은퇴, 85세까지 (40년) → <strong>약 $1,060,000</strong>만 필요 ($1.26M 대신).',
+      explainReal: '<span class="emoji">📊</span><strong>"실질 수익"이란?</strong><br><br>투자가 연 7% 성장해도 인플레이션이 연 약 3%의 구매력을 빼앗습니다. 따라서 <strong>실질(인플레이션 조정) 수익</strong>은 약 4%입니다. 이 계산기는 실질 수익을 사용하여 모든 금액을 <strong>오늘의 가치</strong>로 표시합니다.',
+      footer1: '🔥 은퇴 계산기 — 교육 목적으로만 사용. 과거 시장 수익률이 미래 결과를 보장하지 않습니다.',
+      footer2: '모든 금액은 오늘의 가치로 표시 (인플레이션 조정 완료). 일정한 실질 수익과 꾸준한 기여를 가정.',
+      savingsRate: '저축률',
+      passiveIncome: '수동 소득 (저축에서)',
+      saving: '매월 저축',
+      perMo: '/월', perYr: '/년',
+      atRealReturn: '실질',
+      realReturn: '수익률',
+      coversExpenses: '월 {0} 지출을 커버 — 경제적 자유 달성! 🔥',
+      needButOnly: '월 {0} 필요하지만 현재 {1}/월만 생성 중.',
+      savMsg70: '극한 저축가! 은퇴가 코앞! 🔥🔥🔥',
+      savMsg50: '훌륭합니다! 은퇴 고속도로! 🔥🔥',
+      savMsg30: '좋은 저축률! 🔥',
+      savMsg15: '좋은 시작 — 더 높이면 더 빨리.',
+      savMsgLow: '저축률이 낮습니다. 지출 줄이기를 시도하세요.',
+      fireNum: 'FIRE 목표 (영구)',
+      nestEgg: '은퇴 필요 자금',
+      annExpDiv: '연간 지출 ÷ 실질 수익률',
+      enoughFor: '은퇴 후 {0}년 충분',
+      alreadyThere: '이미 달성!',
+      retireNow: '지금 바로 은퇴 가능! 🎉',
+      needMore: '{0} 더 필요',
+      addIncome: '수입을 입력하여 계산',
+      notReachable: '달성 불가',
+      increaseSav: '저축률을 높이세요',
+      yrs: '년', mo: '개월',
+      superEarly: '초 조기 은퇴! 🔥',
+      excellent: '훌륭한 조기 은퇴!',
+      early: '조기 은퇴!',
+      onTrack: '은퇴 궤도에 있습니다.',
+      considerMore: '저축 증가를 고려하세요.',
+      now: '(지금!)',
+      atAge: '',
+      alertReturn: '⚠️ 수익률이 인플레이션보다 낮습니다 — 돈의 가치가 계속 줄어듭니다. "절대 바닥나지 않는" 모드에는 양의 실질 수익이 필요합니다. "전부 사용하기" 모드를 시도하세요.',
+      alertReturnShort: '실질 수익 ≤ 0 — 영구 모드 불가',
+      alertExpenses: '⚠️ 월 지출을 $0보다 크게 입력하세요.',
+      alertRetireNow: '🎉 지금 바로 은퇴 가능! 저축({0})이 목표({1})를 초과합니다.',
+      alertNeedMore: '💡 은퇴까지 {0} 더 필요합니다. 월 수입을 입력하면 기간을 계산합니다.',
+      lgdPortfolio: '자산',
+      lgdTarget: 'FIRE 목표',
+      lgdNestEgg: '은퇴 필요 자금',
+      lgdLivingOff: '자산 (수익으로 생활)',
+      lgdSpending: '자산 (인출 중)',
+      agePrefix: '',
+      nowLabel: '현재',
+      targetLabel2: '목표',
+      expToggle: '지출 내역',
+      expAdd: '+ 항목 추가',
+      expTotal: '합계',
+      noteExpMult: '배수 > 1 = 안전 마진 (예: ×1.1은 10% 여유).',
+      expSync: '내역과 동기화',
+      expUnsync: '비동기화 — 자유 편집',
+      hhLabel: '가구 구성:',
+      hhSolo: '1인',
+      hhPartner: '파트너와 함께',
+      hhFamily: '파트너 + 자녀',
+      hhKids: '자녀 수:',
+    },
+    vi: {
+      title: 'Máy Tính Nghỉ Hưu',
+      tagline: 'Khi nào bạn có thể ngừng làm việc? Tìm hiểu với hai chiến lược.',
+      modePerp: '♾️ Không Bao Giờ Hết',
+      modePerpDesc: 'Sống bằng lợi nhuận đầu tư — vốn gốc giữ nguyên mãi mãi',
+      modeSpend: '⏳ Chi Tiêu Hết',
+      modeSpendDesc: 'Dùng hết tiết kiệm + lợi nhuận đến tuổi mục tiêu — còn $0',
+      profile: 'Hồ Sơ Tài Chính',
+      lblAge: 'Tuổi hiện tại',
+      lblExpenses: 'Chi tiêu hàng tháng',
+      lblSavings: 'Tiết kiệm / Đầu tư hiện tại',
+      lblIncome: 'Thu nhập hàng tháng (tùy chọn — $0 nếu không đi làm)',
+      noteIncome: 'Để $0 nếu chỉ muốn biết cần bao nhiêu để nghỉ hưu. Chỉ cần thu nhập để tính "bao nhiêu năm đến nghỉ hưu".',
+      lblReturn: 'Lợi suất kỳ vọng hàng năm',
+      noteReturn: '<strong>Gợi ý:</strong> S&P 500 trung bình ~10%/năm (trước lạm phát). Ước tính thận trọng là 6–8%.',
+      lblInflation: 'Tỷ lệ lạm phát',
+      noteInflation: '<strong>Gợi ý:</strong> Lịch sử khoảng 2–3%/năm. Lạm phát làm giảm sức mua nên chúng tôi tính vào.',
+      lblIncomeGrowth: 'Tốc độ tăng thu nhập hàng năm',
+      noteIncomeGrowth: '<strong>Gợi ý:</strong> Tăng lương trung bình 3–5%/năm. Thu nhập tăng thì tiết kiệm hàng tháng cũng tăng.',
+      lblLifeExp: 'Tuổi thọ kỳ vọng (cho chế độ "Chi Tiêu Hết")',
+      noteLifeExp: 'Tiết kiệm sẽ về 0 ở tuổi này. Hãy ước tính thận trọng!',
+      sufYrs: 'tuổi', sufYrs2: 'tuổi',
+      progressTitle: 'Tiến Độ Mục Tiêu Nghỉ Hưu',
+      ofTarget: 'đã đạt mục tiêu',
+      targetWord: 'Mục tiêu',
+      statYears: 'Số năm đến nghỉ hưu',
+      statRetireAge: 'Tuổi nghỉ hưu',
+      chartTitle: 'Dự Báo Tài Sản',
+      cmpTitle: 'So Sánh Hai Chế Độ',
+      cmpColA: '♾️ Không Bao Giờ Hết', cmpColB: '⏳ Chi Tiêu Hết',
+      cmpHow: 'Cách hoạt động',
+      cmpHowA: 'Sống bằng lợi nhuận đầu tư. Vốn gốc giữ nguyên mãi mãi.',
+      cmpHowB: 'Dần dần chi tiêu tiết kiệm + lợi nhuận. Về $0 ở tuổi mục tiêu.',
+      cmpTarget: 'Số tiền mục tiêu', cmpYears: 'Năm để nghỉ hưu', cmpAge: 'Tuổi nghỉ hưu',
+      cmpLeftover: 'Số dư sau khi mất',
+      cmpLeftA: 'Toàn bộ (vô hạn)',
+      cmpRisk: 'Rủi ro',
+      cmpRiskA: 'Rất an toàn — nhưng cần nhiều tiết kiệm hơn',
+      cmpRiskB: 'Phải ước tính tuổi thọ — rủi ro hết tiền',
+      howTitle: 'Cách Tính',
+      explainPerp: '<span class="emoji">♾️</span><strong>Không Bao Giờ Hết (Chế độ vĩnh viễn)</strong><br><br>Đây là phương pháp <strong>FIRE</strong> (Tự do tài chính, Nghỉ hưu sớm) kinh điển. Bạn tích lũy đủ tiết kiệm để <strong>lợi nhuận đầu tư hàng năm</strong> trang trải chi phí sinh hoạt — không bao giờ đụng đến vốn gốc.<br><br><strong>Công thức:</strong> Mục tiêu = Chi phí hàng năm ÷ Lợi suất thực<br><strong>Lợi suất thực</strong> = Lợi suất đầu tư − Lạm phát<br><br>Ví dụ: Chi $50,400/năm, lợi suất 7%, lạm phát 3% (lợi suất thực 4%), cần $50,400 ÷ 0.04 = <strong>$1,260,000</strong>.',
+      explainSpend: '<span class="emoji">⏳</span><strong>Chi Tiêu Hết (Chế độ rút dần)</strong><br><br>Bạn không cần tiết kiệm nhiều vì sẽ <strong>chi cả lợi nhuận lẫn vốn gốc</strong>. Chọn tuổi thọ kỳ vọng, máy tính sẽ tính bạn cần bao nhiêu để tiền kéo dài đúng thời gian đó.<br><br><strong>Công thức:</strong> Sử dụng Giá trị hiện tại của niên kim — tính đến chi tiêu, lợi suất và số năm nghỉ hưu.<br><br>Ví dụ: Cùng chi phí, nghỉ hưu 45 tuổi, sống đến 85 (40 năm) → chỉ cần khoảng <strong>$1,060,000</strong> thay vì $1.26M.',
+      explainReal: '<span class="emoji">📊</span><strong>"Lợi suất thực" là gì?</strong><br><br>Đầu tư có thể tăng 7%/năm, nhưng lạm phát lấy mất ~3%/năm sức mua. Vậy <strong>lợi suất thực (đã điều chỉnh lạm phát)</strong> khoảng 4%. Máy tính này dùng lợi suất thực nên mọi số liệu đều theo <strong>giá trị hôm nay</strong>.',
+      footer1: '🔥 Máy Tính Nghỉ Hưu — Chỉ dùng cho mục đích giáo dục. Lợi suất quá khứ không đảm bảo kết quả tương lai.',
+      footer2: 'Tất cả giá trị hiển thị theo đồng tiền hôm nay (đã điều chỉnh lạm phát). Giả định lợi suất thực không đổi và đóng góp ổn định.',
+      savingsRate: 'Tỷ lệ tiết kiệm',
+      passiveIncome: 'Thu nhập thụ động (từ tiết kiệm)',
+      saving: 'Tiết kiệm',
+      perMo: '/tháng', perYr: '/năm',
+      atRealReturn: 'với',
+      realReturn: 'lợi suất thực',
+      coversExpenses: 'Trang trải {0}/tháng chi phí — bạn tự do rồi! 🔥',
+      needButOnly: 'Cần {0}/tháng nhưng chỉ tạo ra {1}/tháng.',
+      savMsg70: 'Siêu tiết kiệm! Nghỉ hưu đến rất gần 🔥🔥🔥',
+      savMsg50: 'Xuất sắc! Đường tắt đến nghỉ hưu 🔥🔥',
+      savMsg30: 'Tỷ lệ tiết kiệm tốt! 🔥',
+      savMsg15: 'Khởi đầu tốt — tăng thêm để nghỉ hưu sớm hơn.',
+      savMsgLow: 'Tỷ lệ tiết kiệm thấp. Thử cắt giảm chi tiêu.',
+      fireNum: 'Mục tiêu FIRE (vĩnh viễn)',
+      nestEgg: 'Quỹ nghỉ hưu cần thiết',
+      annExpDiv: 'Chi phí hàng năm ÷ lợi suất thực',
+      enoughFor: 'Đủ cho {0} năm nghỉ hưu',
+      alreadyThere: 'Đã đạt mục tiêu!',
+      retireNow: 'Bạn có thể nghỉ hưu ngay! 🎉',
+      needMore: 'Cần thêm {0}',
+      addIncome: 'Nhập thu nhập để tính',
+      notReachable: 'Không thể đạt được',
+      increaseSav: 'Tăng tỷ lệ tiết kiệm',
+      yrs: 'năm', mo: 'tháng',
+      superEarly: 'Nghỉ hưu siêu sớm! 🔥',
+      excellent: 'Nghỉ hưu sớm tuyệt vời!',
+      early: 'Nghỉ hưu sớm!',
+      onTrack: 'Đang trên đường nghỉ hưu.',
+      considerMore: 'Hãy cân nhắc tăng tiết kiệm.',
+      now: '(ngay bây giờ!)',
+      atAge: 'ở tuổi',
+      alertReturn: '⚠️ Lợi suất thấp hơn lạm phát — tiền mất giá liên tục. Chế độ "Không Bao Giờ Hết" cần lợi suất thực dương. Thử chế độ "Chi Tiêu Hết".',
+      alertReturnShort: 'Lợi suất thực ≤ 0 — không khả thi ở chế độ vĩnh viễn',
+      alertExpenses: '⚠️ Vui lòng nhập chi tiêu hàng tháng lớn hơn $0.',
+      alertRetireNow: '🎉 Bạn có thể nghỉ hưu ngay! Tiết kiệm ({0}) vượt mục tiêu ({1}).',
+      alertNeedMore: '💡 Bạn cần thêm {0} để nghỉ hưu. Nhập thu nhập hàng tháng để tính thời gian.',
+      lgdPortfolio: 'Tài sản',
+      lgdTarget: 'Mục tiêu FIRE',
+      lgdNestEgg: 'Quỹ nghỉ hưu',
+      lgdLivingOff: 'Tài sản (sống bằng lợi nhuận)',
+      lgdSpending: 'Tài sản (đang rút dần)',
+      agePrefix: 'Tuổi ',
+      nowLabel: 'Hiện tại',
+      targetLabel2: 'Mục tiêu',
+      expToggle: 'Chi tiết chi tiêu',
+      expAdd: '+ Thêm mục',
+      expTotal: 'Tổng',
+      noteExpMult: 'Hệ số > 1 = dự phòng (ví dụ ×1.1 thêm 10% dự phòng).',
+      expSync: 'Đồng bộ với chi tiết',
+      expUnsync: 'Không đồng bộ — nhập tự do',
+      hhLabel: 'Hộ gia đình:',
+      hhSolo: 'Một mình',
+      hhPartner: 'Có bạn đời',
+      hhFamily: 'Bạn đời + Con',
+      hhKids: 'Số con:',
     }
   };
 
@@ -1201,16 +1510,20 @@
       const val = t(key);
       if (val) el.innerHTML = val;
     });
+    const langLabels = {en:'EN',zh:'中文',ja:'日本語',ko:'한국어',vi:'Tiếng Việt'};
     document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', (btn.textContent.trim() === 'EN' && currentLang === 'en') || (btn.textContent.trim() === '中文' && currentLang === 'zh'));
+      btn.classList.toggle('active', btn.textContent.trim() === langLabels[currentLang]);
     });
-    document.title = currentLang === 'zh' ? '退休計算機 — 什麼時候可以退休？' : 'Retirement Calculator — When Can I Retire?';
+    const titles = {en:'Retirement Calculator — When Can I Retire?',zh:'退休計算機 — 什麼時候可以退休？',ja:'リタイア計算機 — いつリタイアできる？',ko:'은퇴 계산기 — 언제 은퇴할 수 있을까?',vi:'Máy Tính Nghỉ Hưu — Khi nào nghỉ hưu?'};
+    document.title = titles[currentLang] || titles.en;
     if ($('syncLabel')) $('syncLabel').textContent = expSynced ? t('expSync') : t('expUnsync');
   }
 
   function setLang(lang) {
     currentLang = lang;
-    document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+    const langCodes = {en:'en',zh:'zh-TW',ja:'ja',ko:'ko',vi:'vi'};
+    document.documentElement.lang = langCodes[lang] || 'en';
+    localStorage.setItem('fire-lang', lang);
     updateStaticText();
     retranslateExpenseItems();
     calculate();
@@ -1504,7 +1817,8 @@
     $('cmpYearsB').textContent = canRetireSpend ? '0 ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' ' + t('yrs') : '—');
     $('cmpAgeA').textContent = canRetirePerp ? age.toFixed(0) + ' ' + t('now') : (hasIncome && isFinite(perpYearsForCmp) ? (age + perpYearsForCmp).toFixed(1) : '—');
     $('cmpAgeB').textContent = canRetireSpend ? age.toFixed(0) + ' ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendRetireAge.toFixed(1) : '—');
-    $('cmpLeftoverVal').textContent = currentLang === 'zh' ? ('$0（' + lifeExp + ' 歲歸零）') : ('$0 at age ' + lifeExp);
+    const leftoverTexts = {en:'$0 at age '+lifeExp, zh:'$0（'+lifeExp+' 歲歸零）', ja:'$0（'+lifeExp+'歳でゼロ）', ko:'$0 ('+lifeExp+'세에 소진)', vi:'$0 ở tuổi '+lifeExp};
+    $('cmpLeftoverVal').textContent = leftoverTexts[currentLang] || leftoverTexts.en;
 
     // Chart
     buildChart(curSav, monthlySav, monthlyRealR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome, realIncGrowth);
@@ -1539,7 +1853,8 @@
     const monthlyExpense = annualExp / 12;
 
     const ap = t('agePrefix');
-    const ageLbl = (a) => currentLang === 'zh' ? Math.round(a) + '歲' : ap + Math.round(a);
+    const ageSuffix = {zh:'歲',ja:'歳',ko:'세',vi:' tuổi'};
+    const ageLbl = (a) => ageSuffix[currentLang] ? Math.round(a) + ageSuffix[currentLang] : ap + Math.round(a);
 
     function simAccum(months) {
       let bal = curSav, sav = monthlySav;
@@ -1669,6 +1984,27 @@
       insurance: '保險', other: '其他',
       pFood: '伴侶 — 餐飲', pInsurance: '伴侶 — 保險', pPersonal: '伴侶 — 個人消費',
       kSchool: '小孩{n} — 托育／學費', kFood: '小孩{n} — 餐飲', kActivities: '小孩{n} — 活動／用品',
+    },
+    ja: {
+      rent: '家賃／住宅', food: '食費', transport: '交通費',
+      utilities: '光熱費', shopping: '買い物', entertainment: '娯楽',
+      insurance: '保険', other: 'その他',
+      pFood: 'パートナー — 食費', pInsurance: 'パートナー — 保険', pPersonal: 'パートナー — 個人消費',
+      kSchool: '子供{n} — 保育／学費', kFood: '子供{n} — 食費', kActivities: '子供{n} — 活動／用品',
+    },
+    ko: {
+      rent: '주거비', food: '식비', transport: '교통비',
+      utilities: '공과금', shopping: '쇼핑', entertainment: '오락',
+      insurance: '보험', other: '기타',
+      pFood: '파트너 — 식비', pInsurance: '파트너 — 보험', pPersonal: '파트너 — 개인 소비',
+      kSchool: '자녀{n} — 보육/학비', kFood: '자녀{n} — 식비', kActivities: '자녀{n} — 활동/용품',
+    },
+    vi: {
+      rent: 'Thuê nhà / Nhà ở', food: 'Ăn uống', transport: 'Đi lại',
+      utilities: 'Điện nước', shopping: 'Mua sắm', entertainment: 'Giải trí',
+      insurance: 'Bảo hiểm', other: 'Khác',
+      pFood: 'Bạn đời — Ăn uống', pInsurance: 'Bạn đời — Bảo hiểm', pPersonal: 'Bạn đời — Chi tiêu cá nhân',
+      kSchool: 'Con {n} — Trông trẻ / Học phí', kFood: 'Con {n} — Ăn uống', kActivities: 'Con {n} — Hoạt động / Đồ dùng',
     }
   };
   function expName(key, kidNum) {
@@ -1784,7 +2120,8 @@
   }
 
   function addExpenseRow() {
-    const name = currentLang === 'zh' ? '新項目' : 'New item';
+    const newItemNames = {en:'New item',zh:'新項目',ja:'新しい項目',ko:'새 항목',vi:'Mục mới'};
+    const name = newItemNames[currentLang] || newItemNames.en;
     expenseItems.push({ name: name, amount: 0, mult: 1 });
     renderExpenseList();
     const list = $('expenseList');
@@ -1833,7 +2170,7 @@
   }
 
   initChart();
-  updateStaticText();
+  setLang(currentLang);
   syncExpenses();
 </script>
 </body>
