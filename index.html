@@ -347,6 +347,13 @@
     .compare-table .label-col { color: var(--muted); font-weight: 500; }
     .compare-table .mode-a { color: var(--fire2); }
     .compare-table .mode-b { color: var(--blue); }
+    .country-row { cursor: pointer; transition: background .15s; }
+    .country-row:hover { background: rgba(255,170,0,.08); }
+    .country-row td:first-child { font-weight: 600; }
+    .country-flag { margin-right: 5px; }
+    .country-note { font-size: .72rem; color: var(--muted); line-height: 1.3; }
+    .kid-note { margin-top:8px; padding:8px 12px; background:rgba(255,170,0,.08); border-radius:8px; font-size:.78rem; color:var(--fire2); display:none; }
+    .kid-note.visible { display:block; }
 
     /* Info boxes */
     .info-box {
@@ -780,6 +787,8 @@
             <div class="hh-kids-wrap" id="kidsWrap" style="display:none;">
               <span class="hh-kids-label" data-i18n="hhKids">Kids:</span>
               <input type="number" id="kidsCount" value="1" min="1" max="10" onchange="applyHousehold()" oninput="applyHousehold()" />
+              <span class="hh-kids-label" data-i18n="hhSupportUntil" style="margin-left:10px;">Support until age:</span>
+              <input type="number" id="kidSupportAge" value="22" min="1" max="40" onchange="calculate()" oninput="calculate()" style="width:52px;" />
             </div>
           </div>
           <div class="expense-list" id="expenseList"></div>
@@ -792,6 +801,7 @@
               <div class="expense-total" id="expenseTotal">$0</div>
             </div>
           </div>
+          <div class="kid-note" id="kidExpenseNote"></div>
         </div>
       </div>
 
@@ -960,6 +970,24 @@
   </div>
 
   <div class="info-box" style="margin-top:16px;" id="explainReal" data-i18n-html="explainReal"></div>
+
+  <!-- Popular Retirement Countries -->
+  <div class="section-divider" data-i18n="countriesTitle">🌍 Popular Retirement Destinations</div>
+  <div class="info-box" style="font-size:0.82rem;margin-bottom:6px;" data-i18n="countriesNote">Rough monthly living costs (USD) by household type. Click a country to auto-fill expenses.</div>
+  <div style="overflow-x:auto;">
+    <table class="compare-table" id="countriesTable" style="font-size:0.82rem;width:100%;">
+      <thead>
+        <tr>
+          <th data-i18n="countryCol">Country</th>
+          <th data-i18n="costSolo">Solo</th>
+          <th data-i18n="costPartner">With Partner</th>
+          <th data-i18n="costFamily">Family (1 kid)</th>
+          <th data-i18n="countryNotes">Notes</th>
+        </tr>
+      </thead>
+      <tbody id="countriesBody"></tbody>
+    </table>
+  </div>
 </div>
 
 <footer>
@@ -1079,6 +1107,15 @@
       hhPartner: 'With Partner',
       hhFamily: 'Partner + Kids',
       hhKids: 'Kids:',
+      hhSupportUntil: 'Support until age:',
+      kidExpNote: 'Kid expenses end in ~{0} years (age {1}). After that, monthly expenses drop to ~{2}.',
+      countriesTitle: '🌍 Popular Retirement Destinations',
+      countriesNote: 'Rough monthly living costs (USD) by household type. Click a country to auto-fill expenses.',
+      countryCol: 'Country',
+      costSolo: 'Solo',
+      costPartner: 'With Partner',
+      costFamily: 'Family (1 kid)',
+      countryNotes: 'Notes',
     },
     zh: {
       title: '退休計算機',
@@ -1180,6 +1217,15 @@
       hhPartner: '有伴侶',
       hhFamily: '伴侶＋小孩',
       hhKids: '小孩人數：',
+      hhSupportUntil: '撫養到幾歲：',
+      kidExpNote: '小孩支出約在 {0} 年後結束（{1} 歲）。之後每月支出降為約 {2}。',
+      countriesTitle: '🌍 熱門退休目的地',
+      countriesNote: '各國大略每月生活費（美元）。點擊國家可自動填入支出。',
+      countryCol: '國家',
+      costSolo: '一人',
+      costPartner: '有伴侶',
+      costFamily: '家庭（1小孩）',
+      countryNotes: '備註',
     },
     ja: {
       title: 'リタイア計算機',
@@ -1281,6 +1327,15 @@
       hhPartner: 'パートナーあり',
       hhFamily: 'パートナー＋子供',
       hhKids: '子供の数：',
+      hhSupportUntil: '何歳まで扶養：',
+      kidExpNote: '子供の費用は約{0}年後（{1}歳）に終了。その後、月間支出は約{2}に減少。',
+      countriesTitle: '🌍 人気のリタイア先',
+      countriesNote: '国別の概算月間生活費（USD）。国をクリックすると支出に自動入力。',
+      countryCol: '国',
+      costSolo: '単身',
+      costPartner: 'パートナーあり',
+      costFamily: '家族（子供1人）',
+      countryNotes: 'メモ',
     },
     ko: {
       title: '은퇴 계산기',
@@ -1382,6 +1437,15 @@
       hhPartner: '파트너와 함께',
       hhFamily: '파트너 + 자녀',
       hhKids: '자녀 수:',
+      hhSupportUntil: '부양 종료 나이:',
+      kidExpNote: '자녀 비용은 약 {0}년 후({1}세)에 종료. 이후 월 지출은 약 {2}로 감소.',
+      countriesTitle: '🌍 인기 은퇴 국가',
+      countriesNote: '국가별 대략적인 월 생활비(USD). 국가를 클릭하면 지출에 자동 입력.',
+      countryCol: '국가',
+      costSolo: '1인',
+      costPartner: '파트너와',
+      costFamily: '가족 (자녀 1명)',
+      countryNotes: '비고',
     },
     vi: {
       title: 'Máy Tính Nghỉ Hưu',
@@ -1483,6 +1547,15 @@
       hhPartner: 'Có bạn đời',
       hhFamily: 'Bạn đời + Con',
       hhKids: 'Số con:',
+      hhSupportUntil: 'Hỗ trợ đến tuổi:',
+      kidExpNote: 'Chi phí con cái kết thúc sau ~{0} năm (tuổi {1}). Sau đó, chi tiêu hàng tháng giảm còn ~{2}.',
+      countriesTitle: '🌍 Điểm Đến Nghỉ Hưu Phổ Biến',
+      countriesNote: 'Chi phí sinh hoạt hàng tháng ước tính (USD). Nhấn vào quốc gia để tự động điền chi tiêu.',
+      countryCol: 'Quốc gia',
+      costSolo: 'Một mình',
+      costPartner: 'Có bạn đời',
+      costFamily: 'Gia đình (1 con)',
+      countryNotes: 'Ghi chú',
     }
   };
 
@@ -1527,6 +1600,8 @@
     updateStaticText();
     retranslateExpenseItems();
     calculate();
+    renderCountries();
+    updateKidExpenseNote();
   }
 
   function retranslateExpenseItems() {
@@ -2097,6 +2172,8 @@
   function applyHousehold() {
     expenseItems = buildExpenseDefaults();
     renderExpenseList();
+    renderCountries();
+    updateKidExpenseNote();
   }
 
   function renderExpenseList() {
@@ -2166,6 +2243,69 @@
     if (expensePanelOpen && expSynced) {
       $('expensesBase').value = total;
       syncExpenses();
+    }
+    updateKidExpenseNote();
+  }
+
+  // ─── Popular Retirement Countries ───
+  const COUNTRIES = [
+    { flag:'🇹🇭', key:'Thailand',   solo:1200, partner:1800, family:2400, note:{en:'Low cost, great food & healthcare',zh:'低消費、美食與醫療',ja:'低コスト、美食＆医療',ko:'저비용, 훌륭한 음식 & 의료',vi:'Chi phí thấp, ẩm thực & y tế tốt'} },
+    { flag:'🇻🇳', key:'Vietnam',    solo:900,  partner:1400, family:1900, note:{en:'Very affordable, growing expat scene',zh:'非常實惠，外籍人士社群成長中',ja:'非常に手頃、外国人コミュニティ拡大中',ko:'매우 저렴, 외국인 커뮤니티 성장 중',vi:'Rất hợp túi tiền, cộng đồng expat đang phát triển'} },
+    { flag:'🇲🇾', key:'Malaysia',   solo:1300, partner:1900, family:2500, note:{en:'English-friendly, MM2H visa',zh:'英語友善，MM2H簽證',ja:'英語OK、MM2Hビザ',ko:'영어 가능, MM2H 비자',vi:'Thân thiện tiếng Anh, visa MM2H'} },
+    { flag:'🇹🇼', key:'Taiwan',     solo:1500, partner:2200, family:3000, note:{en:'Excellent healthcare, safe, great food',zh:'優質醫療、安全、美食天堂',ja:'優れた医療、安全、美食',ko:'우수한 의료, 안전, 훌륭한 음식',vi:'Y tế tuyệt vời, an toàn, ẩm thực ngon'} },
+    { flag:'🇯🇵', key:'Japan',      solo:2000, partner:2800, family:3800, note:{en:'High quality of life, visa options vary',zh:'高品質生活，簽證選擇多樣',ja:'高い生活の質、ビザの選択肢多数',ko:'높은 삶의 질, 비자 옵션 다양',vi:'Chất lượng sống cao, tùy chọn visa đa dạng'} },
+    { flag:'🇰🇷', key:'South Korea',solo:1800, partner:2600, family:3500, note:{en:'Modern, fast internet, 4 seasons',zh:'現代化、高速網路、四季分明',ja:'現代的、高速ネット、四季あり',ko:'현대적, 초고속 인터넷, 사계절',vi:'Hiện đại, internet nhanh, 4 mùa'} },
+    { flag:'🇵🇹', key:'Portugal',   solo:2000, partner:2800, family:3600, note:{en:'D7 visa, EU access, mild climate',zh:'D7簽證、歐盟通行、氣候溫和',ja:'D7ビザ、EU圏、温暖な気候',ko:'D7 비자, EU 접근, 온화한 기후',vi:'Visa D7, tiếp cận EU, khí hậu ôn hòa'} },
+    { flag:'🇲🇽', key:'Mexico',     solo:1500, partner:2100, family:2800, note:{en:'Close to US, rich culture, easy residency',zh:'靠近美國、文化豐富、居留容易',ja:'米国に近い、豊かな文化、居住容易',ko:'미국과 가까움, 풍부한 문화, 쉬운 거주',vi:'Gần Mỹ, văn hóa phong phú, dễ cư trú'} },
+    { flag:'🇨🇷', key:'Costa Rica', solo:1800, partner:2500, family:3200, note:{en:'Pura vida lifestyle, nature, stable',zh:'純淨生活、自然、穩定',ja:'プラビダな生活、自然、安定',ko:'순수한 삶, 자연, 안정적',vi:'Lối sống pura vida, thiên nhiên, ổn định'} },
+    { flag:'🇬🇷', key:'Greece',     solo:1600, partner:2300, family:3000, note:{en:'Mediterranean life, affordable in EU',zh:'地中海生活、在歐盟中算實惠',ja:'地中海生活、EU内で手頃',ko:'지중해 생활, EU 내 합리적',vi:'Cuộc sống Địa Trung Hải, hợp lý trong EU'} },
+    { flag:'🇮🇩', key:'Indonesia (Bali)', solo:1100, partner:1600, family:2200, note:{en:'Tropical paradise, digital nomad hub',zh:'熱帶天堂、數位遊牧據點',ja:'トロピカルパラダイス、デジタルノマド拠点',ko:'열대 낙원, 디지털 노마드 허브',vi:'Thiên đường nhiệt đới, trung tâm nomad số'} },
+    { flag:'🇪🇸', key:'Spain',      solo:2100, partner:2900, family:3800, note:{en:'Vibrant culture, excellent food & weather',zh:'活力文化、美食佳餚、好天氣',ja:'活気ある文化、美食＆好天候',ko:'활기찬 문화, 훌륭한 음식 & 날씨',vi:'Văn hóa sôi động, ẩm thực & thời tiết tuyệt vời'} },
+  ];
+
+  function renderCountries() {
+    const body = $('countriesBody');
+    body.innerHTML = '';
+    const hh = currentHousehold;
+    COUNTRIES.forEach(c => {
+      const tr = document.createElement('tr');
+      tr.className = 'country-row';
+      const cost = hh === 'family' ? c.family : hh === 'partner' ? c.partner : c.solo;
+      const note = c.note[currentLang] || c.note.en;
+      tr.innerHTML = '<td><span class="country-flag">' + c.flag + '</span>' + c.key + '</td>'
+        + '<td>$' + c.solo.toLocaleString() + '</td>'
+        + '<td>$' + c.partner.toLocaleString() + '</td>'
+        + '<td>$' + c.family.toLocaleString() + '</td>'
+        + '<td class="country-note">' + note + '</td>';
+      tr.onclick = () => {
+        $('expensesBase').value = cost;
+        syncExpenses();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+      body.appendChild(tr);
+    });
+  }
+
+  // ─── Kid expense note logic ───
+  function updateKidExpenseNote() {
+    const noteEl = $('kidExpenseNote');
+    if (currentHousehold !== 'family' || expenseItems.length === 0) {
+      noteEl.classList.remove('visible');
+      return;
+    }
+    const supportAge = parseInt($('kidSupportAge').value) || 22;
+    const age = parseFloat($('age').value) || 28;
+    const yearsLeft = Math.max(supportAge, 1);
+    const kidTotal = expenseItems
+      .filter(item => item.key && (item.key === 'kSchool' || item.key === 'kFood' || item.key === 'kActivities'))
+      .reduce((s, item) => s + (item.amount * item.mult), 0);
+    const allTotal = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
+    const afterKids = allTotal - kidTotal;
+    if (kidTotal > 0) {
+      noteEl.innerHTML = tFmt('kidExpNote', yearsLeft, Math.round(age + yearsLeft), '$' + Math.round(afterKids).toLocaleString());
+      noteEl.classList.add('visible');
+    } else {
+      noteEl.classList.remove('visible');
     }
   }
 
