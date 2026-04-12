@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retirement Calculator â When Can I Retire?</title>
+  <title>Retirement Calculator — When Can I Retire?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -693,15 +693,15 @@
 
 <div class="lang-toggle">
   <button class="lang-btn active" onclick="setLang('en')">EN</button>
-  <button class="lang-btn" onclick="setLang('zh')">ä¸­æ</button>
-  <button class="lang-btn" onclick="setLang('ja')">æ¥æ¬èª</button>
-  <button class="lang-btn" onclick="setLang('ko')">íêµ­ì´</button>
-  <button class="lang-btn" onclick="setLang('vi')">Tiáº¿ng Viá»t</button>
+  <button class="lang-btn" onclick="setLang('zh')">中文</button>
+  <button class="lang-btn" onclick="setLang('ja')">日本語</button>
+  <button class="lang-btn" onclick="setLang('ko')">한국어</button>
+  <button class="lang-btn" onclick="setLang('vi')">Tiếng Việt</button>
 </div>
 
 <header>
   <div class="logo">
-    <span class="flame-icon">ð¥</span>
+    <span class="flame-icon">🔥</span>
     <h1 data-i18n="title">Retirement Calculator</h1>
   </div>
   <p class="tagline" data-i18n="tagline">When can you stop working? Find out with two strategies.</p>
@@ -712,12 +712,12 @@
   <!-- Mode Tabs -->
   <div class="mode-tabs">
     <button class="mode-tab active" data-mode="perpetual" onclick="setMode('perpetual')">
-      <span class="tab-title" data-i18n="modePerp">â¾ï¸ Never Run Out</span>
-      <span class="tab-desc" data-i18n="modePerpDesc">Live off returns forever â keep your savings intact</span>
+      <span class="tab-title" data-i18n="modePerp">♾️ Never Run Out</span>
+      <span class="tab-desc" data-i18n="modePerpDesc">Live off returns forever — keep your savings intact</span>
     </button>
     <button class="mode-tab" data-mode="spenddown" onclick="setMode('spenddown')">
-      <span class="tab-title" data-i18n="modeSpend">â³ Spend It All</span>
-      <span class="tab-desc" data-i18n="modeSpendDesc">Use all savings + returns until target age â $0 at the end</span>
+      <span class="tab-title" data-i18n="modeSpend">⏳ Spend It All</span>
+      <span class="tab-desc" data-i18n="modeSpendDesc">Use all savings + returns until target age — $0 at the end</span>
     </button>
   </div>
 
@@ -741,7 +741,7 @@
           </div>
         </div>
         <div class="field">
-          <label data-i18n="lblIncome">Monthly Income (optional â $0 if not working)</label>
+          <label data-i18n="lblIncome">Monthly Income (optional — $0 if not working)</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="income" value="7000" min="0" />
@@ -756,20 +756,20 @@
           <div class="exp-input-wrap" style="flex:1;"><span class="exp-prefix">$</span>
             <input type="number" id="expensesBase" value="4200" min="0" />
           </div>
-          <span class="times">Ã</span>
+          <span class="times">×</span>
           <input type="number" class="mult-input" id="expensesMult" value="1" min="0.1" max="5" step="0.05" />
           <span class="row-subtotal" id="expensesFinal">$4,200</span>
         </div>
-        <div class="note" data-i18n="noteExpMult">Multiplier > 1 = safety buffer (e.g. Ã1.1 adds 10% extra).</div>
+        <div class="note" data-i18n="noteExpMult">Multiplier > 1 = safety buffer (e.g. ×1.1 adds 10% extra).</div>
         <input type="hidden" id="expenses" value="4200" />
         <button class="expense-toggle" onclick="toggleExpensePanel()">
-          <span class="arrow" id="expArrow">â¶</span>
+          <span class="arrow" id="expArrow">▶</span>
           <span data-i18n="expToggle">Break down expenses</span>
         </button>
         <div class="expense-panel" id="expensePanel">
           <div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:6px;flex-wrap:wrap;">
             <button class="sync-btn" id="syncBtn" onclick="toggleSync()">
-              <span id="syncIcon">ð</span>
+              <span id="syncIcon">🔗</span>
               <span id="syncLabel" data-i18n="expSync">Sync with breakdown</span>
             </button>
           </div>
@@ -812,7 +812,7 @@
             <span class="range-val" id="returnVal">7%</span>
           </div>
           <input type="range" id="returnRate" min="0" max="100" step="0.5" value="7" />
-          <div class="note" data-i18n="noteReturn"><strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6â8%.</div>
+          <div class="note" data-i18n="noteReturn"><strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.</div>
         </div>
 
         <div class="range-field">
@@ -821,7 +821,7 @@
             <span class="range-val" id="inflationVal">3%</span>
           </div>
           <input type="range" id="inflationRate" min="0" max="8" step="0.5" value="3" />
-          <div class="note" data-i18n="noteInflation"><strong>Tip:</strong> Historically ~2â3%/yr. This erodes your purchasing power over time, so we account for it.</div>
+          <div class="note" data-i18n="noteInflation"><strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.</div>
         </div>
 
         <div class="range-field">
@@ -830,7 +830,7 @@
             <span class="range-val" id="incomeGrowthVal">3%</span>
           </div>
           <input type="range" id="incomeGrowth" min="0" max="100" step="0.5" value="3" />
-          <div class="note" data-i18n="noteIncomeGrowth"><strong>Tip:</strong> Average salary growth is 3â5%/yr. Your savings contribution grows as income rises.</div>
+          <div class="note" data-i18n="noteIncomeGrowth"><strong>Tip:</strong> Average salary growth is 3–5%/yr. Your savings contribution grows as income rises.</div>
         </div>
 
         <div class="life-exp-row visible" id="lifeExpRow">
@@ -865,12 +865,12 @@
         <div class="card-title" data-i18n="progressTitle">Progress to Retirement Target</div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;">
           <div>
-            <div class="progress-pct" id="progressPct">â</div>
+            <div class="progress-pct" id="progressPct">—</div>
             <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;" data-i18n="ofTarget">of target reached</div>
           </div>
           <div style="text-align:right;">
             <div style="font-size:0.8rem;color:var(--muted);" data-i18n="targetWord">Target</div>
-            <div style="font-size:1rem;font-weight:700;color:var(--fire2)" id="targetSmall">â</div>
+            <div style="font-size:1rem;font-weight:700;color:var(--fire2)" id="targetSmall">—</div>
           </div>
         </div>
         <div class="progress-track">
@@ -886,22 +886,22 @@
   <!-- Stat Cards -->
   <div class="grid-3" style="margin-bottom:20px;">
     <div class="stat-card">
-      <span class="stat-icon">ð¯</span>
+      <span class="stat-icon">🎯</span>
       <div class="stat-label" id="targetLabel">Retirement Target</div>
-      <div class="stat-value highlight" id="targetNum">â</div>
-      <div class="stat-sub" id="targetSub">â</div>
+      <div class="stat-value highlight" id="targetNum">—</div>
+      <div class="stat-sub" id="targetSub">—</div>
     </div>
     <div class="stat-card">
-      <span class="stat-icon">â³</span>
+      <span class="stat-icon">⏳</span>
       <div class="stat-label" data-i18n="statYears">Years to Retirement</div>
-      <div class="stat-value" id="yearsToRetire">â</div>
-      <div class="stat-sub" id="yearsToRetireSub">â</div>
+      <div class="stat-value" id="yearsToRetire">—</div>
+      <div class="stat-sub" id="yearsToRetireSub">—</div>
     </div>
     <div class="stat-card">
-      <span class="stat-icon">ðï¸</span>
+      <span class="stat-icon">🏖️</span>
       <div class="stat-label" data-i18n="statRetireAge">Retirement Age</div>
-      <div class="stat-value" id="retireAge">â</div>
-      <div class="stat-sub" id="retireAgeSub">â</div>
+      <div class="stat-value" id="retireAge">—</div>
+      <div class="stat-sub" id="retireAgeSub">—</div>
     </div>
   </div>
 
@@ -923,8 +923,8 @@
       <thead>
         <tr>
           <th></th>
-          <th style="color:var(--fire2)" data-i18n="cmpColA">â¾ï¸ Never Run Out</th>
-          <th style="color:var(--blue)" data-i18n="cmpColB">â³ Spend It All</th>
+          <th style="color:var(--fire2)" data-i18n="cmpColA">♾️ Never Run Out</th>
+          <th style="color:var(--blue)" data-i18n="cmpColB">⏳ Spend It All</th>
         </tr>
       </thead>
       <tbody>
@@ -935,18 +935,18 @@
         </tr>
         <tr>
           <td class="label-col" data-i18n="cmpTarget">Target amount</td>
-          <td class="val mode-a" id="cmpTargetA">â</td>
-          <td class="val mode-b" id="cmpTargetB">â</td>
+          <td class="val mode-a" id="cmpTargetA">—</td>
+          <td class="val mode-b" id="cmpTargetB">—</td>
         </tr>
         <tr>
           <td class="label-col" data-i18n="cmpYears">Years to retire</td>
-          <td class="val mode-a" id="cmpYearsA">â</td>
-          <td class="val mode-b" id="cmpYearsB">â</td>
+          <td class="val mode-a" id="cmpYearsA">—</td>
+          <td class="val mode-b" id="cmpYearsB">—</td>
         </tr>
         <tr>
           <td class="label-col" data-i18n="cmpAge">Retirement age</td>
-          <td class="val mode-a" id="cmpAgeA">â</td>
-          <td class="val mode-b" id="cmpAgeB">â</td>
+          <td class="val mode-a" id="cmpAgeA">—</td>
+          <td class="val mode-b" id="cmpAgeB">—</td>
         </tr>
         <tr>
           <td class="label-col" data-i18n="cmpLeftover">Leftover at death</td>
@@ -955,8 +955,8 @@
         </tr>
         <tr>
           <td class="label-col" data-i18n="cmpRisk">Risk</td>
-          <td data-i18n="cmpRiskA">Very safe â but requires larger savings</td>
-          <td data-i18n="cmpRiskB">Must estimate lifespan â risk of outliving money</td>
+          <td data-i18n="cmpRiskA">Very safe — but requires larger savings</td>
+          <td data-i18n="cmpRiskB">Must estimate lifespan — risk of outliving money</td>
         </tr>
       </tbody>
     </table>
@@ -972,7 +972,7 @@
   <div class="info-box" style="margin-top:16px;" id="explainReal" data-i18n-html="explainReal"></div>
 
   <!-- Popular Retirement Countries -->
-  <div class="section-divider" data-i18n="countriesTitle">ð Popular Retirement Destinations</div>
+  <div class="section-divider" data-i18n="countriesTitle">🌍 Popular Retirement Destinations</div>
   <div class="info-box" style="font-size:0.82rem;margin-bottom:6px;" data-i18n="countriesNote">Rough monthly living costs (USD) by household type. Click a country to auto-fill expenses.</div>
   <div style="overflow-x:auto;">
     <table class="compare-table" id="countriesTable" style="font-size:0.82rem;width:100%;">
@@ -991,7 +991,7 @@
 </div>
 
 <footer>
-  <p data-i18n="footer1">ð¥ Retirement Calculator â For educational purposes only. Past market returns do not guarantee future results.</p>
+  <p data-i18n="footer1">🔥 Retirement Calculator — For educational purposes only. Past market returns do not guarantee future results.</p>
   <p style="margin-top:6px;" data-i18n="footer2">All values shown in today's dollars (inflation-adjusted). Assumes constant real returns and steady contributions.</p>
 </footer>
 
@@ -1015,22 +1015,22 @@
     en: {
       title: 'Retirement Calculator',
       tagline: 'When can you stop working? Find out with two strategies.',
-      modePerp: 'â¾ï¸ Never Run Out',
-      modePerpDesc: 'Live off returns forever â keep your savings intact',
-      modeSpend: 'â³ Spend It All',
-      modeSpendDesc: 'Use all savings + returns until target age â $0 at the end',
+      modePerp: '♾️ Never Run Out',
+      modePerpDesc: 'Live off returns forever — keep your savings intact',
+      modeSpend: '⏳ Spend It All',
+      modeSpendDesc: 'Use all savings + returns until target age — $0 at the end',
       profile: 'Your Financial Profile',
       lblAge: 'Current Age',
       lblExpenses: 'Monthly Expenses',
       lblSavings: 'Current Savings / Investments',
-      lblIncome: 'Monthly Income (optional â $0 if not working)',
+      lblIncome: 'Monthly Income (optional — $0 if not working)',
       noteIncome: 'Leave at $0 if you just want to know how much you need to retire. Only needed to calculate "years until retirement".',
       lblReturn: 'Expected Annual Return',
-      noteReturn: '<strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6â8%.',
+      noteReturn: '<strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.',
       lblInflation: 'Inflation Rate',
-      noteInflation: '<strong>Tip:</strong> Historically ~2â3%/yr. This erodes your purchasing power over time, so we account for it.',
+      noteInflation: '<strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.',
       lblIncomeGrowth: 'Annual Income Growth',
-      noteIncomeGrowth: '<strong>Tip:</strong> Average salary growth is 3â5%/yr. Your savings contribution grows as income rises.',
+      noteIncomeGrowth: '<strong>Tip:</strong> Average salary growth is 3–5%/yr. Your savings contribution grows as income rises.',
       lblLifeExp: 'Life Expectancy (for "Spend It All" mode)',
       noteLifeExp: 'Your savings will be drawn down to $0 by this age. Plan conservatively!',
       sufYrs: 'yrs', sufYrs2: 'yrs',
@@ -1041,7 +1041,7 @@
       statRetireAge: 'Retirement Age',
       chartTitle: 'Projected Wealth Over Time',
       cmpTitle: 'Side-by-Side Comparison',
-      cmpColA: 'â¾ï¸ Never Run Out', cmpColB: 'â³ Spend It All',
+      cmpColA: '♾️ Never Run Out', cmpColB: '⏳ Spend It All',
       cmpHow: 'How it works',
       cmpHowA: 'Live off investment returns. Your savings stay intact forever.',
       cmpHowB: 'Gradually spend savings + returns until target age. $0 left at the end.',
@@ -1049,13 +1049,13 @@
       cmpLeftover: 'Leftover at death',
       cmpLeftA: 'All of it (infinite)',
       cmpRisk: 'Risk',
-      cmpRiskA: 'Very safe â but requires larger savings',
-      cmpRiskB: 'Must estimate lifespan â risk of outliving money',
+      cmpRiskA: 'Very safe — but requires larger savings',
+      cmpRiskB: 'Must estimate lifespan — risk of outliving money',
       howTitle: 'How It Works',
-      explainPerp: '<span class="emoji">â¾ï¸</span><strong>Never Run Out (Perpetual)</strong><br><br>This is the classic <strong>FIRE</strong> (Financial Independence, Retire Early) approach. You accumulate enough savings so that the <strong>annual investment returns alone</strong> cover your living expenses â forever.<br><br><strong>Formula:</strong> Target = Annual Expenses Ã· Real Return Rate<br><strong>Real Return</strong> = Investment Return â Inflation<br><br>Example: If you spend $50,400/yr and earn 7% with 3% inflation (4% real return), you need $50,400 Ã· 0.04 = <strong>$1,260,000</strong>.',
-      explainSpend: '<span class="emoji">â³</span><strong>Spend It All (Drawdown)</strong><br><br>You don\'t need as much saved because you\'ll <strong>spend both returns AND principal</strong> over your remaining years. You choose a life expectancy, and the calculator figures out how much you need so your money lasts exactly that long.<br><br><strong>Formula:</strong> Uses the Present Value of Annuity â it factors in your spending, returns, and years in retirement.<br><br>Example: Same expenses, retire at 45, live to 85 (40 years) â you might only need <strong>~$1,060,000</strong> instead of $1.26M.',
-      explainReal: '<span class="emoji">ð</span><strong>What is "Real Return"?</strong><br><br>Your investments might grow at 7%/yr, but inflation eats away ~3%/yr of purchasing power. So your <strong>real (inflation-adjusted) return</strong> is roughly 4%. This calculator uses real returns so all numbers are in <strong>today\'s dollars</strong> â the amounts shown reflect actual purchasing power, not inflated future numbers.',
-      footer1: 'ð¥ Retirement Calculator â For educational purposes only. Past market returns do not guarantee future results.',
+      explainPerp: '<span class="emoji">♾️</span><strong>Never Run Out (Perpetual)</strong><br><br>This is the classic <strong>FIRE</strong> (Financial Independence, Retire Early) approach. You accumulate enough savings so that the <strong>annual investment returns alone</strong> cover your living expenses — forever.<br><br><strong>Formula:</strong> Target = Annual Expenses ÷ Real Return Rate<br><strong>Real Return</strong> = Investment Return − Inflation<br><br>Example: If you spend $50,400/yr and earn 7% with 3% inflation (4% real return), you need $50,400 ÷ 0.04 = <strong>$1,260,000</strong>.',
+      explainSpend: '<span class="emoji">⏳</span><strong>Spend It All (Drawdown)</strong><br><br>You don\'t need as much saved because you\'ll <strong>spend both returns AND principal</strong> over your remaining years. You choose a life expectancy, and the calculator figures out how much you need so your money lasts exactly that long.<br><br><strong>Formula:</strong> Uses the Present Value of Annuity — it factors in your spending, returns, and years in retirement.<br><br>Example: Same expenses, retire at 45, live to 85 (40 years) → you might only need <strong>~$1,060,000</strong> instead of $1.26M.',
+      explainReal: '<span class="emoji">📊</span><strong>What is "Real Return"?</strong><br><br>Your investments might grow at 7%/yr, but inflation eats away ~3%/yr of purchasing power. So your <strong>real (inflation-adjusted) return</strong> is roughly 4%. This calculator uses real returns so all numbers are in <strong>today\'s dollars</strong> — the amounts shown reflect actual purchasing power, not inflated future numbers.',
+      footer1: '🔥 Retirement Calculator — For educational purposes only. Past market returns do not guarantee future results.',
       footer2: 'All values shown in today\'s dollars (inflation-adjusted). Assumes constant real returns and steady contributions.',
       // Dynamic strings used in calculate()
       savingsRate: 'Savings Rate',
@@ -1064,36 +1064,36 @@
       perMo: '/mo', perYr: '/yr',
       atRealReturn: 'at',
       realReturn: 'real return',
-      coversExpenses: 'Covers your {0}/mo expenses â you\'re free! ð¥',
+      coversExpenses: 'Covers your {0}/mo expenses — you\'re free! 🔥',
       needButOnly: 'Need {0}/mo but only generating {1}/mo.',
-      savMsg70: 'Extreme saver! Retirement is close. ð¥ð¥ð¥',
-      savMsg50: 'Excellent! Fast track to retirement. ð¥ð¥',
-      savMsg30: 'Great savings rate! ð¥',
-      savMsg15: 'Good start â push higher to retire sooner.',
+      savMsg70: 'Extreme saver! Retirement is close. 🔥🔥🔥',
+      savMsg50: 'Excellent! Fast track to retirement. 🔥🔥',
+      savMsg30: 'Great savings rate! 🔥',
+      savMsg15: 'Good start — push higher to retire sooner.',
       savMsgLow: 'Low savings rate. Try cutting expenses.',
       fireNum: 'FIRE Number (Perpetual)',
       nestEgg: 'Retirement Nest Egg',
-      annExpDiv: 'Annual expenses Ã· real return',
+      annExpDiv: 'Annual expenses ÷ real return',
       enoughFor: 'Enough to last {0} years in retirement',
       alreadyThere: 'Already there!',
-      retireNow: 'You can retire now! ð',
+      retireNow: 'You can retire now! 🎉',
       needMore: 'Need {0} more',
       addIncome: 'Add income to calculate',
       notReachable: 'Not reachable',
       increaseSav: 'Increase savings rate',
       yrs: 'yrs', mo: 'mo',
-      superEarly: 'Super early retirement! ð¥',
+      superEarly: 'Super early retirement! 🔥',
       excellent: 'Excellent early retirement!',
       early: 'Early retirement!',
       onTrack: 'On track for retirement.',
       considerMore: 'Consider increasing savings.',
       now: '(now!)',
       atAge: 'at age',
-      alertReturn: 'â ï¸ Return is below inflation â your money loses value over time. "Never Run Out" mode requires positive real return. Try "Spend It All" mode instead.',
-      alertReturnShort: 'Real return â¤ 0 â not possible in perpetual mode',
-      alertExpenses: 'â ï¸ Enter monthly expenses greater than $0.',
-      alertRetireNow: 'ð You can retire now! Your savings ({0}) exceed the target ({1}).',
-      alertNeedMore: 'ð¡ You need {0} more to retire. Add monthly income to see how long it will take.',
+      alertReturn: '⚠️ Return is below inflation — your money loses value over time. "Never Run Out" mode requires positive real return. Try "Spend It All" mode instead.',
+      alertReturnShort: 'Real return ≤ 0 — not possible in perpetual mode',
+      alertExpenses: '⚠️ Enter monthly expenses greater than $0.',
+      alertRetireNow: '🎉 You can retire now! Your savings ({0}) exceed the target ({1}).',
+      alertNeedMore: '💡 You need {0} more to retire. Add monthly income to see how long it will take.',
       lgdPortfolio: 'Portfolio',
       lgdTarget: 'FIRE Target',
       lgdNestEgg: 'Retirement Nest Egg',
@@ -1105,9 +1105,9 @@
       expToggle: 'Break down expenses',
       expAdd: '+ Add item',
       expTotal: 'Total',
-      noteExpMult: 'Multiplier > 1 = safety buffer (e.g. Ã1.1 adds 10% extra).',
+      noteExpMult: 'Multiplier > 1 = safety buffer (e.g. ×1.1 adds 10% extra).',
       expSync: 'Sync with breakdown',
-      expUnsync: 'Not synced â edit freely',
+      expUnsync: 'Not synced — edit freely',
       hhLabel: 'Household:',
       hhSolo: 'Solo',
       hhPartner: 'With Partner',
@@ -1115,7 +1115,7 @@
       hhKids: 'Kids:',
       hhSupportUntil: 'Support until age:',
       kidExpNote: 'Kid expenses end in ~{0} years (age {1}). After that, monthly expenses drop to ~{2}.',
-      countriesTitle: 'ð Popular Retirement Destinations',
+      countriesTitle: '🌍 Popular Retirement Destinations',
       countriesNote: 'Rough monthly living costs (USD) by household type. Click a country to auto-fill expenses.',
       countryCol: 'Country',
       costSolo: 'Solo',
@@ -1124,444 +1124,444 @@
       countryNotes: 'Notes',
     },
     zh: {
-      title: 'éä¼è¨ç®æ©',
-      tagline: 'ä»éº¼æåå¯ä»¥ä¸åå·¥ä½ï¼å©ç¨®ç­ç¥å¹«ä½ ç®æ¸æ¥ã',
-      modePerp: 'â¾ï¸ æ°¸é è±ä¸å®',
-      modePerpDesc: 'é æè³å ±é¬éæ´»ï¼æ¬éæ°¸é ä¸å',
-      modeSpend: 'â³ è±å°æ­¸é¶',
-      modeSpendDesc: 'æå­æ¬¾ï¼å ±é¬å¨é¨è±å®ï¼å°ç®æ¨å¹´é½¡å© $0',
-      profile: 'ä½ çè²¡åçæ³',
-      lblAge: 'ç®åå¹´é½¡',
-      lblExpenses: 'æ¯ææ¯åº',
-      lblSavings: 'ç®åå­æ¬¾ï¼æè³',
-      lblIncome: 'æ¯ææ¶å¥ï¼é¸å¡« â æ²å·¥ä½å¡« $0ï¼',
-      noteIncome: 'å¦æåªæ³ç¥éãéè¦å­å¤å°æè½éä¼ãï¼æ¶å¥å¡« $0 å³å¯ãææ¶å¥ææè¨ç®ãå¹¾å¹´å¾å¯éä¼ãã',
-      lblReturn: 'é æå¹´åå ±é¬ç',
-      noteReturn: '<strong>æç¤ºï¼</strong>S&P 500 æ­·å²å¹³åç´ 10%ï¼å¹´ï¼æªæ£éè¨ï¼ãä¿å®ä¼°è¨ 6â8%ã',
-      lblInflation: 'éè²¨è¨è¹ç',
-      noteInflation: '<strong>æç¤ºï¼</strong>æ­·å²ä¸ç´ 2â3%ï¼å¹´ãéè¨æä¾µèä½ çè³¼è²·åï¼æä»¥æåææå®ç®é²å»ã',
-      lblIncomeGrowth: 'å¹´æ¶å¥æé·ç',
-      noteIncomeGrowth: '<strong>æç¤ºï¼</strong>å¹³åèªè³æé·ç´ 3â5%ï¼å¹´ãæ¶å¥å¢å æï¼æ¯æå­æ¬¾ä¹æè·èå¢å ã',
-      lblLifeExp: 'é æå£½å½ï¼ç¨æ¼ãè±å°æ­¸é¶ãæ¨¡å¼ï¼',
-      noteLifeExp: 'ä½ çå­æ¬¾æå¨éåå¹´é½¡æ­¸é¶ãå»ºè­°ä¿å®ä¼°è¨ï¼',
-      sufYrs: 'æ­²', sufYrs2: 'æ­²',
-      progressTitle: 'éä¼ç®æ¨é²åº¦',
-      ofTarget: 'å·²éæç®æ¨',
-      targetWord: 'ç®æ¨',
-      statYears: 'è·é¢éä¼å¹´æ¸',
-      statRetireAge: 'éä¼å¹´é½¡',
-      chartTitle: 'é ä¼°è³ç¢èµ°å¢',
-      cmpTitle: 'å©ç¨®æ¨¡å¼æ¯è¼',
-      cmpColA: 'â¾ï¸ æ°¸é è±ä¸å®', cmpColB: 'â³ è±å°æ­¸é¶',
-      cmpHow: 'éä½æ¹å¼',
-      cmpHowA: 'é æè³å ±é¬çæ´»ï¼æ¬éæ°¸é ä¸åã',
-      cmpHowB: 'éæ­¥è±æå­æ¬¾ï¼å ±é¬ï¼å°ç®æ¨å¹´é½¡å© $0ã',
-      cmpTarget: 'ç®æ¨éé¡', cmpYears: 'å¹¾å¹´éä¼', cmpAge: 'éä¼å¹´é½¡',
-      cmpLeftover: 'èº«å¾é¤é¡',
-      cmpLeftA: 'å¨é¨ä¿çï¼ç¡éï¼',
-      cmpRisk: 'é¢¨éª',
-      cmpRiskA: 'éå¸¸å®å¨ â ä½éè¦æ´å¤å­æ¬¾',
-      cmpRiskB: 'é ä¼°ç®å£½å½ â æè±åçé¢¨éª',
-      howTitle: 'è¨ç®åç',
-      explainPerp: '<span class="emoji">â¾ï¸</span><strong>æ°¸é è±ä¸å®ï¼æ°¸çºæ¨¡å¼ï¼</strong><br><br>éæ¯ç¶å¸ç <strong>FIRE</strong>ï¼è²¡åèªç±ãææ©éä¼ï¼æ¹æ³ãä½ ç´¯ç©è¶³å¤ çå­æ¬¾ï¼è®<strong>æ¯å¹´çæè³å ±é¬</strong>å°±è½æ¯ä»ä½ ççæ´»è²» â æ°¸é ä¸ç¨åå°æ¬éã<br><br><strong>å¬å¼ï¼</strong>ç®æ¨ = å¹´æ¯åº Ã· å¯¦è³ªå ±é¬ç<br><strong>å¯¦è³ªå ±é¬</strong> = æè³å ±é¬ â éè¨<br><br>ç¯ä¾ï¼å¹´æ¯åº $50,400ãå ±é¬ 7%ãéè¨ 3%ï¼å¯¦è³ªå ±é¬ 4%ï¼ï¼ä½ éè¦ $50,400 Ã· 0.04 = <strong>$1,260,000</strong>ã',
-      explainSpend: '<span class="emoji">â³</span><strong>è±å°æ­¸é¶ï¼æé æ¨¡å¼ï¼</strong><br><br>ä½ ä¸éè¦å­é£éº¼å¤ï¼å çºä½ æå¨éä¼å¾<strong>åæè±æå ±é¬åæ¬é</strong>ãé¸æä¸åé æå£½å½ï¼è¨ç®æ©æç®åºä½ éè¦å¤å°é¢æè½æå°é£æåã<br><br><strong>å¬å¼ï¼</strong>ä½¿ç¨å¹´éç¾å¼å¬å¼ â èæ®æ¯åºãå ±é¬åéä¼å¹´æ¸ã<br><br>ç¯ä¾ï¼åæ¨£çæ¯åºï¼45 æ­²éä¼ãæ´»å° 85 æ­²ï¼40 å¹´ï¼â ä½ å¯è½åªéè¦ <strong>~$1,060,000</strong>ï¼èä¸æ¯ $1.26Mã',
-      explainReal: '<span class="emoji">ð</span><strong>ä»éº¼æ¯ãå¯¦è³ªå ±é¬ãï¼</strong><br><br>ä½ çæè³å¯è½æ¯å¹´æé· 7%ï¼ä½éè¨æ¯å¹´åæç´ 3% çè³¼è²·åãæä»¥ä½ ç<strong>å¯¦è³ªï¼æ£é¤éè¨å¾ï¼å ±é¬</strong>å¤§ç´æ¯ 4%ãæ¬è¨ç®æ©ä½¿ç¨å¯¦è³ªå ±é¬ï¼ææéé¡é½æ¯<strong>ä»å¤©çå¹£å¼</strong> â åæ çæ¯å¯¦éè³¼è²·åï¼èéè¨è¹å¾çæªä¾éé¡ã',
-      footer1: 'ð¥ éä¼è¨ç®æ© â åä¾æè²ç¨éãéå»çå¸å ´å ±é¬ä¸ä¿è­æªä¾çµæã',
-      footer2: 'ææéé¡çä»¥ä»æ¥å¹£å¼é¡¯ç¤ºï¼å·²æ£éè¨ï¼ãåè¨­åºå®å¯¦è³ªå ±é¬èç©©å®æå¥ã',
-      savingsRate: 'å²èç',
-      passiveIncome: 'è¢«åæ¶å¥ï¼ä¾èªå­æ¬¾ï¼',
-      saving: 'æ¯æå­',
-      perMo: '/æ', perYr: '/å¹´',
-      atRealReturn: 'ä»¥',
-      realReturn: 'å¯¦è³ªå ±é¬',
-      coversExpenses: 'æ¶µèä½ ç {0}/æ æ¯åº â ä½ èªç±äºï¼ð¥',
-      needButOnly: 'éè¦ {0}/æï¼ä½ç®ååªç¢ç {1}/æã',
-      savMsg70: 'è¶ç´å­é¢çï¼éä¼å°±å¨ç¼å ð¥ð¥ð¥',
-      savMsg50: 'å¤ªæ£äºï¼å¿«ééåéä¼ ð¥ð¥',
-      savMsg30: 'å¾å¥½çå²èçï¼ç¹¼çºå æ²¹ ð¥',
-      savMsg15: 'ä¸é¯çéå§ â åæé«ä¸é»å°±æ´å¿«ã',
-      savMsgLow: 'å²èçåä½ï¼è©¦èæ¸å°æ¯åºã',
-      fireNum: 'FIRE æ¸å­ï¼æ°¸çºï¼',
-      nestEgg: 'éä¼æéè³é',
-      annExpDiv: 'å¹´æ¯åº Ã· å¯¦è³ªå ±é¬ç',
-      enoughFor: 'è¶³å¤ æ¯æéä¼å¾ {0} å¹´',
-      alreadyThere: 'å·²ç¶éæ¨ï¼',
-      retireNow: 'ä½ ç¾å¨å°±å¯ä»¥éä¼äºï¼ð',
-      needMore: 'éå·® {0}',
-      addIncome: 'å¡«å¥æ¶å¥ä¾è¨ç®',
-      notReachable: 'ç¡æ³éæ',
-      increaseSav: 'æé«å²èç',
-      yrs: 'å¹´', mo: 'åæ',
-      superEarly: 'è¶ç´æåéä¼ï¼ð¥',
-      excellent: 'éå¸¸å¥½çæåéä¼ï¼',
-      early: 'æåéä¼ï¼',
-      onTrack: 'æ­£å¨éä¼è»éä¸ã',
-      considerMore: 'èæ®å¢å å­æ¬¾ã',
-      now: 'ï¼ç¾å¨ï¼ï¼',
-      atAge: 'å¨',
-      alertReturn: 'â ï¸ å ±é¬ä½æ¼éè¨ â ä½ çé¢ææçºè²¶å¼ããæ°¸é è±ä¸å®ãæ¨¡å¼éè¦æ­£å¯¦è³ªå ±é¬ãå¯ä»¥è©¦è©¦ãè±å°æ­¸é¶ãæ¨¡å¼ã',
-      alertReturnShort: 'å¯¦è³ªå ±é¬ â¤ 0 â æ°¸çºæ¨¡å¼ä¸å¯è¡',
-      alertExpenses: 'â ï¸ è«è¼¸å¥å¤§æ¼ $0 çæ¯ææ¯åºã',
-      alertRetireNow: 'ð ä½ ç¾å¨å°±å¯ä»¥éä¼äºï¼ä½ çå­æ¬¾ï¼{0}ï¼è¶éç®æ¨ï¼{1}ï¼ã',
-      alertNeedMore: 'ð¡ ä½ ééè¦ {0} æè½éä¼ãå¡«å¥æ¯ææ¶å¥ä¾è¨ç®éè¦å¤ä¹ã',
-      lgdPortfolio: 'è³ç¢',
-      lgdTarget: 'FIRE ç®æ¨',
-      lgdNestEgg: 'éä¼æéè³é',
-      lgdLivingOff: 'è³ç¢ï¼é å ±é¬çæ´»ï¼',
-      lgdSpending: 'è³ç¢ï¼éæ­¥è±å®ï¼',
+      title: '退休計算機',
+      tagline: '什麼時候可以不再工作？兩種策略幫你算清楚。',
+      modePerp: '♾️ 永遠花不完',
+      modePerpDesc: '靠投資報酬過活，本金永遠不動',
+      modeSpend: '⏳ 花到歸零',
+      modeSpendDesc: '把存款＋報酬全部花完，到目標年齡剩 $0',
+      profile: '你的財務狀況',
+      lblAge: '目前年齡',
+      lblExpenses: '每月支出',
+      lblSavings: '目前存款／投資',
+      lblIncome: '每月收入（選填 — 沒工作填 $0）',
+      noteIncome: '如果只想知道「需要存多少才能退休」，收入填 $0 即可。有收入才會計算「幾年後可退休」。',
+      lblReturn: '預期年化報酬率',
+      noteReturn: '<strong>提示：</strong>S&P 500 歷史平均約 10%／年（未扣通膨）。保守估計 6–8%。',
+      lblInflation: '通貨膨脹率',
+      noteInflation: '<strong>提示：</strong>歷史上約 2–3%／年。通膨會侵蝕你的購買力，所以我們會把它算進去。',
+      lblIncomeGrowth: '年收入成長率',
+      noteIncomeGrowth: '<strong>提示：</strong>平均薪資成長約 3–5%／年。收入增加時，每月存款也會跟著增加。',
+      lblLifeExp: '預期壽命（用於「花到歸零」模式）',
+      noteLifeExp: '你的存款會在這個年齡歸零。建議保守估計！',
+      sufYrs: '歲', sufYrs2: '歲',
+      progressTitle: '退休目標進度',
+      ofTarget: '已達成目標',
+      targetWord: '目標',
+      statYears: '距離退休年數',
+      statRetireAge: '退休年齡',
+      chartTitle: '預估資產走勢',
+      cmpTitle: '兩種模式比較',
+      cmpColA: '♾️ 永遠花不完', cmpColB: '⏳ 花到歸零',
+      cmpHow: '運作方式',
+      cmpHowA: '靠投資報酬生活，本金永遠不動。',
+      cmpHowB: '逐步花掉存款＋報酬，到目標年齡剩 $0。',
+      cmpTarget: '目標金額', cmpYears: '幾年退休', cmpAge: '退休年齡',
+      cmpLeftover: '身後餘額',
+      cmpLeftA: '全部保留（無限）',
+      cmpRisk: '風險',
+      cmpRiskA: '非常安全 — 但需要更多存款',
+      cmpRiskB: '須估算壽命 — 有花光的風險',
+      howTitle: '計算原理',
+      explainPerp: '<span class="emoji">♾️</span><strong>永遠花不完（永續模式）</strong><br><br>這是經典的 <strong>FIRE</strong>（財務自由、提早退休）方法。你累積足夠的存款，讓<strong>每年的投資報酬</strong>就能支付你的生活費 — 永遠不用動到本金。<br><br><strong>公式：</strong>目標 = 年支出 ÷ 實質報酬率<br><strong>實質報酬</strong> = 投資報酬 − 通膨<br><br>範例：年支出 $50,400、報酬 7%、通膨 3%（實質報酬 4%），你需要 $50,400 ÷ 0.04 = <strong>$1,260,000</strong>。',
+      explainSpend: '<span class="emoji">⏳</span><strong>花到歸零（提領模式）</strong><br><br>你不需要存那麼多，因為你會在退休後<strong>同時花掉報酬和本金</strong>。選擇一個預期壽命，計算機會算出你需要多少錢才能撐到那時候。<br><br><strong>公式：</strong>使用年金現值公式 — 考慮支出、報酬和退休年數。<br><br>範例：同樣的支出，45 歲退休、活到 85 歲（40 年）→ 你可能只需要 <strong>~$1,060,000</strong>，而不是 $1.26M。',
+      explainReal: '<span class="emoji">📊</span><strong>什麼是「實質報酬」？</strong><br><br>你的投資可能每年成長 7%，但通膨每年吃掉約 3% 的購買力。所以你的<strong>實質（扣除通膨後）報酬</strong>大約是 4%。本計算機使用實質報酬，所有金額都是<strong>今天的幣值</strong> — 反映的是實際購買力，而非膨脹後的未來金額。',
+      footer1: '🔥 退休計算機 — 僅供教育用途。過去的市場報酬不保證未來結果。',
+      footer2: '所有金額皆以今日幣值顯示（已扣通膨）。假設固定實質報酬與穩定投入。',
+      savingsRate: '儲蓄率',
+      passiveIncome: '被動收入（來自存款）',
+      saving: '每月存',
+      perMo: '/月', perYr: '/年',
+      atRealReturn: '以',
+      realReturn: '實質報酬',
+      coversExpenses: '涵蓋你的 {0}/月 支出 — 你自由了！🔥',
+      needButOnly: '需要 {0}/月，但目前只產生 {1}/月。',
+      savMsg70: '超級存錢王！退休就在眼前 🔥🔥🔥',
+      savMsg50: '太棒了！快速邁向退休 🔥🔥',
+      savMsg30: '很好的儲蓄率！繼續加油 🔥',
+      savMsg15: '不錯的開始 — 再提高一點就更快。',
+      savMsgLow: '儲蓄率偏低，試著減少支出。',
+      fireNum: 'FIRE 數字（永續）',
+      nestEgg: '退休所需資金',
+      annExpDiv: '年支出 ÷ 實質報酬率',
+      enoughFor: '足夠支撐退休後 {0} 年',
+      alreadyThere: '已經達標！',
+      retireNow: '你現在就可以退休了！🎉',
+      needMore: '還差 {0}',
+      addIncome: '填入收入來計算',
+      notReachable: '無法達成',
+      increaseSav: '提高儲蓄率',
+      yrs: '年', mo: '個月',
+      superEarly: '超級提前退休！🔥',
+      excellent: '非常好的提前退休！',
+      early: '提前退休！',
+      onTrack: '正在退休軌道上。',
+      considerMore: '考慮增加存款。',
+      now: '（現在！）',
+      atAge: '在',
+      alertReturn: '⚠️ 報酬低於通膨 — 你的錢會持續貶值。「永遠花不完」模式需要正實質報酬。可以試試「花到歸零」模式。',
+      alertReturnShort: '實質報酬 ≤ 0 — 永續模式不可行',
+      alertExpenses: '⚠️ 請輸入大於 $0 的每月支出。',
+      alertRetireNow: '🎉 你現在就可以退休了！你的存款（{0}）超過目標（{1}）。',
+      alertNeedMore: '💡 你還需要 {0} 才能退休。填入每月收入來計算需要多久。',
+      lgdPortfolio: '資產',
+      lgdTarget: 'FIRE 目標',
+      lgdNestEgg: '退休所需資金',
+      lgdLivingOff: '資產（靠報酬生活）',
+      lgdSpending: '資產（逐步花完）',
       agePrefix: '',
-      nowLabel: 'ç¾å¨',
-      targetLabel2: 'ç®æ¨',
-      expToggle: 'å±éæ¯åºæç´°',
-      expAdd: '+ æ°å¢é ç®',
-      expTotal: 'åè¨',
-      noteExpMult: 'åæ¸ > 1 = å½æ§é çï¼ä¾å¦ Ã1.1 å¤ 10% åç¨éï¼ã',
-      expSync: 'èæç´°åæ­¥',
-      expUnsync: 'æªåæ­¥ â èªç±è¼¸å¥',
-      hhLabel: 'å®¶åº­çµåï¼',
-      hhSolo: 'ä¸åäºº',
-      hhPartner: 'æä¼´ä¾¶',
-      hhFamily: 'ä¼´ä¾¶ï¼å°å­©',
-      hhKids: 'å°å­©äººæ¸ï¼',
-      hhSupportUntil: 'æ«é¤å°å¹¾æ­²ï¼',
-      kidExpNote: 'å°å­©æ¯åºç´å¨ {0} å¹´å¾çµæï¼{1} æ­²ï¼ãä¹å¾æ¯ææ¯åºéçºç´ {2}ã',
-      countriesTitle: 'ð ç±ééä¼ç®çå°',
-      countriesNote: 'ååå¤§ç¥æ¯æçæ´»è²»ï¼ç¾åï¼ãé»æåå®¶å¯èªåå¡«å¥æ¯åºã',
-      countryCol: 'åå®¶',
-      costSolo: 'ä¸äºº',
-      costPartner: 'æä¼´ä¾¶',
-      costFamily: 'å®¶åº­ï¼1å°å­©ï¼',
-      countryNotes: 'åè¨»',
+      nowLabel: '現在',
+      targetLabel2: '目標',
+      expToggle: '展開支出明細',
+      expAdd: '+ 新增項目',
+      expTotal: '合計',
+      noteExpMult: '倍數 > 1 = 彈性預留（例如 ×1.1 多 10% 備用金）。',
+      expSync: '與明細同步',
+      expUnsync: '未同步 — 自由輸入',
+      hhLabel: '家庭組合：',
+      hhSolo: '一個人',
+      hhPartner: '有伴侶',
+      hhFamily: '伴侶＋小孩',
+      hhKids: '小孩人數：',
+      hhSupportUntil: '撫養到幾歲：',
+      kidExpNote: '小孩支出約在 {0} 年後結束（{1} 歲）。之後每月支出降為約 {2}。',
+      countriesTitle: '🌍 熱門退休目的地',
+      countriesNote: '各國大略每月生活費（美元）。點擊國家可自動填入支出。',
+      countryCol: '國家',
+      costSolo: '一人',
+      costPartner: '有伴侶',
+      costFamily: '家庭（1小孩）',
+      countryNotes: '備註',
     },
     ja: {
-      title: 'ãªã¿ã¤ã¢è¨ç®æ©',
-      tagline: 'ãã¤ä»äºãè¾ããããï¼2ã¤ã®æ¦ç¥ã§è¨ç®ãã¾ãã',
-      modePerp: 'â¾ï¸ æ°¸ä¹ã«ä½¿ãåããªã',
-      modePerpDesc: 'æè³ãªã¿ã¼ã³ã ãã§çæ´» â åæ¬ã¯ãã®ã¾ã¾',
-      modeSpend: 'â³ å¨é¨ä½¿ãåã',
-      modeSpendDesc: 'è²¯èï¼ãªã¿ã¼ã³ãç®æ¨å¹´é½¢ã¾ã§ä½¿ãåã â æçµæ®é«$0',
-      profile: 'ããªãã®è²¡åãã­ãã£ã¼ã«',
-      lblAge: 'ç¾å¨ã®å¹´é½¢',
-      lblExpenses: 'æéæ¯åº',
-      lblSavings: 'ç¾å¨ã®è²¯èï¼æè³é¡',
-      lblIncome: 'æéåå¥ï¼ä»»æ â ç¡è·ãªã$0ï¼',
-      noteIncome: 'ãªã¿ã¤ã¢ã«å¿è¦ãªéé¡ã ãç¥ãããå ´åã¯$0ã®ã¾ã¾ã§ãããªã¿ã¤ã¢ã¾ã§ä½å¹´ãã®è¨ç®ã«ã¯åå¥ãå¿è¦ã§ãã',
-      lblReturn: 'æå¾å¹´éãªã¿ã¼ã³',
-      noteReturn: '<strong>ãã³ãï¼</strong>S&P 500ã®å¹³åã¯ç´10%ï¼å¹´ï¼ã¤ã³ãã¬åï¼ãä¿å®çãªè¦ç©ããã¯6â8%ã',
-      lblInflation: 'ã¤ã³ãã¬ç',
-      noteInflation: '<strong>ãã³ãï¼</strong>æ­´å²çã«ç´2â3%ï¼å¹´ãè³¼è²·åãå¾ãã«æ¸å°ããããããè¨ç®ã«å«ãã¾ãã',
-      lblIncomeGrowth: 'å¹´éåå¥æé·ç',
-      noteIncomeGrowth: '<strong>ãã³ãï¼</strong>å¹³åæçµ¦çã¯3â5%ï¼å¹´ãåå¥ãå¢ããã¨æ¯æã®è²¯èãå¢ãã¾ãã',
-      lblLifeExp: 'äºæ³å¯¿å½ï¼ãå¨é¨ä½¿ãåããã¢ã¼ãç¨ï¼',
-      noteLifeExp: 'ãã®å¹´é½¢ã§è²¯èãã¼ã­ã«ãªãã¾ããä¿å®çã«è¨­å®ãã¾ãããï¼',
-      sufYrs: 'æ­³', sufYrs2: 'æ­³',
-      progressTitle: 'ãªã¿ã¤ã¢ç®æ¨ã¸ã®é²æ',
-      ofTarget: 'ç®æ¨éæç',
-      targetWord: 'ç®æ¨',
-      statYears: 'ãªã¿ã¤ã¢ã¾ã§ã®å¹´æ°',
-      statRetireAge: 'ãªã¿ã¤ã¢å¹´é½¢',
-      chartTitle: 'è³ç£æ¨ç§»äºæ¸¬',
-      cmpTitle: '2ã¤ã®ã¢ã¼ãæ¯è¼',
-      cmpColA: 'â¾ï¸ æ°¸ä¹ã«ä½¿ãåããªã', cmpColB: 'â³ å¨é¨ä½¿ãåã',
-      cmpHow: 'ä»çµã¿',
-      cmpHowA: 'æè³ãªã¿ã¼ã³ã§çæ´»ãåæ¬ã¯æ°¸é ã«ãã®ã¾ã¾ã',
-      cmpHowB: 'è²¯èï¼ãªã¿ã¼ã³ãå¾ãã«ä½¿ãåããç®æ¨å¹´é½¢ã§æ®é«$0ã',
-      cmpTarget: 'ç®æ¨éé¡', cmpYears: 'ãªã¿ã¤ã¢ã¾ã§', cmpAge: 'ãªã¿ã¤ã¢å¹´é½¢',
-      cmpLeftover: 'æ­»å¾ã®æ®é«',
-      cmpLeftA: 'å¨é¡æ®ãï¼ç¡éï¼',
-      cmpRisk: 'ãªã¹ã¯',
-      cmpRiskA: 'éå¸¸ã«å®å¨ â ãã ãå¤é¡ã®è²¯èãå¿è¦',
-      cmpRiskB: 'å¯¿å½ã®è¦ç©ãããå¿è¦ â è³éãå°½ãããªã¹ã¯ãã',
-      howTitle: 'è¨ç®ã®ä»çµã¿',
-      explainPerp: '<span class="emoji">â¾ï¸</span><strong>æ°¸ä¹ã«ä½¿ãåããªãï¼æ°¸ç¶ã¢ã¼ãï¼</strong><br><br>ããã¯å¸åçãª<strong>FIRE</strong>ï¼çµæ¸çèªç«ã»æ©æãªã¿ã¤ã¢ï¼ã®ã¢ãã­ã¼ãã§ãã<strong>å¹´éã®æè³ãªã¿ã¼ã³ã ã</strong>ã§çæ´»è²»ãè³ããã ãã®è²¯èãç¯ãã¾ã â åæ¬ã«ã¯ä¸åæãã¤ãã¾ããã<br><br><strong>å¬å¼ï¼</strong>ç®æ¨ = å¹´éæ¯åº Ã· å®è³ªãªã¿ã¼ã³ç<br><strong>å®è³ªãªã¿ã¼ã³</strong> = æè³ãªã¿ã¼ã³ â ã¤ã³ãã¬<br><br>ä¾ï¼å¹´éæ¯åº$50,400ããªã¿ã¼ã³7%ãã¤ã³ãã¬3%ï¼å®è³ªãªã¿ã¼ã³4%ï¼ã®å ´åã$50,400 Ã· 0.04 = <strong>$1,260,000</strong>ãå¿è¦ã',
-      explainSpend: '<span class="emoji">â³</span><strong>å¨é¨ä½¿ãåãï¼åå´©ã¢ã¼ãï¼</strong><br><br>ãªã¿ã¼ã³<strong>ã¨åæ¬ã®ä¸¡æ¹</strong>ãä½¿ããããå¿è¦ãªè²¯èé¡ã¯å°ãªããªãã¾ããäºæ³å¯¿å½ãè¨­å®ããã¨ããã®æéã¡ããã©æã¤éé¡ãè¨ç®ãã¾ãã<br><br><strong>å¬å¼ï¼</strong>å¹´éç¾å¨ä¾¡å¤ãä½¿ç¨ â æ¯åºããªã¿ã¼ã³ããªã¿ã¤ã¢å¹´æ°ãèæ®ã<br><br>ä¾ï¼åãæ¯åºã§45æ­³ãªã¿ã¤ã¢ã85æ­³ã¾ã§ï¼40å¹´ï¼â <strong>ç´$1,060,000</strong>ã§æ¸ã¿ã¾ãï¼$1.26Mã§ã¯ãªãï¼ã',
-      explainReal: '<span class="emoji">ð</span><strong>ãå®è³ªãªã¿ã¼ã³ãã¨ã¯ï¼</strong><br><br>æè³ãå¹´7%æé·ãã¦ããã¤ã³ãã¬ãå¹´ç´3%ã®è³¼è²·åãå¥ªãã¾ããã¤ã¾ã<strong>å®è³ªï¼ã¤ã³ãã¬èª¿æ´å¾ï¼ãªã¿ã¼ã³</strong>ã¯ç´4%ã§ãããã®è¨ç®æ©ã¯å®è³ªãªã¿ã¼ã³ãä½¿ç¨ããå¨éé¡ã<strong>ä»æ¥ã®ä¾¡å¤</strong>ã§è¡¨ç¤ºãã¾ãã',
-      footer1: 'ð¥ ãªã¿ã¤ã¢è¨ç®æ© â æè²ç®çã®ã¿ãéå»ã®å¸å ´ãªã¿ã¼ã³ã¯å°æ¥ã®çµæãä¿è¨¼ãã¾ããã',
-      footer2: 'ãã¹ã¦ã®éé¡ã¯ä»æ¥ã®ä¾¡å¤ã§è¡¨ç¤ºï¼ã¤ã³ãã¬èª¿æ´æ¸ã¿ï¼ãä¸å®ã®å®è³ªãªã¿ã¼ã³ã¨å®å®ããæ åºãåæã',
-      savingsRate: 'è²¯èç',
-      passiveIncome: 'ä¸å´æå¾ï¼è²¯èããï¼',
-      saving: 'æ¯æè²¯è',
-      perMo: '/æ', perYr: '/å¹´',
-      atRealReturn: 'å®è³ª',
-      realReturn: 'ãªã¿ã¼ã³',
-      coversExpenses: 'æ{0}ã®æ¯åºãã«ãã¼ â çµæ¸çèªç±éæï¼ð¥',
-      needButOnly: 'æ{0}å¿è¦ã§ãããç¾å¨{1}/æããçæãã¦ãã¾ããã',
-      savMsg70: 'è¶è²¯èå®¶ï¼ãªã¿ã¤ã¢ã¯ãããã ð¥ð¥ð¥',
-      savMsg50: 'ç´ æ´ãããï¼ãªã¿ã¤ã¢ã¸ã®æç­ã«ã¼ã ð¥ð¥',
-      savMsg30: 'è¯ãè²¯èçï¼ð¥',
-      savMsg15: 'è¯ãã¹ã¿ã¼ã â ããå°ãä¸ããã¨ããã«æ©ãã',
-      savMsgLow: 'è²¯èçãä½ãã§ããæ¯åºã®åæ¸ãæ¤è¨ãã¦ãã ããã',
-      fireNum: 'FIREç®æ¨é¡ï¼æ°¸ç¶ï¼',
-      nestEgg: 'ãªã¿ã¤ã¢å¿è¦è³é',
-      annExpDiv: 'å¹´éæ¯åº Ã· å®è³ªãªã¿ã¼ã³ç',
-      enoughFor: 'ãªã¿ã¤ã¢å¾{0}å¹´åã«åå',
-      alreadyThere: 'æ¢ã«éæï¼',
-      retireNow: 'ä»ãããªã¿ã¤ã¢ã§ãã¾ãï¼ð',
-      needMore: 'ãã¨{0}å¿è¦',
-      addIncome: 'åå¥ãå¥åãã¦è¨ç®',
-      notReachable: 'éæä¸å¯',
-      increaseSav: 'è²¯èçãä¸ãã¾ããã',
-      yrs: 'å¹´', mo: 'ã¶æ',
-      superEarly: 'è¶æ©æãªã¿ã¤ã¢ï¼ð¥',
-      excellent: 'ç´ æ´ãããæ©æãªã¿ã¤ã¢ï¼',
-      early: 'æ©æãªã¿ã¤ã¢ï¼',
-      onTrack: 'ãªã¿ã¤ã¢ã®è»éã«ä¹ã£ã¦ãã¾ãã',
-      considerMore: 'è²¯èã®å¢å ãæ¤è¨ãã¾ãããã',
-      now: 'ï¼ä»ããï¼ï¼',
+      title: 'リタイア計算機',
+      tagline: 'いつ仕事を辞められる？2つの戦略で計算します。',
+      modePerp: '♾️ 永久に使い切らない',
+      modePerpDesc: '投資リターンだけで生活 — 元本はそのまま',
+      modeSpend: '⏳ 全部使い切る',
+      modeSpendDesc: '貯蓄＋リターンを目標年齢まで使い切る — 最終残高$0',
+      profile: 'あなたの財務プロフィール',
+      lblAge: '現在の年齢',
+      lblExpenses: '月間支出',
+      lblSavings: '現在の貯蓄／投資額',
+      lblIncome: '月間収入（任意 — 無職なら$0）',
+      noteIncome: 'リタイアに必要な金額だけ知りたい場合は$0のままで。「リタイアまで何年」の計算には収入が必要です。',
+      lblReturn: '期待年間リターン',
+      noteReturn: '<strong>ヒント：</strong>S&P 500の平均は約10%／年（インフレ前）。保守的な見積もりは6–8%。',
+      lblInflation: 'インフレ率',
+      noteInflation: '<strong>ヒント：</strong>歴史的に約2–3%／年。購買力を徐々に減少させるため、計算に含めます。',
+      lblIncomeGrowth: '年間収入成長率',
+      noteIncomeGrowth: '<strong>ヒント：</strong>平均昇給率は3–5%／年。収入が増えると毎月の貯蓄も増えます。',
+      lblLifeExp: '予想寿命（「全部使い切る」モード用）',
+      noteLifeExp: 'この年齢で貯蓄がゼロになります。保守的に設定しましょう！',
+      sufYrs: '歳', sufYrs2: '歳',
+      progressTitle: 'リタイア目標への進捗',
+      ofTarget: '目標達成率',
+      targetWord: '目標',
+      statYears: 'リタイアまでの年数',
+      statRetireAge: 'リタイア年齢',
+      chartTitle: '資産推移予測',
+      cmpTitle: '2つのモード比較',
+      cmpColA: '♾️ 永久に使い切らない', cmpColB: '⏳ 全部使い切る',
+      cmpHow: '仕組み',
+      cmpHowA: '投資リターンで生活。元本は永遠にそのまま。',
+      cmpHowB: '貯蓄＋リターンを徐々に使い切る。目標年齢で残高$0。',
+      cmpTarget: '目標金額', cmpYears: 'リタイアまで', cmpAge: 'リタイア年齢',
+      cmpLeftover: '死後の残高',
+      cmpLeftA: '全額残る（無限）',
+      cmpRisk: 'リスク',
+      cmpRiskA: '非常に安全 — ただし多額の貯蓄が必要',
+      cmpRiskB: '寿命の見積もりが必要 — 資金が尽きるリスクあり',
+      howTitle: '計算の仕組み',
+      explainPerp: '<span class="emoji">♾️</span><strong>永久に使い切らない（永続モード）</strong><br><br>これは典型的な<strong>FIRE</strong>（経済的自立・早期リタイア）のアプローチです。<strong>年間の投資リターンだけ</strong>で生活費を賄えるだけの貯蓄を築きます — 元本には一切手をつけません。<br><br><strong>公式：</strong>目標 = 年間支出 ÷ 実質リターン率<br><strong>実質リターン</strong> = 投資リターン − インフレ<br><br>例：年間支出$50,400、リターン7%、インフレ3%（実質リターン4%）の場合、$50,400 ÷ 0.04 = <strong>$1,260,000</strong>が必要。',
+      explainSpend: '<span class="emoji">⏳</span><strong>全部使い切る（取崩モード）</strong><br><br>リターン<strong>と元本の両方</strong>を使うため、必要な貯蓄額は少なくなります。予想寿命を設定すると、その期間ちょうど持つ金額を計算します。<br><br><strong>公式：</strong>年金現在価値を使用 — 支出、リターン、リタイア年数を考慮。<br><br>例：同じ支出で45歳リタイア、85歳まで（40年）→ <strong>約$1,060,000</strong>で済みます（$1.26Mではなく）。',
+      explainReal: '<span class="emoji">📊</span><strong>「実質リターン」とは？</strong><br><br>投資が年7%成長しても、インフレが年約3%の購買力を奪います。つまり<strong>実質（インフレ調整後）リターン</strong>は約4%です。この計算機は実質リターンを使用し、全金額を<strong>今日の価値</strong>で表示します。',
+      footer1: '🔥 リタイア計算機 — 教育目的のみ。過去の市場リターンは将来の結果を保証しません。',
+      footer2: 'すべての金額は今日の価値で表示（インフレ調整済み）。一定の実質リターンと安定した拠出を前提。',
+      savingsRate: '貯蓄率',
+      passiveIncome: '不労所得（貯蓄から）',
+      saving: '毎月貯蓄',
+      perMo: '/月', perYr: '/年',
+      atRealReturn: '実質',
+      realReturn: 'リターン',
+      coversExpenses: '月{0}の支出をカバー — 経済的自由達成！🔥',
+      needButOnly: '月{0}必要ですが、現在{1}/月しか生成していません。',
+      savMsg70: '超貯蓄家！リタイアはすぐそこ 🔥🔥🔥',
+      savMsg50: '素晴らしい！リタイアへの最短ルート 🔥🔥',
+      savMsg30: '良い貯蓄率！🔥',
+      savMsg15: '良いスタート — もう少し上げるとさらに早く。',
+      savMsgLow: '貯蓄率が低いです。支出の削減を検討してください。',
+      fireNum: 'FIRE目標額（永続）',
+      nestEgg: 'リタイア必要資金',
+      annExpDiv: '年間支出 ÷ 実質リターン率',
+      enoughFor: 'リタイア後{0}年分に十分',
+      alreadyThere: '既に達成！',
+      retireNow: '今すぐリタイアできます！🎉',
+      needMore: 'あと{0}必要',
+      addIncome: '収入を入力して計算',
+      notReachable: '達成不可',
+      increaseSav: '貯蓄率を上げましょう',
+      yrs: '年', mo: 'ヶ月',
+      superEarly: '超早期リタイア！🔥',
+      excellent: '素晴らしい早期リタイア！',
+      early: '早期リタイア！',
+      onTrack: 'リタイアの軌道に乗っています。',
+      considerMore: '貯蓄の増加を検討しましょう。',
+      now: '（今すぐ！）',
       atAge: '',
-      alertReturn: 'â ï¸ ãªã¿ã¼ã³ãã¤ã³ãã¬ãä¸åã£ã¦ãã¾ã â ãéã®ä¾¡å¤ãä¸ããç¶ãã¾ãããæ°¸ä¹ã«ä½¿ãåããªããã¢ã¼ãã«ã¯æ­£ã®å®è³ªãªã¿ã¼ã³ãå¿è¦ã§ãããå¨é¨ä½¿ãåããã¢ã¼ãããè©¦ããã ããã',
-      alertReturnShort: 'å®è³ªãªã¿ã¼ã³ â¤ 0 â æ°¸ç¶ã¢ã¼ãã§ã¯ä¸å¯è½',
-      alertExpenses: 'â ï¸ æéæ¯åºã$0ããå¤§ããå¤ã§å¥åãã¦ãã ããã',
-      alertRetireNow: 'ð ä»ãããªã¿ã¤ã¢ã§ãã¾ãï¼è²¯èï¼{0}ï¼ãç®æ¨ï¼{1}ï¼ãè¶ãã¦ãã¾ãã',
-      alertNeedMore: 'ð¡ ãªã¿ã¤ã¢ã«ã¯ãã¨{0}å¿è¦ã§ããæéåå¥ãå¥åããã¨å¿è¦æéãè¨ç®ãã¾ãã',
-      lgdPortfolio: 'è³ç£',
-      lgdTarget: 'FIREç®æ¨',
-      lgdNestEgg: 'ãªã¿ã¤ã¢å¿è¦è³é',
-      lgdLivingOff: 'è³ç£ï¼ãªã¿ã¼ã³ã§çæ´»ï¼',
-      lgdSpending: 'è³ç£ï¼åå´©ãä¸­ï¼',
+      alertReturn: '⚠️ リターンがインフレを下回っています — お金の価値が下がり続けます。「永久に使い切らない」モードには正の実質リターンが必要です。「全部使い切る」モードをお試しください。',
+      alertReturnShort: '実質リターン ≤ 0 — 永続モードでは不可能',
+      alertExpenses: '⚠️ 月間支出を$0より大きい値で入力してください。',
+      alertRetireNow: '🎉 今すぐリタイアできます！貯蓄（{0}）が目標（{1}）を超えています。',
+      alertNeedMore: '💡 リタイアにはあと{0}必要です。月間収入を入力すると必要期間を計算します。',
+      lgdPortfolio: '資産',
+      lgdTarget: 'FIRE目標',
+      lgdNestEgg: 'リタイア必要資金',
+      lgdLivingOff: '資産（リターンで生活）',
+      lgdSpending: '資産（取崩し中）',
       agePrefix: '',
-      nowLabel: 'ç¾å¨',
-      targetLabel2: 'ç®æ¨',
-      expToggle: 'æ¯åºã®åè¨³',
-      expAdd: '+ é ç®è¿½å ',
-      expTotal: 'åè¨',
-      noteExpMult: 'åç > 1 = å®å¨ãã¼ã¸ã³ï¼ä¾ï¼Ã1.1ã§10%ã®ä½è£ï¼ã',
-      expSync: 'åè¨³ã¨åæ',
-      expUnsync: 'éåæ â èªç±ã«ç·¨é',
-      hhLabel: 'ä¸å¸¯æ§æï¼',
-      hhSolo: 'åèº«',
-      hhPartner: 'ãã¼ããã¼ãã',
-      hhFamily: 'ãã¼ããã¼ï¼å­ä¾',
-      hhKids: 'å­ä¾ã®æ°ï¼',
-      hhSupportUntil: 'ä½æ­³ã¾ã§æ¶é¤ï¼',
-      kidExpNote: 'å­ä¾ã®è²»ç¨ã¯ç´{0}å¹´å¾ï¼{1}æ­³ï¼ã«çµäºããã®å¾ãæéæ¯åºã¯ç´{2}ã«æ¸å°ã',
-      countriesTitle: 'ð äººæ°ã®ãªã¿ã¤ã¢å',
-      countriesNote: 'å½å¥ã®æ¦ç®æéçæ´»è²»ï¼USDï¼ãå½ãã¯ãªãã¯ããã¨æ¯åºã«èªåå¥åã',
-      countryCol: 'å½',
-      costSolo: 'åèº«',
-      costPartner: 'ãã¼ããã¼ãã',
-      costFamily: 'å®¶æï¼å­ä¾1äººï¼',
-      countryNotes: 'ã¡ã¢',
+      nowLabel: '現在',
+      targetLabel2: '目標',
+      expToggle: '支出の内訳',
+      expAdd: '+ 項目追加',
+      expTotal: '合計',
+      noteExpMult: '倍率 > 1 = 安全マージン（例：×1.1で10%の余裕）。',
+      expSync: '内訳と同期',
+      expUnsync: '非同期 — 自由に編集',
+      hhLabel: '世帯構成：',
+      hhSolo: '単身',
+      hhPartner: 'パートナーあり',
+      hhFamily: 'パートナー＋子供',
+      hhKids: '子供の数：',
+      hhSupportUntil: '何歳まで扶養：',
+      kidExpNote: '子供の費用は約{0}年後（{1}歳）に終了。その後、月間支出は約{2}に減少。',
+      countriesTitle: '🌍 人気のリタイア先',
+      countriesNote: '国別の概算月間生活費（USD）。国をクリックすると支出に自動入力。',
+      countryCol: '国',
+      costSolo: '単身',
+      costPartner: 'パートナーあり',
+      costFamily: '家族（子供1人）',
+      countryNotes: 'メモ',
     },
     ko: {
-      title: 'ìí´ ê³ì°ê¸°',
-      tagline: 'ì¸ì  ì¼ì ê·¸ë§ë ì ììê¹? ë ê°ì§ ì ëµì¼ë¡ ììë³´ì¸ì.',
-      modePerp: 'â¾ï¸ ì ë ë°ë¥ëì§ ìë',
-      modePerpDesc: 'í¬ì ììµë§ì¼ë¡ ìí â ìê¸ì ììí ì ì§',
-      modeSpend: 'â³ ì ë¶ ì¬ì©íê¸°',
-      modeSpendDesc: 'ì ì¶ + ììµì ëª©í ëì´ê¹ì§ ëª¨ë ì¬ì© â ìµì¢ ìì¡ $0',
-      profile: 'ì¬ì  íë¡í',
-      lblAge: 'íì¬ ëì´',
-      lblExpenses: 'ì ì§ì¶',
-      lblSavings: 'íì¬ ì ì¶/í¬ìì¡',
-      lblIncome: 'ì ìì (ì í â ë¯¸ì·¨ì ì $0)',
-      noteIncome: 'ìí´ì íìí ê¸ì¡ë§ ìê³  ì¶ë¤ë©´ $0ì¼ë¡ ëì¸ì. "ìí´ê¹ì§ ëª ë" ê³ì°ìë§ ììì´ íìí©ëë¤.',
-      lblReturn: 'ìì ì°ê° ììµë¥ ',
-      noteReturn: '<strong>í:</strong> S&P 500 íê· ì ì° ì½ 10% (ì¸íë ì´ì ì ). ë³´ìì  ì¶ì ì¹ë 6â8%.',
-      lblInflation: 'ì¸íë ì´ìì¨',
-      noteInflation: '<strong>í:</strong> ì­ì¬ì ì¼ë¡ ì° ì½ 2â3%. êµ¬ë§¤ë ¥ì ììí ê°ììí¤ë¯ë¡ ê³ì°ì í¬í¨í©ëë¤.',
-      lblIncomeGrowth: 'ì°ê° ìì ì±ì¥ë¥ ',
-      noteIncomeGrowth: '<strong>í:</strong> íê·  ê¸ì¬ ì¸ìë¥ ì ì° 3â5%. ììì´ ëë©´ ë§¤ì ì ì¶ë ì¦ê°í©ëë¤.',
-      lblLifeExp: 'ê¸°ë ìëª ("ì ë¶ ì¬ì©íê¸°" ëª¨ëì©)',
-      noteLifeExp: 'ì´ ëì´ì ì ì¶ì´ 0ì´ ë©ëë¤. ë³´ìì ì¼ë¡ ì¤ì íì¸ì!',
-      sufYrs: 'ì¸', sufYrs2: 'ì¸',
-      progressTitle: 'ìí´ ëª©í ì§íë¥ ',
-      ofTarget: 'ëª©í ë¬ì±ë¥ ',
-      targetWord: 'ëª©í',
-      statYears: 'ìí´ê¹ì§ ë¨ì ê¸°ê°',
-      statRetireAge: 'ìí´ ëì´',
-      chartTitle: 'ìì° ì¶ì´ ìì¸¡',
-      cmpTitle: 'ë ëª¨ë ë¹êµ',
-      cmpColA: 'â¾ï¸ ì ë ë°ë¥ëì§ ìë', cmpColB: 'â³ ì ë¶ ì¬ì©íê¸°',
-      cmpHow: 'ìë ë°©ì',
-      cmpHowA: 'í¬ì ììµì¼ë¡ ìí. ìê¸ì ììí ì ì§.',
-      cmpHowB: 'ì ì¶ + ììµì ì ì°¨ ìì§. ëª©í ëì´ì ìì¡ $0.',
-      cmpTarget: 'ëª©í ê¸ì¡', cmpYears: 'ìí´ê¹ì§', cmpAge: 'ìí´ ëì´',
-      cmpLeftover: 'ì¬ë§ í ìì¡',
-      cmpLeftA: 'ì ì¡ ë³´ì¡´ (ë¬´í)',
-      cmpRisk: 'ìí',
-      cmpRiskA: 'ë§¤ì° ìì  â ë¨, ë ë§ì ì ì¶ íì',
-      cmpRiskB: 'ìëª ìì¸¡ íì â ìê¸ ìì§ ìí ìì',
-      howTitle: 'ê³ì° ìë¦¬',
-      explainPerp: '<span class="emoji">â¾ï¸</span><strong>ì ë ë°ë¥ëì§ ìë (ìêµ¬ ëª¨ë)</strong><br><br>ì´ê²ì ì íì ì¸ <strong>FIRE</strong>(ê²½ì ì  ìë¦½, ì¡°ê¸° ìí´) ì ê·¼ë²ìëë¤. <strong>ì°ê° í¬ì ììµë§ì¼ë¡</strong> ìíë¹ë¥¼ ì¶©ë¹í  ì ìë ì ì¶ì ììµëë¤ â ìê¸ì ì ë ê±´ëë¦¬ì§ ììµëë¤.<br><br><strong>ê³µì:</strong> ëª©í = ì°ê° ì§ì¶ Ã· ì¤ì§ ììµë¥ <br><strong>ì¤ì§ ììµ</strong> = í¬ì ììµ â ì¸íë ì´ì<br><br>ì: ì°ê° ì§ì¶ $50,400, ììµë¥  7%, ì¸íë ì´ì 3% (ì¤ì§ ììµ 4%), íìì¡ $50,400 Ã· 0.04 = <strong>$1,260,000</strong>.',
-      explainSpend: '<span class="emoji">â³</span><strong>ì ë¶ ì¬ì©íê¸° (ì¸ì¶ ëª¨ë)</strong><br><br>ììµ<strong>ê³¼ ìê¸ ëª¨ë</strong>ë¥¼ ì¬ì©íë¯ë¡ íìí ì ì¶ì´ ì ìµëë¤. ê¸°ë ìëªì ì ííë©´, ê·¸ ê¸°ê° ëì ì íí ì§ìëë ê¸ì¡ì ê³ì°í©ëë¤.<br><br><strong>ê³µì:</strong> ì°ê¸ íì¬ ê°ì¹ ì¬ì© â ì§ì¶, ììµ, ìí´ ê¸°ê°ì ê³ ë ¤.<br><br>ì: ê°ì ì§ì¶ë¡ 45ì¸ ìí´, 85ì¸ê¹ì§ (40ë) â <strong>ì½ $1,060,000</strong>ë§ íì ($1.26M ëì ).',
-      explainReal: '<span class="emoji">ð</span><strong>"ì¤ì§ ììµ"ì´ë?</strong><br><br>í¬ìê° ì° 7% ì±ì¥í´ë ì¸íë ì´ìì´ ì° ì½ 3%ì êµ¬ë§¤ë ¥ì ë¹¼ììµëë¤. ë°ë¼ì <strong>ì¤ì§(ì¸íë ì´ì ì¡°ì ) ììµ</strong>ì ì½ 4%ìëë¤. ì´ ê³ì°ê¸°ë ì¤ì§ ììµì ì¬ì©íì¬ ëª¨ë  ê¸ì¡ì <strong>ì¤ëì ê°ì¹</strong>ë¡ íìí©ëë¤.',
-      footer1: 'ð¥ ìí´ ê³ì°ê¸° â êµì¡ ëª©ì ì¼ë¡ë§ ì¬ì©. ê³¼ê±° ìì¥ ììµë¥ ì´ ë¯¸ë ê²°ê³¼ë¥¼ ë³´ì¥íì§ ììµëë¤.',
-      footer2: 'ëª¨ë  ê¸ì¡ì ì¤ëì ê°ì¹ë¡ íì (ì¸íë ì´ì ì¡°ì  ìë£). ì¼ì í ì¤ì§ ììµê³¼ ê¾¸ì¤í ê¸°ì¬ë¥¼ ê°ì .',
-      savingsRate: 'ì ì¶ë¥ ',
-      passiveIncome: 'ìë ìë (ì ì¶ìì)',
-      saving: 'ë§¤ì ì ì¶',
-      perMo: '/ì', perYr: '/ë',
-      atRealReturn: 'ì¤ì§',
-      realReturn: 'ììµë¥ ',
-      coversExpenses: 'ì {0} ì§ì¶ì ì»¤ë² â ê²½ì ì  ìì  ë¬ì±! ð¥',
-      needButOnly: 'ì {0} íìíì§ë§ íì¬ {1}/ìë§ ìì± ì¤.',
-      savMsg70: 'ê·¹í ì ì¶ê°! ìí´ê° ì½ì! ð¥ð¥ð¥',
-      savMsg50: 'íë¥­í©ëë¤! ìí´ ê³ ìëë¡! ð¥ð¥',
-      savMsg30: 'ì¢ì ì ì¶ë¥ ! ð¥',
-      savMsg15: 'ì¢ì ìì â ë ëì´ë©´ ë ë¹¨ë¦¬.',
-      savMsgLow: 'ì ì¶ë¥ ì´ ë®ìµëë¤. ì§ì¶ ì¤ì´ê¸°ë¥¼ ìëíì¸ì.',
-      fireNum: 'FIRE ëª©í (ìêµ¬)',
-      nestEgg: 'ìí´ íì ìê¸',
-      annExpDiv: 'ì°ê° ì§ì¶ Ã· ì¤ì§ ììµë¥ ',
-      enoughFor: 'ìí´ í {0}ë ì¶©ë¶',
-      alreadyThere: 'ì´ë¯¸ ë¬ì±!',
-      retireNow: 'ì§ê¸ ë°ë¡ ìí´ ê°ë¥! ð',
-      needMore: '{0} ë íì',
-      addIncome: 'ììì ìë ¥íì¬ ê³ì°',
-      notReachable: 'ë¬ì± ë¶ê°',
-      increaseSav: 'ì ì¶ë¥ ì ëì´ì¸ì',
-      yrs: 'ë', mo: 'ê°ì',
-      superEarly: 'ì´ ì¡°ê¸° ìí´! ð¥',
-      excellent: 'íë¥­í ì¡°ê¸° ìí´!',
-      early: 'ì¡°ê¸° ìí´!',
-      onTrack: 'ìí´ ê¶¤ëì ììµëë¤.',
-      considerMore: 'ì ì¶ ì¦ê°ë¥¼ ê³ ë ¤íì¸ì.',
-      now: '(ì§ê¸!)',
+      title: '은퇴 계산기',
+      tagline: '언제 일을 그만둘 수 있을까? 두 가지 전략으로 알아보세요.',
+      modePerp: '♾️ 절대 바닥나지 않는',
+      modePerpDesc: '투자 수익만으로 생활 — 원금은 영원히 유지',
+      modeSpend: '⏳ 전부 사용하기',
+      modeSpendDesc: '저축 + 수익을 목표 나이까지 모두 사용 — 최종 잔액 $0',
+      profile: '재정 프로필',
+      lblAge: '현재 나이',
+      lblExpenses: '월 지출',
+      lblSavings: '현재 저축/투자액',
+      lblIncome: '월 수입 (선택 — 미취업 시 $0)',
+      noteIncome: '은퇴에 필요한 금액만 알고 싶다면 $0으로 두세요. "은퇴까지 몇 년" 계산에만 수입이 필요합니다.',
+      lblReturn: '예상 연간 수익률',
+      noteReturn: '<strong>팁:</strong> S&P 500 평균은 연 약 10% (인플레이션 전). 보수적 추정치는 6–8%.',
+      lblInflation: '인플레이션율',
+      noteInflation: '<strong>팁:</strong> 역사적으로 연 약 2–3%. 구매력을 서서히 감소시키므로 계산에 포함합니다.',
+      lblIncomeGrowth: '연간 수입 성장률',
+      noteIncomeGrowth: '<strong>팁:</strong> 평균 급여 인상률은 연 3–5%. 수입이 늘면 매월 저축도 증가합니다.',
+      lblLifeExp: '기대 수명 ("전부 사용하기" 모드용)',
+      noteLifeExp: '이 나이에 저축이 0이 됩니다. 보수적으로 설정하세요!',
+      sufYrs: '세', sufYrs2: '세',
+      progressTitle: '은퇴 목표 진행률',
+      ofTarget: '목표 달성률',
+      targetWord: '목표',
+      statYears: '은퇴까지 남은 기간',
+      statRetireAge: '은퇴 나이',
+      chartTitle: '자산 추이 예측',
+      cmpTitle: '두 모드 비교',
+      cmpColA: '♾️ 절대 바닥나지 않는', cmpColB: '⏳ 전부 사용하기',
+      cmpHow: '작동 방식',
+      cmpHowA: '투자 수익으로 생활. 원금은 영원히 유지.',
+      cmpHowB: '저축 + 수익을 점차 소진. 목표 나이에 잔액 $0.',
+      cmpTarget: '목표 금액', cmpYears: '은퇴까지', cmpAge: '은퇴 나이',
+      cmpLeftover: '사망 후 잔액',
+      cmpLeftA: '전액 보존 (무한)',
+      cmpRisk: '위험',
+      cmpRiskA: '매우 안전 — 단, 더 많은 저축 필요',
+      cmpRiskB: '수명 예측 필요 — 자금 소진 위험 있음',
+      howTitle: '계산 원리',
+      explainPerp: '<span class="emoji">♾️</span><strong>절대 바닥나지 않는 (영구 모드)</strong><br><br>이것은 전형적인 <strong>FIRE</strong>(경제적 자립, 조기 은퇴) 접근법입니다. <strong>연간 투자 수익만으로</strong> 생활비를 충당할 수 있는 저축을 쌓습니다 — 원금은 절대 건드리지 않습니다.<br><br><strong>공식:</strong> 목표 = 연간 지출 ÷ 실질 수익률<br><strong>실질 수익</strong> = 투자 수익 − 인플레이션<br><br>예: 연간 지출 $50,400, 수익률 7%, 인플레이션 3% (실질 수익 4%), 필요액 $50,400 ÷ 0.04 = <strong>$1,260,000</strong>.',
+      explainSpend: '<span class="emoji">⏳</span><strong>전부 사용하기 (인출 모드)</strong><br><br>수익<strong>과 원금 모두</strong>를 사용하므로 필요한 저축이 적습니다. 기대 수명을 선택하면, 그 기간 동안 정확히 지속되는 금액을 계산합니다.<br><br><strong>공식:</strong> 연금 현재 가치 사용 — 지출, 수익, 은퇴 기간을 고려.<br><br>예: 같은 지출로 45세 은퇴, 85세까지 (40년) → <strong>약 $1,060,000</strong>만 필요 ($1.26M 대신).',
+      explainReal: '<span class="emoji">📊</span><strong>"실질 수익"이란?</strong><br><br>투자가 연 7% 성장해도 인플레이션이 연 약 3%의 구매력을 빼앗습니다. 따라서 <strong>실질(인플레이션 조정) 수익</strong>은 약 4%입니다. 이 계산기는 실질 수익을 사용하여 모든 금액을 <strong>오늘의 가치</strong>로 표시합니다.',
+      footer1: '🔥 은퇴 계산기 — 교육 목적으로만 사용. 과거 시장 수익률이 미래 결과를 보장하지 않습니다.',
+      footer2: '모든 금액은 오늘의 가치로 표시 (인플레이션 조정 완료). 일정한 실질 수익과 꾸준한 기여를 가정.',
+      savingsRate: '저축률',
+      passiveIncome: '수동 소득 (저축에서)',
+      saving: '매월 저축',
+      perMo: '/월', perYr: '/년',
+      atRealReturn: '실질',
+      realReturn: '수익률',
+      coversExpenses: '월 {0} 지출을 커버 — 경제적 자유 달성! 🔥',
+      needButOnly: '월 {0} 필요하지만 현재 {1}/월만 생성 중.',
+      savMsg70: '극한 저축가! 은퇴가 코앞! 🔥🔥🔥',
+      savMsg50: '훌륭합니다! 은퇴 고속도로! 🔥🔥',
+      savMsg30: '좋은 저축률! 🔥',
+      savMsg15: '좋은 시작 — 더 높이면 더 빨리.',
+      savMsgLow: '저축률이 낮습니다. 지출 줄이기를 시도하세요.',
+      fireNum: 'FIRE 목표 (영구)',
+      nestEgg: '은퇴 필요 자금',
+      annExpDiv: '연간 지출 ÷ 실질 수익률',
+      enoughFor: '은퇴 후 {0}년 충분',
+      alreadyThere: '이미 달성!',
+      retireNow: '지금 바로 은퇴 가능! 🎉',
+      needMore: '{0} 더 필요',
+      addIncome: '수입을 입력하여 계산',
+      notReachable: '달성 불가',
+      increaseSav: '저축률을 높이세요',
+      yrs: '년', mo: '개월',
+      superEarly: '초 조기 은퇴! 🔥',
+      excellent: '훌륭한 조기 은퇴!',
+      early: '조기 은퇴!',
+      onTrack: '은퇴 궤도에 있습니다.',
+      considerMore: '저축 증가를 고려하세요.',
+      now: '(지금!)',
       atAge: '',
-      alertReturn: 'â ï¸ ììµë¥ ì´ ì¸íë ì´ìë³´ë¤ ë®ìµëë¤ â ëì ê°ì¹ê° ê³ì ì¤ì´ë­ëë¤. "ì ë ë°ë¥ëì§ ìë" ëª¨ëìë ìì ì¤ì§ ììµì´ íìí©ëë¤. "ì ë¶ ì¬ì©íê¸°" ëª¨ëë¥¼ ìëíì¸ì.',
-      alertReturnShort: 'ì¤ì§ ììµ â¤ 0 â ìêµ¬ ëª¨ë ë¶ê°',
-      alertExpenses: 'â ï¸ ì ì§ì¶ì $0ë³´ë¤ í¬ê² ìë ¥íì¸ì.',
-      alertRetireNow: 'ð ì§ê¸ ë°ë¡ ìí´ ê°ë¥! ì ì¶({0})ì´ ëª©í({1})ë¥¼ ì´ê³¼í©ëë¤.',
-      alertNeedMore: 'ð¡ ìí´ê¹ì§ {0} ë íìí©ëë¤. ì ììì ìë ¥íë©´ ê¸°ê°ì ê³ì°í©ëë¤.',
-      lgdPortfolio: 'ìì°',
-      lgdTarget: 'FIRE ëª©í',
-      lgdNestEgg: 'ìí´ íì ìê¸',
-      lgdLivingOff: 'ìì° (ììµì¼ë¡ ìí)',
-      lgdSpending: 'ìì° (ì¸ì¶ ì¤)',
+      alertReturn: '⚠️ 수익률이 인플레이션보다 낮습니다 — 돈의 가치가 계속 줄어듭니다. "절대 바닥나지 않는" 모드에는 양의 실질 수익이 필요합니다. "전부 사용하기" 모드를 시도하세요.',
+      alertReturnShort: '실질 수익 ≤ 0 — 영구 모드 불가',
+      alertExpenses: '⚠️ 월 지출을 $0보다 크게 입력하세요.',
+      alertRetireNow: '🎉 지금 바로 은퇴 가능! 저축({0})이 목표({1})를 초과합니다.',
+      alertNeedMore: '💡 은퇴까지 {0} 더 필요합니다. 월 수입을 입력하면 기간을 계산합니다.',
+      lgdPortfolio: '자산',
+      lgdTarget: 'FIRE 목표',
+      lgdNestEgg: '은퇴 필요 자금',
+      lgdLivingOff: '자산 (수익으로 생활)',
+      lgdSpending: '자산 (인출 중)',
       agePrefix: '',
-      nowLabel: 'íì¬',
-      targetLabel2: 'ëª©í',
-      expToggle: 'ì§ì¶ ë´ì­',
-      expAdd: '+ í­ëª© ì¶ê°',
-      expTotal: 'í©ê³',
-      noteExpMult: 'ë°°ì > 1 = ìì  ë§ì§ (ì: Ã1.1ì 10% ì¬ì ).',
-      expSync: 'ë´ì­ê³¼ ëê¸°í',
-      expUnsync: 'ë¹ëê¸°í â ìì  í¸ì§',
-      hhLabel: 'ê°êµ¬ êµ¬ì±:',
-      hhSolo: '1ì¸',
-      hhPartner: 'íí¸ëì í¨ê»',
-      hhFamily: 'íí¸ë + ìë',
-      hhKids: 'ìë ì:',
-      hhSupportUntil: 'ë¶ì ì¢ë£ ëì´:',
-      kidExpNote: 'ìë ë¹ì©ì ì½ {0}ë í({1}ì¸)ì ì¢ë£. ì´í ì ì§ì¶ì ì½ {2}ë¡ ê°ì.',
-      countriesTitle: 'ð ì¸ê¸° ìí´ êµ­ê°',
-      countriesNote: 'êµ­ê°ë³ ëëµì ì¸ ì ìíë¹(USD). êµ­ê°ë¥¼ í´ë¦­íë©´ ì§ì¶ì ìë ìë ¥.',
-      countryCol: 'êµ­ê°',
-      costSolo: '1ì¸',
-      costPartner: 'íí¸ëì',
-      costFamily: 'ê°ì¡± (ìë 1ëª)',
-      countryNotes: 'ë¹ê³ ',
+      nowLabel: '현재',
+      targetLabel2: '목표',
+      expToggle: '지출 내역',
+      expAdd: '+ 항목 추가',
+      expTotal: '합계',
+      noteExpMult: '배수 > 1 = 안전 마진 (예: ×1.1은 10% 여유).',
+      expSync: '내역과 동기화',
+      expUnsync: '비동기화 — 자유 편집',
+      hhLabel: '가구 구성:',
+      hhSolo: '1인',
+      hhPartner: '파트너와 함께',
+      hhFamily: '파트너 + 자녀',
+      hhKids: '자녀 수:',
+      hhSupportUntil: '부양 종료 나이:',
+      kidExpNote: '자녀 비용은 약 {0}년 후({1}세)에 종료. 이후 월 지출은 약 {2}로 감소.',
+      countriesTitle: '🌍 인기 은퇴 국가',
+      countriesNote: '국가별 대략적인 월 생활비(USD). 국가를 클릭하면 지출에 자동 입력.',
+      countryCol: '국가',
+      costSolo: '1인',
+      costPartner: '파트너와',
+      costFamily: '가족 (자녀 1명)',
+      countryNotes: '비고',
     },
     vi: {
-      title: 'MÃ¡y TÃ­nh Nghá» HÆ°u',
-      tagline: 'Khi nÃ o báº¡n cÃ³ thá» ngá»«ng lÃ m viá»c? TÃ¬m hiá»u vá»i hai chiáº¿n lÆ°á»£c.',
-      modePerp: 'â¾ï¸ KhÃ´ng Bao Giá» Háº¿t',
-      modePerpDesc: 'Sá»ng báº±ng lá»£i nhuáº­n Äáº§u tÆ° â vá»n gá»c giá»¯ nguyÃªn mÃ£i mÃ£i',
-      modeSpend: 'â³ Chi TiÃªu Háº¿t',
-      modeSpendDesc: 'DÃ¹ng háº¿t tiáº¿t kiá»m + lá»£i nhuáº­n Äáº¿n tuá»i má»¥c tiÃªu â cÃ²n $0',
-      profile: 'Há» SÆ¡ TÃ i ChÃ­nh',
-      lblAge: 'Tuá»i hiá»n táº¡i',
-      lblExpenses: 'Chi tiÃªu hÃ ng thÃ¡ng',
-      lblSavings: 'Tiáº¿t kiá»m / Äáº§u tÆ° hiá»n táº¡i',
-      lblIncome: 'Thu nháº­p hÃ ng thÃ¡ng (tÃ¹y chá»n â $0 náº¿u khÃ´ng Äi lÃ m)',
-      noteIncome: 'Äá» $0 náº¿u chá» muá»n biáº¿t cáº§n bao nhiÃªu Äá» nghá» hÆ°u. Chá» cáº§n thu nháº­p Äá» tÃ­nh "bao nhiÃªu nÄm Äáº¿n nghá» hÆ°u".',
-      lblReturn: 'Lá»£i suáº¥t ká»³ vá»ng hÃ ng nÄm',
-      noteReturn: '<strong>Gá»£i Ã½:</strong> S&P 500 trung bÃ¬nh ~10%/nÄm (trÆ°á»c láº¡m phÃ¡t). Æ¯á»c tÃ­nh tháº­n trá»ng lÃ  6â8%.',
-      lblInflation: 'Tá»· lá» láº¡m phÃ¡t',
-      noteInflation: '<strong>Gá»£i Ã½:</strong> Lá»ch sá»­ khoáº£ng 2â3%/nÄm. Láº¡m phÃ¡t lÃ m giáº£m sá»©c mua nÃªn chÃºng tÃ´i tÃ­nh vÃ o.',
-      lblIncomeGrowth: 'Tá»c Äá» tÄng thu nháº­p hÃ ng nÄm',
-      noteIncomeGrowth: '<strong>Gá»£i Ã½:</strong> TÄng lÆ°Æ¡ng trung bÃ¬nh 3â5%/nÄm. Thu nháº­p tÄng thÃ¬ tiáº¿t kiá»m hÃ ng thÃ¡ng cÅ©ng tÄng.',
-      lblLifeExp: 'Tuá»i thá» ká»³ vá»ng (cho cháº¿ Äá» "Chi TiÃªu Háº¿t")',
-      noteLifeExp: 'Tiáº¿t kiá»m sáº½ vá» 0 á» tuá»i nÃ y. HÃ£y Æ°á»c tÃ­nh tháº­n trá»ng!',
-      sufYrs: 'tuá»i', sufYrs2: 'tuá»i',
-      progressTitle: 'Tiáº¿n Äá» Má»¥c TiÃªu Nghá» HÆ°u',
-      ofTarget: 'ÄÃ£ Äáº¡t má»¥c tiÃªu',
-      targetWord: 'Má»¥c tiÃªu',
-      statYears: 'Sá» nÄm Äáº¿n nghá» hÆ°u',
-      statRetireAge: 'Tuá»i nghá» hÆ°u',
-      chartTitle: 'Dá»± BÃ¡o TÃ i Sáº£n',
-      cmpTitle: 'So SÃ¡nh Hai Cháº¿ Äá»',
-      cmpColA: 'â¾ï¸ KhÃ´ng Bao Giá» Háº¿t', cmpColB: 'â³ Chi TiÃªu Háº¿t',
-      cmpHow: 'CÃ¡ch hoáº¡t Äá»ng',
-      cmpHowA: 'Sá»ng báº±ng lá»£i nhuáº­n Äáº§u tÆ°. Vá»n gá»c giá»¯ nguyÃªn mÃ£i mÃ£i.',
-      cmpHowB: 'Dáº§n dáº§n chi tiÃªu tiáº¿t kiá»m + lá»£i nhuáº­n. Vá» $0 á» tuá»i má»¥c tiÃªu.',
-      cmpTarget: 'Sá» tiá»n má»¥c tiÃªu', cmpYears: 'NÄm Äá» nghá» hÆ°u', cmpAge: 'Tuá»i nghá» hÆ°u',
-      cmpLeftover: 'Sá» dÆ° sau khi máº¥t',
-      cmpLeftA: 'ToÃ n bá» (vÃ´ háº¡n)',
-      cmpRisk: 'Rá»§i ro',
-      cmpRiskA: 'Ráº¥t an toÃ n â nhÆ°ng cáº§n nhiá»u tiáº¿t kiá»m hÆ¡n',
-      cmpRiskB: 'Pháº£i Æ°á»c tÃ­nh tuá»i thá» â rá»§i ro háº¿t tiá»n',
-      howTitle: 'CÃ¡ch TÃ­nh',
-      explainPerp: '<span class="emoji">â¾ï¸</span><strong>KhÃ´ng Bao Giá» Háº¿t (Cháº¿ Äá» vÄ©nh viá»n)</strong><br><br>ÄÃ¢y lÃ  phÆ°Æ¡ng phÃ¡p <strong>FIRE</strong> (Tá»± do tÃ i chÃ­nh, Nghá» hÆ°u sá»m) kinh Äiá»n. Báº¡n tÃ­ch lÅ©y Äá»§ tiáº¿t kiá»m Äá» <strong>lá»£i nhuáº­n Äáº§u tÆ° hÃ ng nÄm</strong> trang tráº£i chi phÃ­ sinh hoáº¡t â khÃ´ng bao giá» Äá»¥ng Äáº¿n vá»n gá»c.<br><br><strong>CÃ´ng thá»©c:</strong> Má»¥c tiÃªu = Chi phÃ­ hÃ ng nÄm Ã· Lá»£i suáº¥t thá»±c<br><strong>Lá»£i suáº¥t thá»±c</strong> = Lá»£i suáº¥t Äáº§u tÆ° â Láº¡m phÃ¡t<br><br>VÃ­ dá»¥: Chi $50,400/nÄm, lá»£i suáº¥t 7%, láº¡m phÃ¡t 3% (lá»£i suáº¥t thá»±c 4%), cáº§n $50,400 Ã· 0.04 = <strong>$1,260,000</strong>.',
-      explainSpend: '<span class="emoji">â³</span><strong>Chi TiÃªu Háº¿t (Cháº¿ Äá» rÃºt dáº§n)</strong><br><br>Báº¡n khÃ´ng cáº§n tiáº¿t kiá»m nhiá»u vÃ¬ sáº½ <strong>chi cáº£ lá»£i nhuáº­n láº«n vá»n gá»c</strong>. Chá»n tuá»i thá» ká»³ vá»ng, mÃ¡y tÃ­nh sáº½ tÃ­nh báº¡n cáº§n bao nhiÃªu Äá» tiá»n kÃ©o dÃ i ÄÃºng thá»i gian ÄÃ³.<br><br><strong>CÃ´ng thá»©c:</strong> Sá»­ dá»¥ng GiÃ¡ trá» hiá»n táº¡i cá»§a niÃªn kim â tÃ­nh Äáº¿n chi tiÃªu, lá»£i suáº¥t vÃ  sá» nÄm nghá» hÆ°u.<br><br>VÃ­ dá»¥: CÃ¹ng chi phÃ­, nghá» hÆ°u 45 tuá»i, sá»ng Äáº¿n 85 (40 nÄm) â chá» cáº§n khoáº£ng <strong>$1,060,000</strong> thay vÃ¬ $1.26M.',
-      explainReal: '<span class="emoji">ð</span><strong>"Lá»£i suáº¥t thá»±c" lÃ  gÃ¬?</strong><br><br>Äáº§u tÆ° cÃ³ thá» tÄng 7%/nÄm, nhÆ°ng láº¡m phÃ¡t láº¥y máº¥t ~3%/nÄm sá»©c mua. Váº­y <strong>lá»£i suáº¥t thá»±c (ÄÃ£ Äiá»u chá»nh láº¡m phÃ¡t)</strong> khoáº£ng 4%. MÃ¡y tÃ­nh nÃ y dÃ¹ng lá»£i suáº¥t thá»±c nÃªn má»i sá» liá»u Äá»u theo <strong>giÃ¡ trá» hÃ´m nay</strong>.',
-      footer1: 'ð¥ MÃ¡y TÃ­nh Nghá» HÆ°u â Chá» dÃ¹ng cho má»¥c ÄÃ­ch giÃ¡o dá»¥c. Lá»£i suáº¥t quÃ¡ khá»© khÃ´ng Äáº£m báº£o káº¿t quáº£ tÆ°Æ¡ng lai.',
-      footer2: 'Táº¥t cáº£ giÃ¡ trá» hiá»n thá» theo Äá»ng tiá»n hÃ´m nay (ÄÃ£ Äiá»u chá»nh láº¡m phÃ¡t). Giáº£ Äá»nh lá»£i suáº¥t thá»±c khÃ´ng Äá»i vÃ  ÄÃ³ng gÃ³p á»n Äá»nh.',
-      savingsRate: 'Tá»· lá» tiáº¿t kiá»m',
-      passiveIncome: 'Thu nháº­p thá»¥ Äá»ng (tá»« tiáº¿t kiá»m)',
-      saving: 'Tiáº¿t kiá»m',
-      perMo: '/thÃ¡ng', perYr: '/nÄm',
-      atRealReturn: 'vá»i',
-      realReturn: 'lá»£i suáº¥t thá»±c',
-      coversExpenses: 'Trang tráº£i {0}/thÃ¡ng chi phÃ­ â báº¡n tá»± do rá»i! ð¥',
-      needButOnly: 'Cáº§n {0}/thÃ¡ng nhÆ°ng chá» táº¡o ra {1}/thÃ¡ng.',
-      savMsg70: 'SiÃªu tiáº¿t kiá»m! Nghá» hÆ°u Äáº¿n ráº¥t gáº§n ð¥ð¥ð¥',
-      savMsg50: 'Xuáº¥t sáº¯c! ÄÆ°á»ng táº¯t Äáº¿n nghá» hÆ°u ð¥ð¥',
-      savMsg30: 'Tá»· lá» tiáº¿t kiá»m tá»t! ð¥',
-      savMsg15: 'Khá»i Äáº§u tá»t â tÄng thÃªm Äá» nghá» hÆ°u sá»m hÆ¡n.',
-      savMsgLow: 'Tá»· lá» tiáº¿t kiá»m tháº¥p. Thá»­ cáº¯t giáº£m chi tiÃªu.',
-      fireNum: 'Má»¥c tiÃªu FIRE (vÄ©nh viá»n)',
-      nestEgg: 'Quá»¹ nghá» hÆ°u cáº§n thiáº¿t',
-      annExpDiv: 'Chi phÃ­ hÃ ng nÄm Ã· lá»£i suáº¥t thá»±c',
-      enoughFor: 'Äá»§ cho {0} nÄm nghá» hÆ°u',
-      alreadyThere: 'ÄÃ£ Äáº¡t má»¥c tiÃªu!',
-      retireNow: 'Báº¡n cÃ³ thá» nghá» hÆ°u ngay! ð',
-      needMore: 'Cáº§n thÃªm {0}',
-      addIncome: 'Nháº­p thu nháº­p Äá» tÃ­nh',
-      notReachable: 'KhÃ´ng thá» Äáº¡t ÄÆ°á»£c',
-      increaseSav: 'TÄng tá»· lá» tiáº¿t kiá»m',
-      yrs: 'nÄm', mo: 'thÃ¡ng',
-      superEarly: 'Nghá» hÆ°u siÃªu sá»m! ð¥',
-      excellent: 'Nghá» hÆ°u sá»m tuyá»t vá»i!',
-      early: 'Nghá» hÆ°u sá»m!',
-      onTrack: 'Äang trÃªn ÄÆ°á»ng nghá» hÆ°u.',
-      considerMore: 'HÃ£y cÃ¢n nháº¯c tÄng tiáº¿t kiá»m.',
-      now: '(ngay bÃ¢y giá»!)',
-      atAge: 'á» tuá»i',
-      alertReturn: 'â ï¸ Lá»£i suáº¥t tháº¥p hÆ¡n láº¡m phÃ¡t â tiá»n máº¥t giÃ¡ liÃªn tá»¥c. Cháº¿ Äá» "KhÃ´ng Bao Giá» Háº¿t" cáº§n lá»£i suáº¥t thá»±c dÆ°Æ¡ng. Thá»­ cháº¿ Äá» "Chi TiÃªu Háº¿t".',
-      alertReturnShort: 'Lá»£i suáº¥t thá»±c â¤ 0 â khÃ´ng kháº£ thi á» cháº¿ Äá» vÄ©nh viá»n',
-      alertExpenses: 'â ï¸ Vui lÃ²ng nháº­p chi tiÃªu hÃ ng thÃ¡ng lá»n hÆ¡n $0.',
-      alertRetireNow: 'ð Báº¡n cÃ³ thá» nghá» hÆ°u ngay! Tiáº¿t kiá»m ({0}) vÆ°á»£t má»¥c tiÃªu ({1}).',
-      alertNeedMore: 'ð¡ Báº¡n cáº§n thÃªm {0} Äá» nghá» hÆ°u. Nháº­p thu nháº­p hÃ ng thÃ¡ng Äá» tÃ­nh thá»i gian.',
-      lgdPortfolio: 'TÃ i sáº£n',
-      lgdTarget: 'Má»¥c tiÃªu FIRE',
-      lgdNestEgg: 'Quá»¹ nghá» hÆ°u',
-      lgdLivingOff: 'TÃ i sáº£n (sá»ng báº±ng lá»£i nhuáº­n)',
-      lgdSpending: 'TÃ i sáº£n (Äang rÃºt dáº§n)',
-      agePrefix: 'Tuá»i ',
-      nowLabel: 'Hiá»n táº¡i',
-      targetLabel2: 'Má»¥c tiÃªu',
-      expToggle: 'Chi tiáº¿t chi tiÃªu',
-      expAdd: '+ ThÃªm má»¥c',
-      expTotal: 'Tá»ng',
-      noteExpMult: 'Há» sá» > 1 = dá»± phÃ²ng (vÃ­ dá»¥ Ã1.1 thÃªm 10% dá»± phÃ²ng).',
-      expSync: 'Äá»ng bá» vá»i chi tiáº¿t',
-      expUnsync: 'KhÃ´ng Äá»ng bá» â nháº­p tá»± do',
-      hhLabel: 'Há» gia ÄÃ¬nh:',
-      hhSolo: 'Má»t mÃ¬nh',
-      hhPartner: 'CÃ³ báº¡n Äá»i',
-      hhFamily: 'Báº¡n Äá»i + Con',
-      hhKids: 'Sá» con:',
-      hhSupportUntil: 'Há» trá»£ Äáº¿n tuá»i:',
-      kidExpNote: 'Chi phÃ­ con cÃ¡i káº¿t thÃºc sau ~{0} nÄm (tuá»i {1}). Sau ÄÃ³, chi tiÃªu hÃ ng thÃ¡ng giáº£m cÃ²n ~{2}.',
-      countriesTitle: 'ð Äiá»m Äáº¿n Nghá» HÆ°u Phá» Biáº¿n',
-      countriesNote: 'Chi phÃ­ sinh hoáº¡t hÃ ng thÃ¡ng Æ°á»c tÃ­nh (USD). Nháº¥n vÃ o quá»c gia Äá» tá»± Äá»ng Äiá»n chi tiÃªu.',
-      countryCol: 'Quá»c gia',
-      costSolo: 'Má»t mÃ¬nh',
-      costPartner: 'CÃ³ báº¡n Äá»i',
-      costFamily: 'Gia ÄÃ¬nh (1 con)',
-      countryNotes: 'Ghi chÃº',
+      title: 'Máy Tính Nghỉ Hưu',
+      tagline: 'Khi nào bạn có thể ngừng làm việc? Tìm hiểu với hai chiến lược.',
+      modePerp: '♾️ Không Bao Giờ Hết',
+      modePerpDesc: 'Sống bằng lợi nhuận đầu tư — vốn gốc giữ nguyên mãi mãi',
+      modeSpend: '⏳ Chi Tiêu Hết',
+      modeSpendDesc: 'Dùng hết tiết kiệm + lợi nhuận đến tuổi mục tiêu — còn $0',
+      profile: 'Hồ Sơ Tài Chính',
+      lblAge: 'Tuổi hiện tại',
+      lblExpenses: 'Chi tiêu hàng tháng',
+      lblSavings: 'Tiết kiệm / Đầu tư hiện tại',
+      lblIncome: 'Thu nhập hàng tháng (tùy chọn — $0 nếu không đi làm)',
+      noteIncome: 'Để $0 nếu chỉ muốn biết cần bao nhiêu để nghỉ hưu. Chỉ cần thu nhập để tính "bao nhiêu năm đến nghỉ hưu".',
+      lblReturn: 'Lợi suất kỳ vọng hàng năm',
+      noteReturn: '<strong>Gợi ý:</strong> S&P 500 trung bình ~10%/năm (trước lạm phát). Ước tính thận trọng là 6–8%.',
+      lblInflation: 'Tỷ lệ lạm phát',
+      noteInflation: '<strong>Gợi ý:</strong> Lịch sử khoảng 2–3%/năm. Lạm phát làm giảm sức mua nên chúng tôi tính vào.',
+      lblIncomeGrowth: 'Tốc độ tăng thu nhập hàng năm',
+      noteIncomeGrowth: '<strong>Gợi ý:</strong> Tăng lương trung bình 3–5%/năm. Thu nhập tăng thì tiết kiệm hàng tháng cũng tăng.',
+      lblLifeExp: 'Tuổi thọ kỳ vọng (cho chế độ "Chi Tiêu Hết")',
+      noteLifeExp: 'Tiết kiệm sẽ về 0 ở tuổi này. Hãy ước tính thận trọng!',
+      sufYrs: 'tuổi', sufYrs2: 'tuổi',
+      progressTitle: 'Tiến Độ Mục Tiêu Nghỉ Hưu',
+      ofTarget: 'đã đạt mục tiêu',
+      targetWord: 'Mục tiêu',
+      statYears: 'Số năm đến nghỉ hưu',
+      statRetireAge: 'Tuổi nghỉ hưu',
+      chartTitle: 'Dự Báo Tài Sản',
+      cmpTitle: 'So Sánh Hai Chế Độ',
+      cmpColA: '♾️ Không Bao Giờ Hết', cmpColB: '⏳ Chi Tiêu Hết',
+      cmpHow: 'Cách hoạt động',
+      cmpHowA: 'Sống bằng lợi nhuận đầu tư. Vốn gốc giữ nguyên mãi mãi.',
+      cmpHowB: 'Dần dần chi tiêu tiết kiệm + lợi nhuận. Về $0 ở tuổi mục tiêu.',
+      cmpTarget: 'Số tiền mục tiêu', cmpYears: 'Năm để nghỉ hưu', cmpAge: 'Tuổi nghỉ hưu',
+      cmpLeftover: 'Số dư sau khi mất',
+      cmpLeftA: 'Toàn bộ (vô hạn)',
+      cmpRisk: 'Rủi ro',
+      cmpRiskA: 'Rất an toàn — nhưng cần nhiều tiết kiệm hơn',
+      cmpRiskB: 'Phải ước tính tuổi thọ — rủi ro hết tiền',
+      howTitle: 'Cách Tính',
+      explainPerp: '<span class="emoji">♾️</span><strong>Không Bao Giờ Hết (Chế độ vĩnh viễn)</strong><br><br>Đây là phương pháp <strong>FIRE</strong> (Tự do tài chính, Nghỉ hưu sớm) kinh điển. Bạn tích lũy đủ tiết kiệm để <strong>lợi nhuận đầu tư hàng năm</strong> trang trải chi phí sinh hoạt — không bao giờ đụng đến vốn gốc.<br><br><strong>Công thức:</strong> Mục tiêu = Chi phí hàng năm ÷ Lợi suất thực<br><strong>Lợi suất thực</strong> = Lợi suất đầu tư − Lạm phát<br><br>Ví dụ: Chi $50,400/năm, lợi suất 7%, lạm phát 3% (lợi suất thực 4%), cần $50,400 ÷ 0.04 = <strong>$1,260,000</strong>.',
+      explainSpend: '<span class="emoji">⏳</span><strong>Chi Tiêu Hết (Chế độ rút dần)</strong><br><br>Bạn không cần tiết kiệm nhiều vì sẽ <strong>chi cả lợi nhuận lẫn vốn gốc</strong>. Chọn tuổi thọ kỳ vọng, máy tính sẽ tính bạn cần bao nhiêu để tiền kéo dài đúng thời gian đó.<br><br><strong>Công thức:</strong> Sử dụng Giá trị hiện tại của niên kim — tính đến chi tiêu, lợi suất và số năm nghỉ hưu.<br><br>Ví dụ: Cùng chi phí, nghỉ hưu 45 tuổi, sống đến 85 (40 năm) → chỉ cần khoảng <strong>$1,060,000</strong> thay vì $1.26M.',
+      explainReal: '<span class="emoji">📊</span><strong>"Lợi suất thực" là gì?</strong><br><br>Đầu tư có thể tăng 7%/năm, nhưng lạm phát lấy mất ~3%/năm sức mua. Vậy <strong>lợi suất thực (đã điều chỉnh lạm phát)</strong> khoảng 4%. Máy tính này dùng lợi suất thực nên mọi số liệu đều theo <strong>giá trị hôm nay</strong>.',
+      footer1: '🔥 Máy Tính Nghỉ Hưu — Chỉ dùng cho mục đích giáo dục. Lợi suất quá khứ không đảm bảo kết quả tương lai.',
+      footer2: 'Tất cả giá trị hiển thị theo đồng tiền hôm nay (đã điều chỉnh lạm phát). Giả định lợi suất thực không đổi và đóng góp ổn định.',
+      savingsRate: 'Tỷ lệ tiết kiệm',
+      passiveIncome: 'Thu nhập thụ động (từ tiết kiệm)',
+      saving: 'Tiết kiệm',
+      perMo: '/tháng', perYr: '/năm',
+      atRealReturn: 'với',
+      realReturn: 'lợi suất thực',
+      coversExpenses: 'Trang trải {0}/tháng chi phí — bạn tự do rồi! 🔥',
+      needButOnly: 'Cần {0}/tháng nhưng chỉ tạo ra {1}/tháng.',
+      savMsg70: 'Siêu tiết kiệm! Nghỉ hưu đến rất gần 🔥🔥🔥',
+      savMsg50: 'Xuất sắc! Đường tắt đến nghỉ hưu 🔥🔥',
+      savMsg30: 'Tỷ lệ tiết kiệm tốt! 🔥',
+      savMsg15: 'Khởi đầu tốt — tăng thêm để nghỉ hưu sớm hơn.',
+      savMsgLow: 'Tỷ lệ tiết kiệm thấp. Thử cắt giảm chi tiêu.',
+      fireNum: 'Mục tiêu FIRE (vĩnh viễn)',
+      nestEgg: 'Quỹ nghỉ hưu cần thiết',
+      annExpDiv: 'Chi phí hàng năm ÷ lợi suất thực',
+      enoughFor: 'Đủ cho {0} năm nghỉ hưu',
+      alreadyThere: 'Đã đạt mục tiêu!',
+      retireNow: 'Bạn có thể nghỉ hưu ngay! 🎉',
+      needMore: 'Cần thêm {0}',
+      addIncome: 'Nhập thu nhập để tính',
+      notReachable: 'Không thể đạt được',
+      increaseSav: 'Tăng tỷ lệ tiết kiệm',
+      yrs: 'năm', mo: 'tháng',
+      superEarly: 'Nghỉ hưu siêu sớm! 🔥',
+      excellent: 'Nghỉ hưu sớm tuyệt vời!',
+      early: 'Nghỉ hưu sớm!',
+      onTrack: 'Đang trên đường nghỉ hưu.',
+      considerMore: 'Hãy cân nhắc tăng tiết kiệm.',
+      now: '(ngay bây giờ!)',
+      atAge: 'ở tuổi',
+      alertReturn: '⚠️ Lợi suất thấp hơn lạm phát — tiền mất giá liên tục. Chế độ "Không Bao Giờ Hết" cần lợi suất thực dương. Thử chế độ "Chi Tiêu Hết".',
+      alertReturnShort: 'Lợi suất thực ≤ 0 — không khả thi ở chế độ vĩnh viễn',
+      alertExpenses: '⚠️ Vui lòng nhập chi tiêu hàng tháng lớn hơn $0.',
+      alertRetireNow: '🎉 Bạn có thể nghỉ hưu ngay! Tiết kiệm ({0}) vượt mục tiêu ({1}).',
+      alertNeedMore: '💡 Bạn cần thêm {0} để nghỉ hưu. Nhập thu nhập hàng tháng để tính thời gian.',
+      lgdPortfolio: 'Tài sản',
+      lgdTarget: 'Mục tiêu FIRE',
+      lgdNestEgg: 'Quỹ nghỉ hưu',
+      lgdLivingOff: 'Tài sản (sống bằng lợi nhuận)',
+      lgdSpending: 'Tài sản (đang rút dần)',
+      agePrefix: 'Tuổi ',
+      nowLabel: 'Hiện tại',
+      targetLabel2: 'Mục tiêu',
+      expToggle: 'Chi tiết chi tiêu',
+      expAdd: '+ Thêm mục',
+      expTotal: 'Tổng',
+      noteExpMult: 'Hệ số > 1 = dự phòng (ví dụ ×1.1 thêm 10% dự phòng).',
+      expSync: 'Đồng bộ với chi tiết',
+      expUnsync: 'Không đồng bộ — nhập tự do',
+      hhLabel: 'Hộ gia đình:',
+      hhSolo: 'Một mình',
+      hhPartner: 'Có bạn đời',
+      hhFamily: 'Bạn đời + Con',
+      hhKids: 'Số con:',
+      hhSupportUntil: 'Hỗ trợ đến tuổi:',
+      kidExpNote: 'Chi phí con cái kết thúc sau ~{0} năm (tuổi {1}). Sau đó, chi tiêu hàng tháng giảm còn ~{2}.',
+      countriesTitle: '🌍 Điểm Đến Nghỉ Hưu Phổ Biến',
+      countriesNote: 'Chi phí sinh hoạt hàng tháng ước tính (USD). Nhấn vào quốc gia để tự động điền chi tiêu.',
+      countryCol: 'Quốc gia',
+      costSolo: 'Một mình',
+      costPartner: 'Có bạn đời',
+      costFamily: 'Gia đình (1 con)',
+      countryNotes: 'Ghi chú',
     }
   };
 
@@ -1589,11 +1589,11 @@
       const val = t(key);
       if (val) el.innerHTML = val;
     });
-    const langLabels = {en:'EN',zh:'ä¸­æ',ja:'æ¥æ¬èª',ko:'íêµ­ì´',vi:'Tiáº¿ng Viá»t'};
+    const langLabels = {en:'EN',zh:'中文',ja:'日本語',ko:'한국어',vi:'Tiếng Việt'};
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.classList.toggle('active', btn.textContent.trim() === langLabels[currentLang]);
     });
-    const titles = {en:'Retirement Calculator â When Can I Retire?',zh:'éä¼è¨ç®æ© â ä»éº¼æåå¯ä»¥éä¼ï¼',ja:'ãªã¿ã¤ã¢è¨ç®æ© â ãã¤ãªã¿ã¤ã¢ã§ããï¼',ko:'ìí´ ê³ì°ê¸° â ì¸ì  ìí´í  ì ììê¹?',vi:'MÃ¡y TÃ­nh Nghá» HÆ°u â Khi nÃ o nghá» hÆ°u?'};
+    const titles = {en:'Retirement Calculator — When Can I Retire?',zh:'退休計算機 — 什麼時候可以退休？',ja:'リタイア計算機 — いつリタイアできる？',ko:'은퇴 계산기 — 언제 은퇴할 수 있을까?',vi:'Máy Tính Nghỉ Hưu — Khi nào nghỉ hưu?'};
     document.title = titles[currentLang] || titles.en;
     if ($('syncLabel')) $('syncLabel').textContent = expSynced ? t('expSync') : t('expUnsync');
   }
@@ -1863,36 +1863,36 @@
 
     // Progress
     const targetFinite = isFinite(target);
-    $('progressPct').textContent = targetFinite ? progress.toFixed(1) + '%' : 'â';
+    $('progressPct').textContent = targetFinite ? progress.toFixed(1) + '%' : '—';
     $('progressBar').style.width = targetFinite ? Math.min(progress, 100) + '%' : '0%';
-    $('targetSmall').textContent = targetFinite ? fmt(target) : 'â';
+    $('targetSmall').textContent = targetFinite ? fmt(target) : '∞';
 
     // Stat cards
     $('targetLabel').textContent = isPerp ? t('fireNum') : t('nestEgg');
-    $('targetNum').textContent = valid ? (targetFinite ? fmt(target) : 'â') : 'â';
+    $('targetNum').textContent = valid ? (targetFinite ? fmt(target) : '∞') : '—';
     $('targetSub').textContent = isPerp
       ? (realReturn > 0.001 ? t('annExpDiv') + ' (' + (realReturn * 100).toFixed(1) + '%)' : t('alertReturnShort'))
       : tFmt('enoughFor', Math.round(spendRetYears));
 
     if (!valid) {
-      $('yearsToRetire').textContent = 'â';
-      $('yearsToRetireSub').textContent = 'â';
-      $('retireAge').textContent = 'â';
-      $('retireAgeSub').textContent = 'â';
+      $('yearsToRetire').textContent = '—';
+      $('yearsToRetireSub').textContent = '—';
+      $('retireAge').textContent = '—';
+      $('retireAgeSub').textContent = '—';
     } else if (canRetireNow) {
       $('yearsToRetire').textContent = '0';
       $('yearsToRetireSub').textContent = t('alreadyThere');
       $('retireAge').textContent = age.toFixed(0);
       $('retireAgeSub').textContent = t('retireNow');
     } else if (!hasIncome) {
-      $('yearsToRetire').textContent = 'â';
+      $('yearsToRetire').textContent = '—';
       $('yearsToRetireSub').textContent = isFinite(gap) ? tFmt('needMore', fmt(gap)) : t('alertReturnShort');
-      $('retireAge').textContent = 'â';
+      $('retireAge').textContent = '—';
       $('retireAgeSub').textContent = t('addIncome');
     } else if (!isFinite(yearsToRetire)) {
-      $('yearsToRetire').textContent = 'â';
+      $('yearsToRetire').textContent = '∞';
       $('yearsToRetireSub').textContent = t('notReachable');
-      $('retireAge').textContent = 'â';
+      $('retireAge').textContent = '—';
       $('retireAgeSub').textContent = t('increaseSav');
     } else {
       const yInt = Math.floor(yearsToRetire);
@@ -1912,13 +1912,13 @@
     const perpYearsForCmp = hasIncome ? solveYearsToTarget(curSav, monthlySav, monthlyRealR, perpetualTarget, realIncGrowth) : Infinity;
     const canRetirePerp = curSav >= perpetualTarget;
     const canRetireSpend = curSav >= spendTargetNow;
-    $('cmpTargetA').textContent = valid ? (isFinite(perpetualTarget) ? fmt(perpetualTarget) : 'â') : 'â';
-    $('cmpTargetB').textContent = valid ? fmt(hasIncome ? spendTarget : spendTargetNow) : 'â';
-    $('cmpYearsA').textContent = canRetirePerp ? '0 ' + t('now') : (hasIncome && isFinite(perpYearsForCmp) ? perpYearsForCmp.toFixed(1) + ' ' + t('yrs') : 'â');
-    $('cmpYearsB').textContent = canRetireSpend ? '0 ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' ' + t('yrs') : 'â');
-    $('cmpAgeA').textContent = canRetirePerp ? age.toFixed(0) + ' ' + t('now') : (hasIncome && isFinite(perpYearsForCmp) ? (age + perpYearsForCmp).toFixed(1) : 'â');
-    $('cmpAgeB').textContent = canRetireSpend ? age.toFixed(0) + ' ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendRetireAge.toFixed(1) : 'â');
-    const leftoverTexts = {en:'$0 at age '+lifeExp, zh:'$0ï¼'+lifeExp+' æ­²æ­¸é¶ï¼', ja:'$0ï¼'+lifeExp+'æ­³ã§ã¼ã­ï¼', ko:'$0 ('+lifeExp+'ì¸ì ìì§)', vi:'$0 á» tuá»i '+lifeExp};
+    $('cmpTargetA').textContent = valid ? (isFinite(perpetualTarget) ? fmt(perpetualTarget) : '∞') : '—';
+    $('cmpTargetB').textContent = valid ? fmt(hasIncome ? spendTarget : spendTargetNow) : '—';
+    $('cmpYearsA').textContent = canRetirePerp ? '0 ' + t('now') : (hasIncome && isFinite(perpYearsForCmp) ? perpYearsForCmp.toFixed(1) + ' ' + t('yrs') : '—');
+    $('cmpYearsB').textContent = canRetireSpend ? '0 ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendYearsToRetire.toFixed(1) + ' ' + t('yrs') : '—');
+    $('cmpAgeA').textContent = canRetirePerp ? age.toFixed(0) + ' ' + t('now') : (hasIncome && isFinite(perpYearsForCmp) ? (age + perpYearsForCmp).toFixed(1) : '—');
+    $('cmpAgeB').textContent = canRetireSpend ? age.toFixed(0) + ' ' + t('now') : (hasIncome && isFinite(spendYearsToRetire) ? spendRetireAge.toFixed(1) : '—');
+    const leftoverTexts = {en:'$0 at age '+lifeExp, zh:'$0（'+lifeExp+' 歲歸零）', ja:'$0（'+lifeExp+'歳でゼロ）', ko:'$0 ('+lifeExp+'세에 소진)', vi:'$0 ở tuổi '+lifeExp};
     $('cmpLeftoverVal').textContent = leftoverTexts[currentLang] || leftoverTexts.en;
 
     // Chart
@@ -1954,7 +1954,7 @@
     const monthlyExpense = annualExp / 12;
 
     const ap = t('agePrefix');
-    const ageSuffix = {zh:'æ­²',ja:'æ­³',ko:'ì¸',vi:' tuá»i'};
+    const ageSuffix = {zh:'歲',ja:'歳',ko:'세',vi:' tuổi'};
     const ageLbl = (a) => ageSuffix[currentLang] ? Math.round(a) + ageSuffix[currentLang] : ap + Math.round(a);
 
     function simAccum(months) {
@@ -2076,36 +2076,36 @@
       rent: 'Rent / Housing', food: 'Food / Meals', transport: 'Transportation',
       utilities: 'Utilities', shopping: 'Shopping', entertainment: 'Entertainment',
       insurance: 'Insurance', other: 'Other',
-      pFood: 'Partner â Food', pInsurance: 'Partner â Insurance', pPersonal: 'Partner â Personal',
-      kSchool: 'Kid {n} â Childcare / School', kFood: 'Kid {n} â Food', kActivities: 'Kid {n} â Activities / Supplies',
+      pFood: 'Partner — Food', pInsurance: 'Partner — Insurance', pPersonal: 'Partner — Personal',
+      kSchool: 'Kid {n} — Childcare / School', kFood: 'Kid {n} — Food', kActivities: 'Kid {n} — Activities / Supplies',
     },
     zh: {
-      rent: 'æ¿ç§ï¼æ¿è²¸', food: 'é¤é£²ï¼ä¸é¤', transport: 'äº¤é',
-      utilities: 'æ°´é»ç¦æ¯', shopping: 'è³¼ç©', entertainment: 'å¨æ¨',
-      insurance: 'ä¿éª', other: 'å¶ä»',
-      pFood: 'ä¼´ä¾¶ â é¤é£²', pInsurance: 'ä¼´ä¾¶ â ä¿éª', pPersonal: 'ä¼´ä¾¶ â åäººæ¶è²»',
-      kSchool: 'å°å­©{n} â æè²ï¼å­¸è²»', kFood: 'å°å­©{n} â é¤é£²', kActivities: 'å°å­©{n} â æ´»åï¼ç¨å',
+      rent: '房租／房貸', food: '餐飲／三餐', transport: '交通',
+      utilities: '水電瓦斯', shopping: '購物', entertainment: '娛樂',
+      insurance: '保險', other: '其他',
+      pFood: '伴侶 — 餐飲', pInsurance: '伴侶 — 保險', pPersonal: '伴侶 — 個人消費',
+      kSchool: '小孩{n} — 托育／學費', kFood: '小孩{n} — 餐飲', kActivities: '小孩{n} — 活動／用品',
     },
     ja: {
-      rent: 'å®¶è³ï¼ä½å®', food: 'é£è²»', transport: 'äº¤éè²»',
-      utilities: 'åç±è²»', shopping: 'è²·ãç©', entertainment: 'å¨¯æ¥½',
-      insurance: 'ä¿éº', other: 'ãã®ä»',
-      pFood: 'ãã¼ããã¼ â é£è²»', pInsurance: 'ãã¼ããã¼ â ä¿éº', pPersonal: 'ãã¼ããã¼ â åäººæ¶è²»',
-      kSchool: 'å­ä¾{n} â ä¿è²ï¼å­¦è²»', kFood: 'å­ä¾{n} â é£è²»', kActivities: 'å­ä¾{n} â æ´»åï¼ç¨å',
+      rent: '家賃／住宅', food: '食費', transport: '交通費',
+      utilities: '光熱費', shopping: '買い物', entertainment: '娯楽',
+      insurance: '保険', other: 'その他',
+      pFood: 'パートナー — 食費', pInsurance: 'パートナー — 保険', pPersonal: 'パートナー — 個人消費',
+      kSchool: '子供{n} — 保育／学費', kFood: '子供{n} — 食費', kActivities: '子供{n} — 活動／用品',
     },
     ko: {
-      rent: 'ì£¼ê±°ë¹', food: 'ìë¹', transport: 'êµíµë¹',
-      utilities: 'ê³µê³¼ê¸', shopping: 'ì¼í', entertainment: 'ì¤ë½',
-      insurance: 'ë³´í', other: 'ê¸°í',
-      pFood: 'íí¸ë â ìë¹', pInsurance: 'íí¸ë â ë³´í', pPersonal: 'íí¸ë â ê°ì¸ ìë¹',
-      kSchool: 'ìë{n} â ë³´ì¡/íë¹', kFood: 'ìë{n} â ìë¹', kActivities: 'ìë{n} â íë/ì©í',
+      rent: '주거비', food: '식비', transport: '교통비',
+      utilities: '공과금', shopping: '쇼핑', entertainment: '오락',
+      insurance: '보험', other: '기타',
+      pFood: '파트너 — 식비', pInsurance: '파트너 — 보험', pPersonal: '파트너 — 개인 소비',
+      kSchool: '자녀{n} — 보육/학비', kFood: '자녀{n} — 식비', kActivities: '자녀{n} — 활동/용품',
     },
     vi: {
-      rent: 'ThuÃª nhÃ  / NhÃ  á»', food: 'Än uá»ng', transport: 'Äi láº¡i',
-      utilities: 'Äiá»n nÆ°á»c', shopping: 'Mua sáº¯m', entertainment: 'Giáº£i trÃ­',
-      insurance: 'Báº£o hiá»m', other: 'KhÃ¡c',
-      pFood: 'Báº¡n Äá»i â Än uá»ng', pInsurance: 'Báº¡n Äá»i â Báº£o hiá»m', pPersonal: 'Báº¡n Äá»i â Chi tiÃªu cÃ¡ nhÃ¢n',
-      kSchool: 'Con {n} â TrÃ´ng tráº» / Há»c phÃ­', kFood: 'Con {n} â Än uá»ng', kActivities: 'Con {n} â Hoáº¡t Äá»ng / Äá» dÃ¹ng',
+      rent: 'Thuê nhà / Nhà ở', food: 'Ăn uống', transport: 'Đi lại',
+      utilities: 'Điện nước', shopping: 'Mua sắm', entertainment: 'Giải trí',
+      insurance: 'Bảo hiểm', other: 'Khác',
+      pFood: 'Bạn đời — Ăn uống', pInsurance: 'Bạn đời — Bảo hiểm', pPersonal: 'Bạn đời — Chi tiêu cá nhân',
+      kSchool: 'Con {n} — Trông trẻ / Học phí', kFood: 'Con {n} — Ăn uống', kActivities: 'Con {n} — Hoạt động / Đồ dùng',
     }
   };
   function expName(key, kidNum) {
@@ -2152,7 +2152,7 @@
   function updateSyncUI() {
     const btn = $('syncBtn');
     btn.classList.toggle('off', !expSynced);
-    $('syncIcon').textContent = expSynced ? 'ð' : 'ð';
+    $('syncIcon').textContent = expSynced ? '🔗' : '🔓';
     $('syncLabel').textContent = expSynced ? t('expSync') : t('expUnsync');
   }
 
@@ -2213,17 +2213,17 @@
         '<input type="text" value="' + item.name.replace(/"/g, '&quot;') + '" onchange="updateExpenseName(' + i + ', this.value)" />' +
         '<div class="exp-input-wrap"><span class="exp-prefix">$</span>' +
         '<input type="number" value="' + item.amount + '" min="0" oninput="updateExpenseAmount(' + i + ', this.value)" /></div>' +
-        '<span class="times">Ã</span>' +
+        '<span class="times">×</span>' +
         '<input type="number" class="mult-input" value="' + item.mult + '" min="1" max="365" oninput="updateExpenseMult(' + i + ', this.value)" />' +
         '<span class="row-subtotal">$' + sub.toLocaleString() + '</span>' +
-        '<button class="del-btn" onclick="removeExpenseRow(' + i + ')">â</button>';
+        '<button class="del-btn" onclick="removeExpenseRow(' + i + ')">✕</button>';
       list.appendChild(row);
     });
     sumExpenses();
   }
 
   function addExpenseRow() {
-    const newItemNames = {en:'New item',zh:'æ°é ç®',ja:'æ°ããé ç®',ko:'ì í­ëª©',vi:'Má»¥c má»i'};
+    const newItemNames = {en:'New item',zh:'新項目',ja:'新しい項目',ko:'새 항목',vi:'Mục mới'};
     const name = newItemNames[currentLang] || newItemNames.en;
     expenseItems.push({ name: name, amount: 0, mult: 1 });
     renderExpenseList();
@@ -2273,20 +2273,20 @@
     updateKidExpenseNote();
   }
 
-  // âââ Popular Retirement Countries âââ
+  // ─── Popular Retirement Countries ───
   const COUNTRIES = [
-    { flag:'ð¹ð­', key:'Thailand',   solo:1200, partner:1800, family:2400, note:{en:'Low cost, great food & healthcare',zh:'ä½æ¶è²»ãç¾é£èé«ç',ja:'ä½ã³ã¹ããç¾é£ï¼å»ç',ko:'ì ë¹ì©, íë¥­í ìì & ìë£',vi:'Chi phÃ­ tháº¥p, áº©m thá»±c & y táº¿ tá»t'} },
-    { flag:'ð»ð³', key:'Vietnam',    solo:900,  partner:1400, family:1900, note:{en:'Very affordable, growing expat scene',zh:'éå¸¸å¯¦æ ï¼å¤ç±äººå£«ç¤¾ç¾¤æé·ä¸­',ja:'éå¸¸ã«æé ãå¤å½äººã³ãã¥ããã£æ¡å¤§ä¸­',ko:'ë§¤ì° ì ë ´, ì¸êµ­ì¸ ì»¤ë®¤ëí° ì±ì¥ ì¤',vi:'Ráº¥t há»£p tÃºi tiá»n, cá»ng Äá»ng expat Äang phÃ¡t triá»n'} },
-    { flag:'ð²ð¾', key:'Malaysia',   solo:1300, partner:1900, family:2500, note:{en:'English-friendly, MM2H visa',zh:'è±èªååï¼MM2Hç°½è­',ja:'è±èªOKãMM2Hãã¶',ko:'ìì´ ê°ë¥, MM2H ë¹ì',vi:'ThÃ¢n thiá»n tiáº¿ng Anh, visa MM2H'} },
-    { flag:'ð¹ð¼', key:'Taiwan',     solo:1500, partner:2200, family:3000, note:{en:'Excellent healthcare, safe, great food',zh:'åªè³ªé«çãå®å¨ãç¾é£å¤©å ',ja:'åªããå»çãå®å¨ãç¾é£',ko:'ì°ìí ìë£, ìì , íë¥­í ìì',vi:'Y táº¿ tuyá»t vá»i, an toÃ n, áº©m thá»±c ngon'} },
-    { flag:'ð¯ðµ', key:'Japan',      solo:2000, partner:2800, family:3800, note:{en:'High quality of life, visa options vary',zh:'é«åè³ªçæ´»ï¼ç°½è­é¸æå¤æ¨£',ja:'é«ãçæ´»ã®è³ªããã¶ã®é¸æè¢å¤æ°',ko:'ëì ì¶ì ì§, ë¹ì ìµì ë¤ì',vi:'Cháº¥t lÆ°á»£ng sá»ng cao, tÃ¹y chá»n visa Äa dáº¡ng'} },
-    { flag:'ð°ð·', key:'South Korea',solo:1800, partner:2600, family:3500, note:{en:'Modern, fast internet, 4 seasons',zh:'ç¾ä»£åãé«éç¶²è·¯ãåå­£åæ',ja:'ç¾ä»£çãé«éããããåå­£ãã',ko:'íëì , ì´ê³ ì ì¸í°ë·, ì¬ê³ì ',vi:'Hiá»n Äáº¡i, internet nhanh, 4 mÃ¹a'} },
-    { flag:'ðµð¹', key:'Portugal',   solo:2000, partner:2800, family:3600, note:{en:'D7 visa, EU access, mild climate',zh:'D7ç°½è­ãæ­çéè¡ãæ°£åæº«å',ja:'D7ãã¶ãEUåãæ¸©æãªæ°å',ko:'D7 ë¹ì, EU ì ê·¼, ì¨íí ê¸°í',vi:'Visa D7, tiáº¿p cáº­n EU, khÃ­ háº­u Ã´n hÃ²a'} },
-    { flag:'ð²ð½', key:'Mexico',     solo:1500, partner:2100, family:2800, note:{en:'Close to US, rich culture, easy residency',zh:'é è¿ç¾åãæåè±å¯ãå±çå®¹æ',ja:'ç±³å½ã«è¿ããè±ããªæåãå±ä½å®¹æ',ko:'ë¯¸êµ­ê³¼ ê°ê¹ì, íë¶í ë¬¸í, ì¬ì´ ê±°ì£¼',vi:'Gáº§n Má»¹, vÄn hÃ³a phong phÃº, dá» cÆ° trÃº'} },
-    { flag:'ð¨ð·', key:'Costa Rica', solo:1800, partner:2500, family:3200, note:{en:'Pura vida lifestyle, nature, stable',zh:'ç´æ·¨çæ´»ãèªç¶ãç©©å®',ja:'ãã©ãããªçæ´»ãèªç¶ãå®å®',ko:'ììí ì¶, ìì°, ìì ì ',vi:'Lá»i sá»ng pura vida, thiÃªn nhiÃªn, á»n Äá»nh'} },
-    { flag:'ð¬ð·', key:'Greece',     solo:1600, partner:2300, family:3000, note:{en:'Mediterranean life, affordable in EU',zh:'å°ä¸­æµ·çæ´»ãå¨æ­çä¸­ç®å¯¦æ ',ja:'å°ä¸­æµ·çæ´»ãEUåã§æé ',ko:'ì§ì¤í´ ìí, EU ë´ í©ë¦¬ì ',vi:'Cuá»c sá»ng Äá»a Trung Háº£i, há»£p lÃ½ trong EU'} },
-    { flag:'ð®ð©', key:'Indonesia (Bali)', solo:1100, partner:1600, family:2200, note:{en:'Tropical paradise, digital nomad hub',zh:'ç±å¸¶å¤©å ãæ¸ä½éç§æé»',ja:'ãã­ãã«ã«ãã©ãã¤ã¹ããã¸ã¿ã«ãããæ ç¹',ko:'ì´ë ëì, ëì§í¸ ë¸ë§ë íë¸',vi:'ThiÃªn ÄÆ°á»ng nhiá»t Äá»i, trung tÃ¢m nomad sá»'} },
-    { flag:'ðªð¸', key:'Spain',      solo:2100, partner:2900, family:3800, note:{en:'Vibrant culture, excellent food & weather',zh:'æ´»åæåãç¾é£ä½³é¤ãå¥½å¤©æ°£',ja:'æ´»æ°ããæåãç¾é£ï¼å¥½å¤©å',ko:'íê¸°ì°¬ ë¬¸í, íë¥­í ìì & ë ì¨',vi:'VÄn hÃ³a sÃ´i Äá»ng, áº©m thá»±c & thá»i tiáº¿t tuyá»t vá»i'} },
+    { flag:'🇹🇭', key:'Thailand',   solo:1200, partner:1800, family:2400, note:{en:'Low cost, great food & healthcare',zh:'低消費、美食與醫療',ja:'低コスト、美食＆医療',ko:'저비용, 훌륭한 음식 & 의료',vi:'Chi phí thấp, ẩm thực & y tế tốt'} },
+    { flag:'🇻🇳', key:'Vietnam',    solo:900,  partner:1400, family:1900, note:{en:'Very affordable, growing expat scene',zh:'非常實惠，外籍人士社群成長中',ja:'非常に手頃、外国人コミュニティ拡大中',ko:'매우 저렴, 외국인 커뮤니티 성장 중',vi:'Rất hợp túi tiền, cộng đồng expat đang phát triển'} },
+    { flag:'🇲🇾', key:'Malaysia',   solo:1300, partner:1900, family:2500, note:{en:'English-friendly, MM2H visa',zh:'英語友善，MM2H簽證',ja:'英語OK、MM2Hビザ',ko:'영어 가능, MM2H 비자',vi:'Thân thiện tiếng Anh, visa MM2H'} },
+    { flag:'🇹🇼', key:'Taiwan',     solo:1500, partner:2200, family:3000, note:{en:'Excellent healthcare, safe, great food',zh:'優質醫療、安全、美食天堂',ja:'優れた医療、安全、美食',ko:'우수한 의료, 안전, 훌륭한 음식',vi:'Y tế tuyệt vời, an toàn, ẩm thực ngon'} },
+    { flag:'🇯🇵', key:'Japan',      solo:2000, partner:2800, family:3800, note:{en:'High quality of life, visa options vary',zh:'高品質生活，簽證選擇多樣',ja:'高い生活の質、ビザの選択肢多数',ko:'높은 삶의 질, 비자 옵션 다양',vi:'Chất lượng sống cao, tùy chọn visa đa dạng'} },
+    { flag:'🇰🇷', key:'South Korea',solo:1800, partner:2600, family:3500, note:{en:'Modern, fast internet, 4 seasons',zh:'現代化、高速網路、四季分明',ja:'現代的、高速ネット、四季あり',ko:'현대적, 초고속 인터넷, 사계절',vi:'Hiện đại, internet nhanh, 4 mùa'} },
+    { flag:'🇵🇹', key:'Portugal',   solo:2000, partner:2800, family:3600, note:{en:'D7 visa, EU access, mild climate',zh:'D7簽證、歐盟通行、氣候溫和',ja:'D7ビザ、EU圏、温暖な気候',ko:'D7 비자, EU 접근, 온화한 기후',vi:'Visa D7, tiếp cận EU, khí hậu ôn hòa'} },
+    { flag:'🇲🇽', key:'Mexico',     solo:1500, partner:2100, family:2800, note:{en:'Close to US, rich culture, easy residency',zh:'靠近美國、文化豐富、居留容易',ja:'米国に近い、豊かな文化、居住容易',ko:'미국과 가까움, 풍부한 문화, 쉬운 거주',vi:'Gần Mỹ, văn hóa phong phú, dễ cư trú'} },
+    { flag:'🇨🇷', key:'Costa Rica', solo:1800, partner:2500, family:3200, note:{en:'Pura vida lifestyle, nature, stable',zh:'純淨生活、自然、穩定',ja:'プラビダな生活、自然、安定',ko:'순수한 삶, 자연, 안정적',vi:'Lối sống pura vida, thiên nhiên, ổn định'} },
+    { flag:'🇬🇷', key:'Greece',     solo:1600, partner:2300, family:3000, note:{en:'Mediterranean life, affordable in EU',zh:'地中海生活、在歐盟中算實惠',ja:'地中海生活、EU内で手頃',ko:'지중해 생활, EU 내 합리적',vi:'Cuộc sống Địa Trung Hải, hợp lý trong EU'} },
+    { flag:'🇮🇩', key:'Indonesia (Bali)', solo:1100, partner:1600, family:2200, note:{en:'Tropical paradise, digital nomad hub',zh:'熱帶天堂、數位遊牧據點',ja:'トロピカルパラダイス、デジタルノマド拠点',ko:'열대 낙원, 디지털 노마드 허브',vi:'Thiên đường nhiệt đới, trung tâm nomad số'} },
+    { flag:'🇪🇸', key:'Spain',      solo:2100, partner:2900, family:3800, note:{en:'Vibrant culture, excellent food & weather',zh:'活力文化、美食佳餚、好天氣',ja:'活気ある文化、美食＆好天候',ko:'활기찬 문화, 훌륭한 음식 & 날씨',vi:'Văn hóa sôi động, ẩm thực & thời tiết tuyệt vời'} },
   ];
 
   function renderCountries() {
@@ -2312,7 +2312,7 @@
     });
   }
 
-  // âââ Kid expense note logic âââ
+  // ─── Kid expense note logic ───
   function updateKidExpenseNote() {
     const noteEl = $('kidExpenseNote');
     if (currentHousehold !== 'family' || expenseItems.length === 0) {
