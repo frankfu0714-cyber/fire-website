@@ -749,7 +749,12 @@
     .lang-btn:hover:not(.active) { color: var(--text); }
 
     /* ── NUCLEAR mobile overrides — !important ensures nothing else wins ── */
+    html, body { overflow-x: hidden !important; }
+
     @media (max-width: 520px) {
+      /* Prevent any horizontal scroll */
+      html, body, .container { overflow-x: hidden !important; }
+
       /* Lang bar: force out of fixed flow, sit as a normal block above header */
       .lang-toggle {
         position: static !important;
@@ -764,6 +769,28 @@
         padding: 8px 4px !important;
       }
       header { padding-top: 20px !important; }
+
+      /* ── Uniform section width: strip container padding, push it to each section ── */
+      .container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      /* Every direct child of .container gets identical side margins */
+      .container > * {
+        width: calc(100% - 24px) !important;
+        margin-left: 12px !important;
+        margin-right: 12px !important;
+        box-sizing: border-box !important;
+      }
+      /* Items INSIDE those containers fill their parent — no extra side margins */
+      .main-grid > *,
+      .grid-3 > *,
+      .grid-2 > * {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+      }
 
       /* Expense row: all three columns equal width via flex: 1 1 0 */
       .expense-row .exp-input-wrap {
