@@ -748,23 +748,38 @@
     }
     .lang-btn:hover:not(.active) { color: var(--text); }
 
-    /* ── These mobile rules MUST live after the base .lang-toggle block above
-       so they actually win the cascade (same specificity, later = wins) ── */
+    /* ── NUCLEAR mobile overrides — !important ensures nothing else wins ── */
     @media (max-width: 520px) {
+      /* Lang bar: force out of fixed flow, sit as a normal block above header */
       .lang-toggle {
-        position: relative;
-        top: auto; right: auto; left: auto;
-        width: 100%; max-width: 100%;
-        border-radius: 0;
-        border-left: none; border-right: none;
-        margin: 0 0 8px;
-        padding: 8px 4px;
-        justify-content: center;
+        position: static !important;
+        top: auto !important; right: auto !important;
+        left: auto !important; z-index: auto !important;
+        width: 100% !important; max-width: 100% !important;
+        display: flex !important; justify-content: center !important;
+        flex-wrap: wrap !important;
+        border-radius: 0 !important;
+        border-left: none !important; border-right: none !important;
+        margin: 0 0 12px !important;
+        padding: 8px 4px !important;
       }
-      header { padding-top: 20px; }
-      /* Equal-width, compact multiplier and subtotal in the expense row */
-      .expense-row .mult-input { width: 44px; }
-      .expense-row .row-subtotal { min-width: 50px; max-width: 50px; font-size: 0.7rem; }
+      header { padding-top: 20px !important; }
+
+      /* Expense row: all three columns equal width via flex: 1 1 0 */
+      .expense-row .exp-input-wrap {
+        flex: 1 1 0 !important; min-width: 0 !important;
+      }
+      .expense-row .exp-input-wrap input[type="number"] {
+        width: 100% !important; min-width: 0 !important;
+      }
+      .expense-row .mult-input {
+        flex: 1 1 0 !important; width: auto !important; min-width: 0 !important;
+      }
+      .expense-row .row-subtotal {
+        flex: 1 1 0 !important; min-width: 0 !important;
+        max-width: none !important; text-align: center !important;
+        font-size: 0.72rem !important;
+      }
     }
   </style>
 </head>
