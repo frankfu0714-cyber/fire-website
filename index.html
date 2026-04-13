@@ -142,7 +142,7 @@
       border-color: var(--fire1);
       box-shadow: 0 0 0 3px rgba(255,107,0,0.15);
     }
-    .has-prefix input { padding-left: 30px; }
+    .has-prefix input { padding-left: 50px; }
 
     .range-field { display: flex; flex-direction: column; gap: 8px; }
     .range-header { display: flex; justify-content: space-between; align-items: center; }
@@ -352,6 +352,15 @@
     .country-row td:first-child { font-weight: 600; }
     .country-flag { margin-right: 5px; }
     .country-note { font-size: .72rem; color: var(--muted); line-height: 1.3; }
+    .detail-btn { background: rgba(255,107,0,0.15); border: 1px solid rgba(255,107,0,0.3); color: var(--fire2); padding: 3px 10px; border-radius: 6px; font-size: 0.72rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .detail-btn:hover { background: rgba(255,107,0,0.25); border-color: var(--fire1); }
+    .country-detail-row td { padding: 0 !important; background: var(--surface); }
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; padding: 12px 16px; }
+    .detail-item { display: flex; flex-direction: column; gap: 2px; }
+    .detail-label { font-size: 0.7rem; color: var(--muted); }
+    .detail-value { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+    .detail-total { border-top: 1px solid var(--border); padding-top: 6px; }
+    .detail-total .detail-value { color: var(--fire2); }
     .kid-note { margin-top:8px; padding:8px 12px; background:rgba(255,170,0,.08); border-radius:8px; font-size:.78rem; color:var(--fire2); display:none; }
     .kid-note.visible { display:block; }
 
@@ -501,6 +510,8 @@
       font-weight: 600;
       color: var(--muted);
       pointer-events: none;
+      min-width: 30px;
+      text-align: right;
     }
     .expense-row .exp-input-wrap {
       position: relative;
@@ -983,6 +994,7 @@
           <th data-i18n="costPartner">With Partner</th>
           <th data-i18n="costFamily">Family (1 kid)</th>
           <th data-i18n="countryNotes">Notes</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="countriesBody"></tbody>
@@ -997,14 +1009,25 @@
 
 <script>
   const $ = id => document.getElementById(id);
-  const fmt = (n, d=0) => n >= 1e6
-    ? '$' + (n/1e6).toFixed(2) + 'M'
-    : n >= 1e3
-    ? '$' + (n/1e3).toFixed(d ? 1 : 0) + 'K'
-    : '$' + Math.round(n).toLocaleString();
-  const fmtFull = n => '$' + Math.round(n).toLocaleString();
-
   let currentLang = localStorage.getItem('fire-lang') || 'en';
+
+  const COUNTRY_CONFIG = {
+    en: { currency: '$', savings: 45000, income: 7000, expenses: { rent: 1500, food: 25, transport: 10, utilities: 200, shopping: 400, entertainment: 200, insurance: 300, other: 500, pFood: 25, pInsurance: 300, pPersonal: 400, kSchool: 800, kFood: 15, kActivities: 200 } },
+    zh: { currency: 'NT$', savings: 1500000, income: 50000, expenses: { rent: 15000, food: 250, transport: 100, utilities: 2000, shopping: 4000, entertainment: 2000, insurance: 3000, other: 5000, pFood: 250, pInsurance: 3000, pPersonal: 4000, kSchool: 8000, kFood: 150, kActivities: 2000 } },
+    ja: { currency: '¥', savings: 5000000, income: 350000, expenses: { rent: 80000, food: 1500, transport: 600, utilities: 12000, shopping: 25000, entertainment: 15000, insurance: 20000, other: 30000, pFood: 1500, pInsurance: 20000, pPersonal: 25000, kSchool: 50000, kFood: 1000, kActivities: 15000 } },
+    ko: { currency: '₩', savings: 50000000, income: 3500000, expenses: { rent: 800000, food: 15000, transport: 5000, utilities: 120000, shopping: 250000, entertainment: 150000, insurance: 200000, other: 300000, pFood: 15000, pInsurance: 200000, pPersonal: 250000, kSchool: 500000, kFood: 10000, kActivities: 150000 } },
+    vi: { currency: '₫', savings: 500000000, income: 20000000, expenses: { rent: 5000000, food: 100000, transport: 50000, utilities: 1000000, shopping: 2000000, entertainment: 1000000, insurance: 1500000, other: 2500000, pFood: 100000, pInsurance: 1500000, pPersonal: 2000000, kSchool: 5000000, kFood: 70000, kActivities: 1000000 } }
+  };
+  let currentCountry = currentLang;
+  function getCurrency() { return COUNTRY_CONFIG[currentCountry] || COUNTRY_CONFIG.en; }
+
+  const fmt = (n, d=0) => {
+    const cs = getCurrency().currency;
+    return n >= 1e6 ? cs + (n/1e6).toFixed(2) + 'M'
+      : n >= 1e3 ? cs + (n/1e3).toFixed(d ? 1 : 0) + 'K'
+      : cs + Math.round(n).toLocaleString();
+  };
+  const fmtFull = n => getCurrency().currency + Math.round(n).toLocaleString();
   const I18N = {
     en: {
       title: 'Retirement Calculator',
@@ -1592,11 +1615,31 @@
     if ($('syncLabel')) $('syncLabel').textContent = expSynced ? t('expSync') : t('expUnsync');
   }
 
+  function applyCountryDefaults() {
+    const cc = getCurrency();
+    $('savings').value = cc.savings;
+    $('income').value = cc.income;
+    DEFAULT_EXPENSES.forEach(function(d) { if (cc.expenses[d.key] !== undefined) d.amount = cc.expenses[d.key]; });
+    PARTNER_EXPENSES.forEach(function(d) { if (cc.expenses[d.key] !== undefined) d.amount = cc.expenses[d.key]; });
+    KID_EXPENSES.forEach(function(d) { if (cc.expenses[d.key] !== undefined) d.amount = cc.expenses[d.key]; });
+    expenseItems = buildExpenseDefaults();
+    renderExpenseList();
+    syncExpenses();
+  }
+
+  function updateCurrencySymbols() {
+    const sym = getCurrency().currency;
+    document.querySelectorAll('.prefix, .exp-prefix').forEach(function(el) { el.textContent = sym; });
+  }
+
   function setLang(lang) {
     currentLang = lang;
+    currentCountry = lang;
     const langCodes = {en:'en',zh:'zh-TW',ja:'ja',ko:'ko',vi:'vi'};
     document.documentElement.lang = langCodes[lang] || 'en';
     localStorage.setItem('fire-lang', lang);
+    applyCountryDefaults();
+    updateCurrencySymbols();
     updateStaticText();
     retranslateExpenseItems();
     calculate();
@@ -2185,11 +2228,11 @@
       row.className = 'expense-row';
       row.innerHTML =
         '<input type="text" value="' + item.name.replace(/"/g, '&quot;') + '" onchange="updateExpenseName(' + i + ', this.value)" />' +
-        '<div class="exp-input-wrap"><span class="exp-prefix">$</span>' +
+        '<div class="exp-input-wrap"><span class="exp-prefix">' + getCurrency().currency + '</span>' +
         '<input type="number" value="' + item.amount + '" min="0" oninput="updateExpenseAmount(' + i + ', this.value)" /></div>' +
         '<span class="times">×</span>' +
         '<input type="number" class="mult-input" value="' + item.mult + '" min="1" max="365" oninput="updateExpenseMult(' + i + ', this.value)" />' +
-        '<span class="row-subtotal">$' + sub.toLocaleString() + '</span>' +
+        '<span class="row-subtotal">' + getCurrency().currency + sub.toLocaleString() + '</span>' +
         '<button class="del-btn" onclick="removeExpenseRow(' + i + ')">✕</button>';
       list.appendChild(row);
     });
@@ -2233,13 +2276,13 @@
     const rows = $('expenseList').children;
     if (rows[i]) {
       const sub = expenseItems[i].amount * expenseItems[i].mult;
-      rows[i].querySelector('.row-subtotal').textContent = '$' + sub.toLocaleString();
+      rows[i].querySelector('.row-subtotal').textContent = getCurrency().currency + sub.toLocaleString();
     }
   }
 
   function sumExpenses() {
     const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
-    $('expenseTotal').textContent = '$' + total.toLocaleString();
+    $('expenseTotal').textContent = getCurrency().currency + total.toLocaleString();
     if (expensePanelOpen && expSynced) {
       $('expensesBase').value = total;
       syncExpenses();
@@ -2249,40 +2292,114 @@
 
   // ─── Popular Retirement Countries ───
   const COUNTRIES = [
-    { flag:'🇹🇭', key:'Thailand',   solo:1200, partner:1800, family:2400, note:{en:'Low cost, great food & healthcare',zh:'低消費、美食與醫療',ja:'低コスト、美食＆医療',ko:'저비용, 훌륭한 음식 & 의료',vi:'Chi phí thấp, ẩm thực & y tế tốt'} },
-    { flag:'🇻🇳', key:'Vietnam',    solo:900,  partner:1400, family:1900, note:{en:'Very affordable, growing expat scene',zh:'非常實惠，外籍人士社群成長中',ja:'非常に手頃、外国人コミュニティ拡大中',ko:'매우 저렴, 외국인 커뮤니티 성장 중',vi:'Rất hợp túi tiền, cộng đồng expat đang phát triển'} },
-    { flag:'🇲🇾', key:'Malaysia',   solo:1300, partner:1900, family:2500, note:{en:'English-friendly, MM2H visa',zh:'英語友善，MM2H簽證',ja:'英語OK、MM2Hビザ',ko:'영어 가능, MM2H 비자',vi:'Thân thiện tiếng Anh, visa MM2H'} },
-    { flag:'🇹🇼', key:'Taiwan',     solo:1500, partner:2200, family:3000, note:{en:'Excellent healthcare, safe, great food',zh:'優質醫療、安全、美食天堂',ja:'優れた医療、安全、美食',ko:'우수한 의료, 안전, 훌륭한 음식',vi:'Y tế tuyệt vời, an toàn, ẩm thực ngon'} },
-    { flag:'🇯🇵', key:'Japan',      solo:2000, partner:2800, family:3800, note:{en:'High quality of life, visa options vary',zh:'高品質生活，簽證選擇多樣',ja:'高い生活の質、ビザの選択肢多数',ko:'높은 삶의 질, 비자 옵션 다양',vi:'Chất lượng sống cao, tùy chọn visa đa dạng'} },
-    { flag:'🇰🇷', key:'South Korea',solo:1800, partner:2600, family:3500, note:{en:'Modern, fast internet, 4 seasons',zh:'現代化、高速網路、四季分明',ja:'現代的、高速ネット、四季あり',ko:'현대적, 초고속 인터넷, 사계절',vi:'Hiện đại, internet nhanh, 4 mùa'} },
-    { flag:'🇵🇹', key:'Portugal',   solo:2000, partner:2800, family:3600, note:{en:'D7 visa, EU access, mild climate',zh:'D7簽證、歐盟通行、氣候溫和',ja:'D7ビザ、EU圏、温暖な気候',ko:'D7 비자, EU 접근, 온화한 기후',vi:'Visa D7, tiếp cận EU, khí hậu ôn hòa'} },
-    { flag:'🇲🇽', key:'Mexico',     solo:1500, partner:2100, family:2800, note:{en:'Close to US, rich culture, easy residency',zh:'靠近美國、文化豐富、居留容易',ja:'米国に近い、豊かな文化、居住容易',ko:'미국과 가까움, 풍부한 문화, 쉬운 거주',vi:'Gần Mỹ, văn hóa phong phú, dễ cư trú'} },
-    { flag:'🇨🇷', key:'Costa Rica', solo:1800, partner:2500, family:3200, note:{en:'Pura vida lifestyle, nature, stable',zh:'純淨生活、自然、穩定',ja:'プラビダな生活、自然、安定',ko:'순수한 삶, 자연, 안정적',vi:'Lối sống pura vida, thiên nhiên, ổn định'} },
-    { flag:'🇬🇷', key:'Greece',     solo:1600, partner:2300, family:3000, note:{en:'Mediterranean life, affordable in EU',zh:'地中海生活、在歐盟中算實惠',ja:'地中海生活、EU内で手頃',ko:'지중해 생활, EU 내 합리적',vi:'Cuộc sống Địa Trung Hải, hợp lý trong EU'} },
-    { flag:'🇮🇩', key:'Indonesia (Bali)', solo:1100, partner:1600, family:2200, note:{en:'Tropical paradise, digital nomad hub',zh:'熱帶天堂、數位遊牧據點',ja:'トロピカルパラダイス、デジタルノマド拠点',ko:'열대 낙원, 디지털 노마드 허브',vi:'Thiên đường nhiệt đới, trung tâm nomad số'} },
-    { flag:'🇪🇸', key:'Spain',      solo:2100, partner:2900, family:3800, note:{en:'Vibrant culture, excellent food & weather',zh:'活力文化、美食佳餚、好天氣',ja:'活気ある文化、美食＆好天候',ko:'활기찬 문화, 훌륭한 음식 & 날씨',vi:'Văn hóa sôi động, ẩm thực & thời tiết tuyệt vời'} },
+    { flag:'🇹🇭', key:'Thailand',   solo:1200, partner:1800, family:2400,
+      details:{rent:500,food:300,transport:50,utilities:80,insurance:70,entertainment:100,other:100},
+      note:{en:'Low cost, great food & healthcare',zh:'低消費、美食與醫療',ja:'低コスト、美食＆医療',ko:'저비용, 훌륭한 음식 & 의료',vi:'Chi phí thấp, ẩm thực & y tế tốt'} },
+    { flag:'🇻🇳', key:'Vietnam',    solo:900,  partner:1400, family:1900,
+      details:{rent:350,food:200,transport:30,utilities:60,insurance:50,entertainment:80,other:130},
+      note:{en:'Very affordable, growing expat scene',zh:'非常實惠，外籍人士社群成長中',ja:'非常に手頃、外国人コミュニティ拡大中',ko:'매우 저렴, 외국인 커뮤니티 성장 중',vi:'Rất hợp túi tiền, cộng đồng expat đang phát triển'} },
+    { flag:'🇲🇾', key:'Malaysia',   solo:1300, partner:1900, family:2500,
+      details:{rent:500,food:300,transport:50,utilities:80,insurance:100,entertainment:120,other:150},
+      note:{en:'English-friendly, MM2H visa',zh:'英語友善，MM2H簽證',ja:'英語OK、MM2Hビザ',ko:'영어 가능, MM2H 비자',vi:'Thân thiện tiếng Anh, visa MM2H'} },
+    { flag:'🇹🇼', key:'Taiwan',     solo:1500, partner:2200, family:3000,
+      details:{rent:600,food:350,transport:60,utilities:100,insurance:100,entertainment:130,other:160},
+      note:{en:'Excellent healthcare, safe, great food',zh:'優質醫療、安全、美食天堂',ja:'優れた医療、安全、美食',ko:'우수한 의료, 안전, 훌륭한 음식',vi:'Y tế tuyệt vời, an toàn, ẩm thực ngon'} },
+    { flag:'🇯🇵', key:'Japan',      solo:2000, partner:2800, family:3800,
+      details:{rent:800,food:450,transport:100,utilities:150,insurance:150,entertainment:150,other:200},
+      note:{en:'High quality of life, visa options vary',zh:'高品質生活，簽證選擇多樣',ja:'高い生活の質、ビザの選択肢多数',ko:'높은 삶의 질, 비자 옵션 다양',vi:'Chất lượng sống cao, tùy chọn visa đa dạng'} },
+    { flag:'🇰🇷', key:'South Korea',solo:1800, partner:2600, family:3500,
+      details:{rent:700,food:400,transport:80,utilities:120,insurance:130,entertainment:150,other:220},
+      note:{en:'Modern, fast internet, 4 seasons',zh:'現代化、高速網路、四季分明',ja:'現代的、高速ネット、四季あり',ko:'현대적, 초고속 인터넷, 사계절',vi:'Hiện đại, internet nhanh, 4 mùa'} },
+    { flag:'🇵🇹', key:'Portugal',   solo:2000, partner:2800, family:3600,
+      details:{rent:800,food:400,transport:80,utilities:130,insurance:150,entertainment:180,other:260},
+      note:{en:'D7 visa, EU access, mild climate',zh:'D7簽證、歐盟通行、氣候溫和',ja:'D7ビザ、EU圏、温暖な気候',ko:'D7 비자, EU 접근, 온화한 기후',vi:'Visa D7, tiếp cận EU, khí hậu ôn hòa'} },
+    { flag:'🇲🇽', key:'Mexico',     solo:1500, partner:2100, family:2800,
+      details:{rent:600,food:350,transport:50,utilities:80,insurance:100,entertainment:130,other:190},
+      note:{en:'Close to US, rich culture, easy residency',zh:'靠近美國、文化豐富、居留容易',ja:'米国に近い、豊かな文化、居住容易',ko:'미국과 가까움, 풍부한 문화, 쉬운 거주',vi:'Gần Mỹ, văn hóa phong phú, dễ cư trú'} },
+    { flag:'🇨🇷', key:'Costa Rica', solo:1800, partner:2500, family:3200,
+      details:{rent:700,food:400,transport:70,utilities:100,insurance:150,entertainment:150,other:230},
+      note:{en:'Pura vida lifestyle, nature, stable',zh:'純淨生活、自然、穩定',ja:'プラビダな生活、自然、安定',ko:'순수한 삶, 자연, 안정적',vi:'Lối sống pura vida, thiên nhiên, ổn định'} },
+    { flag:'🇬🇷', key:'Greece',     solo:1600, partner:2300, family:3000,
+      details:{rent:600,food:350,transport:60,utilities:100,insurance:130,entertainment:150,other:210},
+      note:{en:'Mediterranean life, affordable in EU',zh:'地中海生活、在歐盟中算實惠',ja:'地中海生活、EU内で手頃',ko:'지중해 생활, EU 내 합리적',vi:'Cuộc sống Địa Trung Hải, hợp lý trong EU'} },
+    { flag:'🇮🇩', key:'Indonesia (Bali)', solo:1100, partner:1600, family:2200,
+      details:{rent:450,food:250,transport:40,utilities:70,insurance:60,entertainment:100,other:130},
+      note:{en:'Tropical paradise, digital nomad hub',zh:'熱帶天堂、數位遊牧據點',ja:'トロピカルパラダイス、デジタルノマド拠点',ko:'열대 낙원, 디지털 노마드 허브',vi:'Thiên đường nhiệt đới, trung tâm nomad số'} },
+    { flag:'🇪🇸', key:'Spain',      solo:2100, partner:2900, family:3800,
+      details:{rent:850,food:450,transport:80,utilities:130,insurance:150,entertainment:180,other:260},
+      note:{en:'Vibrant culture, excellent food & weather',zh:'活力文化、美食佳餚、好天氣',ja:'活気ある文化、美食＆好天候',ko:'활기찬 문화, 훌륭한 음식 & 날씨',vi:'Văn hóa sôi động, ẩm thực & thời tiết tuyệt vời'} },
+    { flag:'🇺🇸', key:'New York, USA', solo:4200, partner:5800, family:7500,
+      details:{rent:2200,food:600,transport:130,utilities:200,insurance:400,entertainment:300,other:370},
+      note:{en:'Highest cost, world-class city, endless opportunities',zh:'最高成本、世界級城市、無限機會',ja:'最高コスト、世界クラスの都市',ko:'최고 비용, 세계적인 도시',vi:'Chi phí cao nhất, thành phố đẳng cấp thế giới'} },
+    { flag:'🇺🇸', key:'San Francisco, USA', solo:4000, partner:5500, family:7200,
+      details:{rent:2100,food:550,transport:120,utilities:180,insurance:400,entertainment:280,other:370},
+      note:{en:'Tech hub, high salaries but expensive',zh:'科技中心、高薪但昂貴',ja:'テックハブ、高給だが高コスト',ko:'테크 허브, 고연봉이지만 비쌈',vi:'Trung tâm công nghệ, lương cao nhưng đắt đỏ'} },
+    { flag:'🇺🇸', key:'Chicago, USA', solo:2800, partner:3900, family:5200,
+      details:{rent:1400,food:450,transport:110,utilities:160,insurance:350,entertainment:200,other:130},
+      note:{en:'Affordable major city, great food scene',zh:'可負擔的大城市、美食景點',ja:'手頃な大都市、グルメシーン充実',ko:'합리적인 대도시, 훌륭한 음식',vi:'Thành phố lớn hợp lý, ẩm thực phong phú'} },
+    { flag:'🇺🇸', key:'Michigan, USA', solo:2200, partner:3100, family:4100,
+      details:{rent:1000,food:400,transport:150,utilities:180,insurance:300,entertainment:100,other:70},
+      note:{en:'Low cost of living, nature, Great Lakes',zh:'低生活成本、自然、五大湖',ja:'低コスト、自然、五大湖',ko:'낮은 생활비, 자연, 오대호',vi:'Chi phí thấp, thiên nhiên, Ngũ Đại Hồ'} },
+    { flag:'🇺🇸', key:'Arizona, USA', solo:2500, partner:3500, family:4700,
+      details:{rent:1200,food:400,transport:130,utilities:200,insurance:300,entertainment:150,other:120},
+      note:{en:'Warm climate, growing cities, no state income tax on some',zh:'溫暖氣候、城市成長中',ja:'温暖な気候、成長する都市',ko:'따뜻한 기후, 성장하는 도시',vi:'Khí hậu ấm, các thành phố đang phát triển'} },
   ];
 
   function renderCountries() {
     const body = $('countriesBody');
     body.innerHTML = '';
     const hh = currentHousehold;
-    COUNTRIES.forEach(c => {
-      const tr = document.createElement('tr');
-      tr.className = 'country-row';
+    const detailLabels = {en:{rent:'Rent',food:'Food & Groceries',transport:'Transport',utilities:'Utilities',insurance:'Health Insurance',entertainment:'Entertainment',other:'Other / Misc'},zh:{rent:'房租',food:'飲食',transport:'交通',utilities:'水電瓦斯',insurance:'健康保險',entertainment:'娛樂',other:'其他'},ja:{rent:'家賃',food:'食費',transport:'交通費',utilities:'光熱費',insurance:'健康保険',entertainment:'娯楽',other:'その他'},ko:{rent:'월세',food:'식비',transport:'교통비',utilities:'공과금',insurance:'건강보험',entertainment:'오락',other:'기타'},vi:{rent:'Thuê nhà',food:'Ăn uống',transport:'Đi lại',utilities:'Điện nước',insurance:'Bảo hiểm',entertainment:'Giải trí',other:'Khác'}};
+    COUNTRIES.forEach((c, idx) => {
       const cost = hh === 'family' ? c.family : hh === 'partner' ? c.partner : c.solo;
       const note = c.note[currentLang] || c.note.en;
+      const tr = document.createElement('tr');
+      tr.className = 'country-row';
       tr.innerHTML = '<td><span class="country-flag">' + c.flag + '</span>' + c.key + '</td>'
         + '<td>$' + c.solo.toLocaleString() + '</td>'
         + '<td>$' + c.partner.toLocaleString() + '</td>'
         + '<td>$' + c.family.toLocaleString() + '</td>'
-        + '<td class="country-note">' + note + '</td>';
-      tr.onclick = () => {
+        + '<td class="country-note">' + note + '</td>'
+        + '<td><button class="detail-btn" data-idx="' + idx + '">Details</button></td>';
+      tr.querySelector('td:not(:last-child)').parentElement.addEventListener('click', function(e) {
+        if (e.target.classList.contains('detail-btn')) return;
         $('expensesBase').value = cost;
         syncExpenses();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
+      });
       body.appendChild(tr);
+
+      // Detail row (hidden by default)
+      if (c.details) {
+        const detailTr = document.createElement('tr');
+        detailTr.className = 'country-detail-row';
+        detailTr.id = 'detail-' + idx;
+        detailTr.style.display = 'none';
+        const labels = detailLabels[currentLang] || detailLabels.en;
+        let detailHtml = '<td colspan="6"><div class="detail-grid">';
+        Object.keys(c.details).forEach(k => {
+          detailHtml += '<div class="detail-item"><span class="detail-label">' + (labels[k] || k) + '</span><span class="detail-value">$' + c.details[k].toLocaleString() + '</span></div>';
+        });
+        const detailTotal = Object.values(c.details).reduce((a, b) => a + b, 0);
+        detailHtml += '<div class="detail-item detail-total"><span class="detail-label">Total</span><span class="detail-value">$' + detailTotal.toLocaleString() + '/mo</span></div>';
+        detailHtml += '</div></td>';
+        detailTr.innerHTML = detailHtml;
+        body.appendChild(detailTr);
+      }
+    });
+
+    // Attach detail button handlers
+    body.querySelectorAll('.detail-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const idx = this.dataset.idx;
+        const row = document.getElementById('detail-' + idx);
+        if (row) {
+          const isOpen = row.style.display !== 'none';
+          row.style.display = isOpen ? 'none' : 'table-row';
+          this.textContent = isOpen ? 'Details' : 'Hide';
+        }
+      });
     });
   }
 
