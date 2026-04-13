@@ -321,6 +321,33 @@
     .chart-wrap { position: relative; height: 300px; }
     @media (max-width: 520px) { .chart-wrap { height: 220px; } }
 
+    @media (max-width: 520px) {
+      /* Center the language bar on mobile instead of pinning to top-right */
+      .lang-toggle {
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        width: fit-content;
+        top: 10px;
+      }
+      /* Extra header top padding so content clears the centered lang bar */
+      header { padding-top: 64px; }
+
+      /* Reduce card padding so content breathes on narrow screens */
+      .card { padding: 18px 14px; }
+
+      /* Container side padding */
+      .container { padding-left: 12px; padding-right: 12px; }
+
+      /* Make the main monthly-expense input fill its flex:1 container */
+      #expensesBase { width: 100%; min-width: 0; }
+
+      /* Allow expense rows to shrink gracefully */
+      .expense-row { flex-wrap: nowrap; }
+      .expense-row .exp-input-wrap { flex: 1; min-width: 0; }
+      .expense-row .exp-input-wrap input[type="number"] { width: 100%; min-width: 80px; }
+    }
+
     /* Comparison table */
     .compare-table {
       width: 100%;
