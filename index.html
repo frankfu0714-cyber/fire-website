@@ -747,6 +747,25 @@
       color: #fff;
     }
     .lang-btn:hover:not(.active) { color: var(--text); }
+
+    /* ── These mobile rules MUST live after the base .lang-toggle block above
+       so they actually win the cascade (same specificity, later = wins) ── */
+    @media (max-width: 520px) {
+      .lang-toggle {
+        position: relative;
+        top: auto; right: auto; left: auto;
+        width: 100%; max-width: 100%;
+        border-radius: 0;
+        border-left: none; border-right: none;
+        margin: 0 0 8px;
+        padding: 8px 4px;
+        justify-content: center;
+      }
+      header { padding-top: 20px; }
+      /* Equal-width, compact multiplier and subtotal in the expense row */
+      .expense-row .mult-input { width: 44px; }
+      .expense-row .row-subtotal { min-width: 50px; max-width: 50px; font-size: 0.7rem; }
+    }
   </style>
 </head>
 <body>
