@@ -322,30 +322,49 @@
     @media (max-width: 520px) { .chart-wrap { height: 220px; } }
 
     @media (max-width: 520px) {
-      /* Center the language bar on mobile instead of pinning to top-right */
+      /* ── Language bar: in document flow on mobile, no fixed overlay ── */
       .lang-toggle {
-        right: 0;
-        left: 0;
-        margin: 0 auto;
-        width: fit-content;
-        top: 10px;
+        position: relative;
+        top: auto; right: auto; left: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 8px 4px;
       }
-      /* Extra header top padding so content clears the centered lang bar */
-      header { padding-top: 64px; }
+      /* Normal top padding — no reserved space needed for fixed bar */
+      header { padding-top: 24px; }
 
-      /* Reduce card padding so content breathes on narrow screens */
+      /* Strategy tabs: more breathing room */
+      .mode-tab { padding: 16px 10px; }
+      .mode-tab .tab-title { font-size: 0.88rem; }
+      .mode-tab .tab-desc { font-size: 0.7rem; }
+      .mode-tabs { margin-bottom: 16px; }
+
+      /* Card + container padding */
       .card { padding: 18px 14px; }
-
-      /* Container side padding */
       .container { padding-left: 12px; padding-right: 12px; }
 
-      /* Make the main monthly-expense input fill its flex:1 container */
+      /* Main monthly-expense input fills its flex:1 container */
       #expensesBase { width: 100%; min-width: 0; }
 
-      /* Allow expense rows to shrink gracefully */
+      /* Expense row: allow input to shrink/fill correctly */
       .expense-row { flex-wrap: nowrap; }
       .expense-row .exp-input-wrap { flex: 1; min-width: 0; }
       .expense-row .exp-input-wrap input[type="number"] { width: 100%; min-width: 80px; }
+
+      /* ── Countries table: drop cramped mid columns, keep Country + Solo + Details ── */
+      #countriesTable th:nth-child(3), #countriesTable td:nth-child(3),
+      #countriesTable th:nth-child(4), #countriesTable td:nth-child(4),
+      #countriesTable th:nth-child(5), #countriesTable td:nth-child(5) { display: none; }
+      #countriesTable { font-size: 0.8rem; }
+      #countriesTable td, #countriesTable th { padding: 10px 8px; }
+      /* Detail expand row spans the 3 remaining columns */
+      .country-detail-row td { display: table-cell; }
     }
 
     /* Comparison table */
