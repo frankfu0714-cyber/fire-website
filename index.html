@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="version" content="20260414-5" />
   <title>Retirement Calculator — When Can I Retire?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -566,6 +567,7 @@
       position: relative;
       display: flex;
       align-items: center;
+      flex: 1;
     }
     .expense-row .times {
       color: var(--muted);
@@ -575,7 +577,7 @@
     }
     .expense-row .mult-input {
       width: 46px;
-      padding: 8px 6px;
+      padding: 8px 6px !important;
       text-align: center;
       font-size: 0.82rem;
       border-radius: 8px;
@@ -888,7 +890,7 @@
       <div style="margin-top:14px;" class="field">
         <label data-i18n="lblExpenses">Monthly Expenses</label>
         <div class="expense-row" style="margin-top:2px;">
-          <div class="exp-input-wrap" style="flex:1;"><span class="exp-prefix">$</span>
+          <div class="exp-input-wrap"><span class="exp-prefix">$</span>
             <input type="number" id="expensesBase" value="4200" min="0" />
           </div>
           <span class="times">×</span>
