@@ -355,7 +355,7 @@
       /* Expense row: allow input to shrink/fill correctly */
       .expense-row { flex-wrap: nowrap; }
       .expense-row .exp-input-wrap { flex: 1; min-width: 0; }
-      .expense-row .exp-input-wrap input[type="number"] { width: 100%; min-width: 80px; }
+      .expense-row .exp-input-wrap input[type="number"] { width: 100%; min-width: 100px; }
 
       /* ── Countries table: drop cramped mid columns, keep Country + Solo + Details ── */
       #countriesTable th:nth-child(3), #countriesTable td:nth-child(3),
@@ -545,7 +545,7 @@
       box-shadow: 0 0 0 2px rgba(255,107,0,0.12);
     }
     .expense-row input[type="number"] {
-      width: 80px;
+      width: 130px;
       padding: 8px 10px 8px 46px;
       font-size: 0.82rem;
       border-radius: 8px;
@@ -584,7 +584,7 @@
       font-size: 0.78rem;
       font-weight: 600;
       color: var(--fire2);
-      min-width: 58px;
+      min-width: 80px;
       text-align: right;
       flex-shrink: 0;
     }
