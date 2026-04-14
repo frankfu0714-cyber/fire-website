@@ -765,20 +765,33 @@
       }
       header { padding-top: 20px !important; }
 
-      /* Expense row: all three columns equal width via flex: 1 1 0 */
+      /* Expense row: label on line 1, controls on line 2 — gives amount input room */
+      .expense-row {
+        flex-wrap: wrap !important;
+        row-gap: 4px !important;
+      }
+      /* Label: full-width own line */
+      .expense-row > input[type="text"] {
+        flex: 0 0 100% !important; width: 100% !important; min-width: 0 !important;
+      }
+      /* Amount wrapper: fills most of controls line */
       .expense-row .exp-input-wrap {
-        flex: 1 1 0 !important; min-width: 0 !important;
+        flex: 1 1 auto !important; min-width: 0 !important;
       }
       .expense-row .exp-input-wrap input[type="number"] {
         width: 100% !important; min-width: 0 !important;
       }
+      /* Multiplier: compact fixed size */
       .expense-row .mult-input {
-        flex: 1 1 0 !important; width: auto !important; min-width: 0 !important;
+        flex: 0 0 40px !important; width: 40px !important; min-width: 0 !important;
       }
+      /* Subtotal: secondary info, shrinks gracefully */
       .expense-row .row-subtotal {
-        flex: 1 1 0 !important; min-width: 0 !important;
-        max-width: none !important; text-align: center !important;
-        font-size: 0.72rem !important;
+        flex: 0 1 72px !important; min-width: 0 !important;
+        max-width: 72px !important; text-align: right !important;
+        font-size: 0.7rem !important;
+        overflow: hidden !important; text-overflow: ellipsis !important;
+        white-space: nowrap !important;
       }
 
       /* ── Consistent card widths across ALL sections ── */
