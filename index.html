@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="version" content="20260414-5" />
+  <meta name="version" content="20260414-6" />
   <title>Retirement Calculator — When Can I Retire?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -767,30 +767,32 @@
       }
       header { padding-top: 20px !important; }
 
-      /* Expense row: 3-line stack — label / amount / controls */
+      /* Expense row: one line for main row; breakdown label wraps, controls stay one line */
       .expense-row {
         flex-wrap: wrap !important;
         row-gap: 4px !important;
       }
-      /* Line 1: label — full width */
+      /* Breakdown label only: own full-width line. Main expense row has no text input, so it stays one line. */
       .expense-row > input[type="text"] {
         flex: 0 0 100% !important; width: 100% !important; min-width: 0 !important;
       }
-      /* Line 2: amount input — full width (gives NT$ 270+ px of text area) */
+      /* Amount: fills most of controls line (basis:0 prevents auto-size inflation) */
       .expense-row .exp-input-wrap {
-        flex: 0 0 100% !important; width: 100% !important; min-width: 0 !important;
+        flex: 1 1 0 !important; min-width: 0 !important;
       }
       .expense-row .exp-input-wrap input[type="number"] {
         width: 100% !important; min-width: 0 !important;
       }
-      /* Line 3: × mult subtotal del — share the row */
+      /* Multiplier: compact ~52px — just enough for "1.10" */
       .expense-row .mult-input {
-        flex: 1 1 auto !important; width: auto !important; min-width: 0 !important;
+        flex: 0 0 52px !important; width: 52px !important; min-width: 0 !important;
       }
+      /* Subtotal: compact, ellipsis if it overflows */
       .expense-row .row-subtotal {
-        flex: 2 1 auto !important; min-width: 0 !important;
-        max-width: none !important; text-align: right !important;
-        font-size: 0.7rem !important; white-space: nowrap !important;
+        flex: 0 1 76px !important; max-width: 76px !important; min-width: 0 !important;
+        text-align: right !important; font-size: 0.7rem !important;
+        white-space: nowrap !important; overflow: hidden !important;
+        text-overflow: ellipsis !important;
       }
 
       /* ── Consistent card widths across ALL sections ── */
