@@ -2327,5 +2327,66 @@
   setLang(currentLang);
   syncExpenses();
 </script>
+
+<!-- Feedback Widget -->
+<style>
+  #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#6366f1;color:#fff;border:none;border-radius:50%;width:56px;height:56px;font-size:24px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:transform .2s,background .2s;display:flex;align-items:center;justify-content:center}
+  #fb-btn:hover{transform:scale(1.1);background:#4f46e5}
+  #fb-overlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.4);align-items:center;justify-content:center}
+  #fb-overlay.open{display:flex}
+  #fb-modal{background:#fff;border-radius:16px;padding:28px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.25);font-family:'Inter',system-ui,sans-serif;color:#1e293b;position:relative}
+  #fb-modal h3{margin:0 0 4px;font-size:1.2rem}
+  #fb-modal p{margin:0 0 16px;font-size:.85rem;color:#64748b}
+  #fb-modal label{display:block;font-size:.85rem;font-weight:500;margin-bottom:4px;color:#334155}
+  #fb-modal select,#fb-modal textarea,#fb-modal input[type=email]{width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.9rem;font-family:inherit;margin-bottom:12px;box-sizing:border-box;background:#f8fafc;transition:border .2s}
+  #fb-modal select:focus,#fb-modal textarea:focus,#fb-modal input[type=email]:focus{outline:none;border-color:#6366f1}
+  #fb-modal textarea{resize:vertical;min-height:90px}
+  #fb-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#94a3b8;padding:4px}
+  #fb-close:hover{color:#1e293b}
+  #fb-submit{width:100%;padding:12px;background:#6366f1;color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .2s}
+  #fb-submit:hover{background:#4f46e5}
+  #fb-submit:disabled{background:#a5b4fc;cursor:not-allowed}
+  #fb-thanks{display:none;text-align:center;padding:30px 0}
+  #fb-thanks svg{width:48px;height:48px;color:#22c55e;margin-bottom:8px}
+  @media(prefers-color-scheme:dark){#fb-modal{background:#1e293b;color:#e2e8f0}#fb-modal p{color:#94a3b8}#fb-modal label{color:#cbd5e1}#fb-modal select,#fb-modal textarea,#fb-modal input[type=email]{background:#0f172a;border-color:#334155;color:#e2e8f0}}
+</style>
+<button id="fb-btn" title="Send Feedback" onclick="document.getElementById('fb-overlay').classList.add('open')">&#x1f4ac;</button>
+<div id="fb-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div id="fb-modal">
+    <button id="fb-close" onclick="document.getElementById('fb-overlay').classList.remove('open')">&times;</button>
+    <div id="fb-form-wrap">
+      <h3>Send Feedback</h3>
+      <p>Help me improve this app! Bug reports, suggestions, and comments are all welcome.</p>
+      <form id="fb-form" action="https://formsubmit.co/goldotakutw@gmail.com" method="POST">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_subject" value="Feedback from FIRE Website">
+        <input type="hidden" name="_template" value="table">
+        <label>Type</label>
+        <select name="type" required><option value="">Select...</option><option value="Bug Report">Bug Report</option><option value="Suggestion">Suggestion</option><option value="Comment">Comment</option></select>
+        <label>Message</label>
+        <textarea name="message" placeholder="Describe your feedback..." required></textarea>
+        <label>Email (optional)</label>
+        <input type="email" name="email" placeholder="your@email.com">
+        <button type="submit" id="fb-submit">Send Feedback</button>
+      </form>
+    </div>
+    <div id="fb-thanks">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <h3>Thank you!</h3>
+      <p>Your feedback has been sent.</p>
+    </div>
+  </div>
+</div>
+<script>
+document.getElementById('fb-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  var f=this,b=document.getElementById('fb-submit');
+  b.disabled=true;b.textContent='Sending...';
+  fetch(f.action,{method:'POST',body:new FormData(f)})
+  .then(function(){document.getElementById('fb-form-wrap').querySelector('form').style.display='none';document.getElementById('fb-form-wrap').querySelector('h3').style.display='none';document.getElementById('fb-form-wrap').querySelector('p').style.display='none';document.getElementById('fb-thanks').style.display='block';setTimeout(function(){document.getElementById('fb-overlay').classList.remove('open');document.getElementById('fb-form-wrap').querySelector('form').style.display='';document.getElementById('fb-form-wrap').querySelector('h3').style.display='';document.getElementById('fb-form-wrap').querySelector('p').style.display='';document.getElementById('fb-thanks').style.display='none';f.reset();b.disabled=false;b.textContent='Send Feedback'},2500)})
+  .catch(function(){b.disabled=false;b.textContent='Send Feedback';alert('Failed to send. Please try again.')})
+});
+</script>
+<!-- End Feedback Widget -->
 </body>
 </html>
