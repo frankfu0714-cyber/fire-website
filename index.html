@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="version" content="20260414-6" />
   <title>Retirement Calculator — When Can I Retire?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -157,7 +158,7 @@
       border-color: var(--fire1);
       box-shadow: 0 0 0 3px rgba(255,107,0,0.15);
     }
-    .has-prefix input { padding-left: 30px; }
+    .has-prefix input { padding-left: 50px; }
 
     .range-field { display: flex; flex-direction: column; gap: 8px; }
     .range-header { display: flex; justify-content: space-between; align-items: center; }
@@ -335,15 +336,51 @@
 
     .chart-wrap { position: relative; height: 300px; }
     @media (max-width: 520px) { .chart-wrap { height: 220px; } }
+
     @media (max-width: 520px) {
-      .expense-row { flex-wrap: wrap; gap: 6px; }
-      .expense-row .exp-input-wrap { flex: 1 1 100%; min-width: 0; }
-      .expense-row .exp-input-wrap input[type="number"] { width: 100%; min-width: 0; }
-      #expensesBase { width: 100% !important; }
-      .expense-row .mult-input { width: 52px; }
-      .expense-row .row-subtotal { min-width: auto; }
-      .hh-selector { flex-wrap: wrap; }
-      .hh-kids-wrap { flex-wrap: wrap; width: 100%; margin-top: 4px; }
+      /* ── Language bar: in document flow on mobile, no fixed overlay ── */
+      .lang-toggle {
+        position: relative;
+        top: auto; right: auto; left: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 8px 4px;
+      }
+      /* Normal top padding — no reserved space needed for fixed bar */
+      header { padding-top: 24px; }
+
+      /* Strategy tabs: more breathing room */
+      .mode-tab { padding: 16px 10px; }
+      .mode-tab .tab-title { font-size: 0.88rem; }
+      .mode-tab .tab-desc { font-size: 0.7rem; }
+      .mode-tabs { margin-bottom: 16px; }
+
+      /* Card + container padding */
+      .card { padding: 18px 14px; }
+      .container { padding-left: 12px; padding-right: 12px; }
+
+      /* Main monthly-expense input fills its flex:1 container */
+      #expensesBase { width: 100%; min-width: 0; }
+
+      /* Expense row: allow input to shrink/fill correctly */
+      .expense-row { flex-wrap: nowrap; }
+      .expense-row .exp-input-wrap { flex: 1; min-width: 0; }
+      .expense-row .exp-input-wrap input[type="number"] { width: 100%; min-width: 100px; }
+
+      /* ── Countries table: drop cramped mid columns, keep Country + Solo + Details ── */
+      #countriesTable th:nth-child(3), #countriesTable td:nth-child(3),
+      #countriesTable th:nth-child(4), #countriesTable td:nth-child(4),
+      #countriesTable th:nth-child(5), #countriesTable td:nth-child(5) { display: none; }
+      #countriesTable { font-size: 0.8rem; }
+      #countriesTable td, #countriesTable th { padding: 10px 8px; }
+      /* Detail expand row spans the 3 remaining columns */
+      .country-detail-row td { display: table-cell; }
     }
 
     /* Comparison table */
@@ -377,8 +414,30 @@
     .country-row td:first-child { font-weight: 600; }
     .country-flag { margin-right: 5px; }
     .country-note { font-size: .72rem; color: var(--muted); line-height: 1.3; }
-    .kid-note { margin-top:8px; padding:8px 12px; background:rgba(255,170,0,.08); border-radius:8px; font-size:.78rem; color:var(--fire2); display:none; }
-    .kid-note.visible { display:block; }
+    .detail-btn { background: rgba(255,107,0,0.15); border: 1px solid rgba(255,107,0,0.3); color: var(--fire2); padding: 3px 10px; border-radius: 6px; font-size: 0.72rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .detail-btn:hover { background: rgba(255,107,0,0.25); border-color: var(--fire1); }
+    .country-detail-row td { padding: 0 !important; background: var(--surface); }
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; padding: 12px 16px; }
+    .detail-item { display: flex; flex-direction: column; gap: 2px; }
+    .detail-label { font-size: 0.7rem; color: var(--muted); }
+    .detail-value { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+    .detail-total { border-top: 1px solid var(--border); padding-top: 6px; }
+    .detail-total .detail-value { color: var(--fire2); }
+    .detail-local { font-size: 0.75rem; font-weight: 500; color: var(--muted); }
+    .kid-note {
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: rgba(255,170,0,.08);
+      border: 1px solid rgba(255,170,0,.2);
+      border-radius: 10px;
+      font-size: .8rem;
+      line-height: 1.5;
+      color: var(--fire2);
+      display: none;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .kid-note.visible { display: block; }
 
     /* Info boxes */
     .info-box {
@@ -514,15 +573,13 @@
       box-shadow: 0 0 0 2px rgba(255,107,0,0.12);
     }
     .expense-row input[type="number"] {
-      width: 80px;
-      padding: 8px 10px 8px 24px;
+      width: 130px;
+      padding: 8px 10px 8px 46px;
       font-size: 0.82rem;
       border-radius: 8px;
     }
-    .expense-row .exp-input-wrap input[type="number"] {
-      width: 100%;
-      min-width: 80px;
-    }
+    /* Main monthly expense input lives in a flex:1 container — let it fill it */
+    #expensesBase { width: 100%; min-width: 0; }
     .expense-row .exp-prefix {
       position: absolute;
       left: 8px;
@@ -530,11 +587,14 @@
       font-weight: 600;
       color: var(--muted);
       pointer-events: none;
+      min-width: 36px;
+      text-align: right;
     }
     .expense-row .exp-input-wrap {
       position: relative;
       display: flex;
       align-items: center;
+      flex: 1;
     }
     .expense-row .times {
       color: var(--muted);
@@ -544,7 +604,7 @@
     }
     .expense-row .mult-input {
       width: 46px;
-      padding: 8px 6px;
+      padding: 8px 6px !important;
       text-align: center;
       font-size: 0.82rem;
       border-radius: 8px;
@@ -553,7 +613,7 @@
       font-size: 0.78rem;
       font-weight: 600;
       color: var(--fire2);
-      min-width: 58px;
+      min-width: 80px;
       text-align: right;
       flex-shrink: 0;
     }
@@ -716,6 +776,83 @@
       color: #fff;
     }
     .lang-btn:hover:not(.active) { color: var(--text); }
+
+    /* ── NUCLEAR mobile overrides — !important ensures nothing else wins ── */
+    @media (max-width: 520px) {
+      /* Lang bar: force out of fixed flow, sit as a normal block above header */
+      .lang-toggle {
+        position: static !important;
+        top: auto !important; right: auto !important;
+        left: auto !important; z-index: auto !important;
+        width: 100% !important; max-width: 100% !important;
+        display: flex !important; justify-content: center !important;
+        flex-wrap: wrap !important;
+        border-radius: 0 !important;
+        border-left: none !important; border-right: none !important;
+        margin: 0 0 12px !important;
+        padding: 8px 4px !important;
+      }
+      header { padding-top: 20px !important; }
+
+      /* Expense row: one line for main row; breakdown label wraps, controls stay one line */
+      .expense-row {
+        flex-wrap: wrap !important;
+        row-gap: 4px !important;
+      }
+      /* Breakdown label only: own full-width line. Main expense row has no text input, so it stays one line. */
+      .expense-row > input[type="text"] {
+        flex: 0 0 100% !important; width: 100% !important; min-width: 0 !important;
+      }
+      /* Amount: fills most of controls line (basis:0 prevents auto-size inflation) */
+      .expense-row .exp-input-wrap {
+        flex: 1 1 0 !important; min-width: 0 !important;
+      }
+      .expense-row .exp-input-wrap input[type="number"] {
+        width: 100% !important; min-width: 0 !important;
+      }
+      /* Multiplier: compact ~52px — just enough for "1.10" */
+      .expense-row .mult-input {
+        flex: 0 0 52px !important; width: 52px !important; min-width: 0 !important;
+      }
+      /* Subtotal: compact, ellipsis if it overflows */
+      .expense-row .row-subtotal {
+        flex: 0 1 76px !important; max-width: 76px !important; min-width: 0 !important;
+        text-align: right !important; font-size: 0.7rem !important;
+        white-space: nowrap !important; overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      /* ── Consistent card widths across ALL sections ── */
+      /* 1. Container: single source of truth for side padding */
+      .container {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        box-sizing: border-box !important;
+      }
+      /* 2. Grids must not add their own horizontal offset */
+      .main-grid, .grid-3 {
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+      }
+      /* 3. Every card/stat-card is exactly as wide as its container track */
+      .card, .stat-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+      }
+      /* 4. The anonymous flex wrapper holding the right-column summary cards */
+      .main-grid > div {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -782,7 +919,7 @@
       <div style="margin-top:14px;" class="field">
         <label data-i18n="lblExpenses">Monthly Expenses</label>
         <div class="expense-row" style="margin-top:2px;">
-          <div class="exp-input-wrap" style="flex:1;"><span class="exp-prefix">$</span>
+          <div class="exp-input-wrap"><span class="exp-prefix">$</span>
             <input type="number" id="expensesBase" value="4200" min="0" />
           </div>
           <span class="times">×</span>
@@ -1012,6 +1149,7 @@
           <th data-i18n="costPartner">With Partner</th>
           <th data-i18n="costFamily">Family (1 kid)</th>
           <th data-i18n="countryNotes">Notes</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="countriesBody"></tbody>
@@ -1026,14 +1164,25 @@
 
 <script>
   const $ = id => document.getElementById(id);
-  const fmt = (n, d=0) => n >= 1e6
-    ? '$' + (n/1e6).toFixed(2) + 'M'
-    : n >= 1e3
-    ? '$' + (n/1e3).toFixed(d ? 1 : 0) + 'K'
-    : '$' + Math.round(n).toLocaleString();
-  const fmtFull = n => '$' + Math.round(n).toLocaleString();
-
   let currentLang = localStorage.getItem('fire-lang') || 'en';
+
+  const COUNTRY_CONFIG = {
+    en: { currency: '$', savings: 45000, income: 7000, expenses: { rent: 1500, food: 25, transport: 10, utilities: 200, shopping: 400, entertainment: 200, insurance: 300, other: 500, pFood: 25, pInsurance: 300, pPersonal: 400, kSchool: 800, kFood: 15, kActivities: 200 } },
+    zh: { currency: 'NT$', savings: 1500000, income: 50000, expenses: { rent: 15000, food: 250, transport: 100, utilities: 2000, shopping: 4000, entertainment: 2000, insurance: 3000, other: 5000, pFood: 250, pInsurance: 3000, pPersonal: 4000, kSchool: 8000, kFood: 150, kActivities: 2000 } },
+    ja: { currency: '¥', savings: 5000000, income: 350000, expenses: { rent: 80000, food: 1500, transport: 600, utilities: 12000, shopping: 25000, entertainment: 15000, insurance: 20000, other: 30000, pFood: 1500, pInsurance: 20000, pPersonal: 25000, kSchool: 50000, kFood: 1000, kActivities: 15000 } },
+    ko: { currency: '₩', savings: 50000000, income: 3500000, expenses: { rent: 800000, food: 15000, transport: 5000, utilities: 120000, shopping: 250000, entertainment: 150000, insurance: 200000, other: 300000, pFood: 15000, pInsurance: 200000, pPersonal: 250000, kSchool: 500000, kFood: 10000, kActivities: 150000 } },
+    vi: { currency: '₫', savings: 500000000, income: 20000000, expenses: { rent: 5000000, food: 100000, transport: 50000, utilities: 1000000, shopping: 2000000, entertainment: 1000000, insurance: 1500000, other: 2500000, pFood: 100000, pInsurance: 1500000, pPersonal: 2000000, kSchool: 5000000, kFood: 70000, kActivities: 1000000 } }
+  };
+  let currentCountry = currentLang;
+  function getCurrency() { return COUNTRY_CONFIG[currentCountry] || COUNTRY_CONFIG.en; }
+
+  const fmt = (n, d=0) => {
+    const cs = getCurrency().currency;
+    return n >= 1e6 ? cs + (n/1e6).toFixed(2) + 'M'
+      : n >= 1e3 ? cs + (n/1e3).toFixed(d ? 1 : 0) + 'K'
+      : cs + Math.round(n).toLocaleString();
+  };
+  const fmtFull = n => getCurrency().currency + Math.round(n).toLocaleString();
   const I18N = {
     en: {
       title: 'Retirement Calculator',
@@ -1631,11 +1780,31 @@
     if ($('syncLabel')) $('syncLabel').textContent = expSynced ? t('expSync') : t('expUnsync');
   }
 
+  function applyCountryDefaults() {
+    const cc = getCurrency();
+    $('savings').value = cc.savings;
+    $('income').value = cc.income;
+    DEFAULT_EXPENSES.forEach(function(d) { if (cc.expenses[d.key] !== undefined) d.amount = cc.expenses[d.key]; });
+    PARTNER_EXPENSES.forEach(function(d) { if (cc.expenses[d.key] !== undefined) d.amount = cc.expenses[d.key]; });
+    KID_EXPENSES.forEach(function(d) { if (cc.expenses[d.key] !== undefined) d.amount = cc.expenses[d.key]; });
+    expenseItems = buildExpenseDefaults();
+    renderExpenseList();
+    syncExpenses();
+  }
+
+  function updateCurrencySymbols() {
+    const sym = getCurrency().currency;
+    document.querySelectorAll('.prefix, .exp-prefix').forEach(function(el) { el.textContent = sym; });
+  }
+
   function setLang(lang) {
     currentLang = lang;
+    currentCountry = lang;
     const langCodes = {en:'en',zh:'zh-TW',ja:'ja',ko:'ko',vi:'vi'};
     document.documentElement.lang = langCodes[lang] || 'en';
     localStorage.setItem('fire-lang', lang);
+    applyCountryDefaults();
+    updateCurrencySymbols();
     updateStaticText();
     retranslateExpenseItems();
     calculate();
@@ -1760,7 +1929,7 @@
   function pvAnnuity(annualExpense, realReturn, years) {
     if (years <= 0) return 0;
     if (Math.abs(realReturn) < 0.0001) return annualExpense * years;
-    if (realReturn < 0) return annualExpense * years; // conservative when real return negative
+    if (realReturn < 0) return annualExpense * years;
     return annualExpense * (1 - Math.pow(1 + realReturn, -years)) / realReturn;
   }
 
@@ -1836,7 +2005,6 @@
     const monthlyPassiveIncome = annualPassiveIncome / 12;
 
     // Estimate when (if ever) savings will deplete in spend-down mode.
-    // Returns the age at depletion, or null if savings last to lifeExp.
     function estimateDepletionAge() {
       if (annualExp <= 0) return null;
       let bal;
@@ -1875,7 +2043,6 @@
       alertEl.className = 'alert warn';
       alertEl.textContent = t('alertExpenses');
     } else if (isPerp && realReturn <= 0) {
-      // Perpetual mode is mathematically impossible when inflation ≥ return
       alertEl.className = 'alert warn';
       alertEl.textContent = t('alertReturn');
     } else if (canRetireNow) {
@@ -1885,7 +2052,6 @@
       alertEl.className = 'alert warn';
       alertEl.textContent = tFmt('alertNeedMore', fmt(gap));
     } else if (!isPerp) {
-      // Spend-down mode: check whether savings actually last to lifeExp
       const depletionAge = estimateDepletionAge();
       if (depletionAge !== null && depletionAge < lifeExp - 0.5) {
         alertEl.className = 'alert warn';
@@ -2267,11 +2433,11 @@
       row.className = 'expense-row';
       row.innerHTML =
         '<input type="text" value="' + item.name.replace(/"/g, '&quot;') + '" onchange="updateExpenseName(' + i + ', this.value)" />' +
-        '<div class="exp-input-wrap"><span class="exp-prefix">$</span>' +
+        '<div class="exp-input-wrap"><span class="exp-prefix">' + getCurrency().currency + '</span>' +
         '<input type="number" value="' + item.amount + '" min="0" oninput="updateExpenseAmount(' + i + ', this.value)" /></div>' +
         '<span class="times">×</span>' +
         '<input type="number" class="mult-input" value="' + item.mult + '" min="1" max="365" oninput="updateExpenseMult(' + i + ', this.value)" />' +
-        '<span class="row-subtotal">$' + sub.toLocaleString() + '</span>' +
+        '<span class="row-subtotal">' + getCurrency().currency + sub.toLocaleString() + '</span>' +
         '<button class="del-btn" onclick="removeExpenseRow(' + i + ')">✕</button>';
       list.appendChild(row);
     });
@@ -2315,13 +2481,13 @@
     const rows = $('expenseList').children;
     if (rows[i]) {
       const sub = expenseItems[i].amount * expenseItems[i].mult;
-      rows[i].querySelector('.row-subtotal').textContent = '$' + sub.toLocaleString();
+      rows[i].querySelector('.row-subtotal').textContent = getCurrency().currency + sub.toLocaleString();
     }
   }
 
   function sumExpenses() {
     const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
-    $('expenseTotal').textContent = '$' + total.toLocaleString();
+    $('expenseTotal').textContent = getCurrency().currency + total.toLocaleString();
     if (expensePanelOpen && expSynced) {
       $('expensesBase').value = total;
       syncExpenses();
@@ -2331,40 +2497,119 @@
 
   // ─── Popular Retirement Countries ───
   const COUNTRIES = [
-    { flag:'🇹🇭', key:'Thailand',   solo:1200, partner:1800, family:2400, note:{en:'Low cost, great food & healthcare',zh:'低消費、美食與醫療',ja:'低コスト、美食＆医療',ko:'저비용, 훌륭한 음식 & 의료',vi:'Chi phí thấp, ẩm thực & y tế tốt'} },
-    { flag:'🇻🇳', key:'Vietnam',    solo:900,  partner:1400, family:1900, note:{en:'Very affordable, growing expat scene',zh:'非常實惠，外籍人士社群成長中',ja:'非常に手頃、外国人コミュニティ拡大中',ko:'매우 저렴, 외국인 커뮤니티 성장 중',vi:'Rất hợp túi tiền, cộng đồng expat đang phát triển'} },
-    { flag:'🇲🇾', key:'Malaysia',   solo:1300, partner:1900, family:2500, note:{en:'English-friendly, MM2H visa',zh:'英語友善，MM2H簽證',ja:'英語OK、MM2Hビザ',ko:'영어 가능, MM2H 비자',vi:'Thân thiện tiếng Anh, visa MM2H'} },
-    { flag:'🇹🇼', key:'Taiwan',     solo:1500, partner:2200, family:3000, note:{en:'Excellent healthcare, safe, great food',zh:'優質醫療、安全、美食天堂',ja:'優れた医療、安全、美食',ko:'우수한 의료, 안전, 훌륭한 음식',vi:'Y tế tuyệt vời, an toàn, ẩm thực ngon'} },
-    { flag:'🇯🇵', key:'Japan',      solo:2000, partner:2800, family:3800, note:{en:'High quality of life, visa options vary',zh:'高品質生活，簽證選擇多樣',ja:'高い生活の質、ビザの選択肢多数',ko:'높은 삶의 질, 비자 옵션 다양',vi:'Chất lượng sống cao, tùy chọn visa đa dạng'} },
-    { flag:'🇰🇷', key:'South Korea',solo:1800, partner:2600, family:3500, note:{en:'Modern, fast internet, 4 seasons',zh:'現代化、高速網路、四季分明',ja:'現代的、高速ネット、四季あり',ko:'현대적, 초고속 인터넷, 사계절',vi:'Hiện đại, internet nhanh, 4 mùa'} },
-    { flag:'🇵🇹', key:'Portugal',   solo:2000, partner:2800, family:3600, note:{en:'D7 visa, EU access, mild climate',zh:'D7簽證、歐盟通行、氣候溫和',ja:'D7ビザ、EU圏、温暖な気候',ko:'D7 비자, EU 접근, 온화한 기후',vi:'Visa D7, tiếp cận EU, khí hậu ôn hòa'} },
-    { flag:'🇲🇽', key:'Mexico',     solo:1500, partner:2100, family:2800, note:{en:'Close to US, rich culture, easy residency',zh:'靠近美國、文化豐富、居留容易',ja:'米国に近い、豊かな文化、居住容易',ko:'미국과 가까움, 풍부한 문화, 쉬운 거주',vi:'Gần Mỹ, văn hóa phong phú, dễ cư trú'} },
-    { flag:'🇨🇷', key:'Costa Rica', solo:1800, partner:2500, family:3200, note:{en:'Pura vida lifestyle, nature, stable',zh:'純淨生活、自然、穩定',ja:'プラビダな生活、自然、安定',ko:'순수한 삶, 자연, 안정적',vi:'Lối sống pura vida, thiên nhiên, ổn định'} },
-    { flag:'🇬🇷', key:'Greece',     solo:1600, partner:2300, family:3000, note:{en:'Mediterranean life, affordable in EU',zh:'地中海生活、在歐盟中算實惠',ja:'地中海生活、EU内で手頃',ko:'지중해 생활, EU 내 합리적',vi:'Cuộc sống Địa Trung Hải, hợp lý trong EU'} },
-    { flag:'🇮🇩', key:'Indonesia (Bali)', solo:1100, partner:1600, family:2200, note:{en:'Tropical paradise, digital nomad hub',zh:'熱帶天堂、數位遊牧據點',ja:'トロピカルパラダイス、デジタルノマド拠点',ko:'열대 낙원, 디지털 노마드 허브',vi:'Thiên đường nhiệt đới, trung tâm nomad số'} },
-    { flag:'🇪🇸', key:'Spain',      solo:2100, partner:2900, family:3800, note:{en:'Vibrant culture, excellent food & weather',zh:'活力文化、美食佳餚、好天氣',ja:'活気ある文化、美食＆好天候',ko:'활기찬 문화, 훌륭한 음식 & 날씨',vi:'Văn hóa sôi động, ẩm thực & thời tiết tuyệt vời'} },
+    { flag:'🇹🇭', key:'Thailand',   solo:1200, partner:1800, family:2400, localSym:'฿',   fxRate:35,
+      details:{rent:500,food:300,transport:50,utilities:80,internet:25,entertainment:100,other:145},
+      note:{en:'Low cost, great food & healthcare',zh:'低消費、美食與醫療',ja:'低コスト、美食＆医療',ko:'저비용, 훌륭한 음식 & 의료',vi:'Chi phí thấp, ẩm thực & y tế tốt'} },
+    { flag:'🇻🇳', key:'Vietnam',    solo:900,  partner:1400, family:1900, localSym:'₫',   fxRate:25000,
+      details:{rent:350,food:200,transport:30,utilities:60,internet:20,entertainment:80,other:160},
+      note:{en:'Very affordable, growing expat scene',zh:'非常實惠，外籍人士社群成長中',ja:'非常に手頃、外国人コミュニティ拡大中',ko:'매우 저렴, 외국인 커뮤니티 성장 중',vi:'Rất hợp túi tiền, cộng đồng expat đang phát triển'} },
+    { flag:'🇲🇾', key:'Malaysia',   solo:1300, partner:1900, family:2500, localSym:'RM',  fxRate:4.7,
+      details:{rent:500,food:300,transport:50,utilities:80,internet:30,entertainment:120,other:220},
+      note:{en:'English-friendly, MM2H visa',zh:'英語友善，MM2H簽證',ja:'英語OK、MM2Hビザ',ko:'영어 가능, MM2H 비자',vi:'Thân thiện tiếng Anh, visa MM2H'} },
+    { flag:'🇹🇼', key:'Taiwan',     solo:1500, partner:2200, family:3000, localSym:'NT$', fxRate:32,
+      details:{rent:600,food:350,transport:60,utilities:100,internet:35,entertainment:130,other:225},
+      note:{en:'Excellent healthcare, safe, great food',zh:'優質醫療、安全、美食天堂',ja:'優れた医療、安全、美食',ko:'우수한 의료, 안전, 훌륭한 음식',vi:'Y tế tuyệt vời, an toàn, ẩm thực ngon'} },
+    { flag:'🇯🇵', key:'Japan',      solo:2000, partner:2800, family:3800, localSym:'¥',   fxRate:150,
+      details:{rent:800,food:450,transport:100,utilities:150,internet:50,entertainment:150,other:300},
+      note:{en:'High quality of life, visa options vary',zh:'高品質生活，簽證選擇多樣',ja:'高い生活の質、ビザの選択肢多数',ko:'높은 삶의 질, 비자 옵션 다양',vi:'Chất lượng sống cao, tùy chọn visa đa dạng'} },
+    { flag:'🇰🇷', key:'South Korea',solo:1800, partner:2600, family:3500, localSym:'₩',   fxRate:1350,
+      details:{rent:700,food:400,transport:80,utilities:120,internet:40,entertainment:150,other:310},
+      note:{en:'Modern, fast internet, 4 seasons',zh:'現代化、高速網路、四季分明',ja:'現代的、高速ネット、四季あり',ko:'현대적, 초고속 인터넷, 사계절',vi:'Hiện đại, internet nhanh, 4 mùa'} },
+    { flag:'🇵🇹', key:'Portugal',   solo:2000, partner:2800, family:3600, localSym:'€',   fxRate:0.92,
+      details:{rent:800,food:400,transport:80,utilities:130,internet:40,entertainment:180,other:370},
+      note:{en:'D7 visa, EU access, mild climate',zh:'D7簽證、歐盟通行、氣候溫和',ja:'D7ビザ、EU圏、温暖な気候',ko:'D7 비자, EU 접근, 온화한 기후',vi:'Visa D7, tiếp cận EU, khí hậu ôn hòa'} },
+    { flag:'🇲🇽', key:'Mexico',     solo:1500, partner:2100, family:2800, localSym:'$MXN',fxRate:17,
+      details:{rent:600,food:350,transport:50,utilities:80,internet:30,entertainment:130,other:260},
+      note:{en:'Close to US, rich culture, easy residency',zh:'靠近美國、文化豐富、居留容易',ja:'米国に近い、豊かな文化、居住容易',ko:'미국과 가까움, 풍부한 문화, 쉬운 거주',vi:'Gần Mỹ, văn hóa phong phú, dễ cư trú'} },
+    { flag:'🇨🇷', key:'Costa Rica', solo:1800, partner:2500, family:3200, localSym:'₡',   fxRate:520,
+      details:{rent:700,food:400,transport:70,utilities:100,internet:35,entertainment:150,other:345},
+      note:{en:'Pura vida lifestyle, nature, stable',zh:'純淨生活、自然、穩定',ja:'プラビダな生活、自然、安定',ko:'순수한 삶, 자연, 안정적',vi:'Lối sống pura vida, thiên nhiên, ổn định'} },
+    { flag:'🇬🇷', key:'Greece',     solo:1600, partner:2300, family:3000, localSym:'€',   fxRate:0.92,
+      details:{rent:600,food:350,transport:60,utilities:100,internet:35,entertainment:150,other:305},
+      note:{en:'Mediterranean life, affordable in EU',zh:'地中海生活、在歐盟中算實惠',ja:'地中海生活、EU内で手頃',ko:'지중해 생활, EU 내 합리적',vi:'Cuộc sống Địa Trung Hải, hợp lý trong EU'} },
+    { flag:'🇮🇩', key:'Indonesia (Bali)', solo:1100, partner:1600, family:2200, localSym:'Rp', fxRate:16000,
+      details:{rent:450,food:250,transport:40,utilities:70,internet:25,entertainment:100,other:165},
+      note:{en:'Tropical paradise, digital nomad hub',zh:'熱帶天堂、數位遊牧據點',ja:'トロピカルパラダイス、デジタルノマド拠点',ko:'열대 낙원, 디지털 노마드 허브',vi:'Thiên đường nhiệt đới, trung tâm nomad số'} },
+    { flag:'🇪🇸', key:'Spain',      solo:2100, partner:2900, family:3800, localSym:'€',   fxRate:0.92,
+      details:{rent:850,food:450,transport:80,utilities:130,internet:45,entertainment:180,other:365},
+      note:{en:'Vibrant culture, excellent food & weather',zh:'活力文化、美食佳餚、好天氣',ja:'活気ある文化、美食＆好天候',ko:'활기찬 문화, 훌륭한 음식 & 날씨',vi:'Văn hóa sôi động, ẩm thực & thời tiết tuyệt vời'} },
+    { flag:'🇺🇸', key:'New York, USA', solo:4200, partner:5800, family:7500,
+      details:{rent:2200,food:600,transport:130,utilities:200,internet:80,entertainment:300,other:690},
+      note:{en:'Highest cost, world-class city, endless opportunities',zh:'最高成本、世界級城市、無限機會',ja:'最高コスト、世界クラスの都市',ko:'최고 비용, 세계적인 도시',vi:'Chi phí cao nhất, thành phố đẳng cấp thế giới'} },
+    { flag:'🇺🇸', key:'San Francisco, USA', solo:4000, partner:5500, family:7200,
+      details:{rent:2100,food:550,transport:120,utilities:180,internet:80,entertainment:280,other:690},
+      note:{en:'Tech hub, high salaries but expensive',zh:'科技中心、高薪但昂貴',ja:'テックハブ、高給だが高コスト',ko:'테크 허브, 고연봉이지만 비쌈',vi:'Trung tâm công nghệ, lương cao nhưng đắt đỏ'} },
+    { flag:'🇺🇸', key:'Chicago, USA', solo:2800, partner:3900, family:5200,
+      details:{rent:1400,food:450,transport:110,utilities:160,internet:70,entertainment:200,other:410},
+      note:{en:'Affordable major city, great food scene',zh:'可負擔的大城市、美食景點',ja:'手頃な大都市、グルメシーン充実',ko:'합리적인 대도시, 훌륭한 음식',vi:'Thành phố lớn hợp lý, ẩm thực phong phú'} },
+    { flag:'🇺🇸', key:'Michigan, USA', solo:2200, partner:3100, family:4100,
+      details:{rent:1000,food:400,transport:150,utilities:180,internet:65,entertainment:100,other:305},
+      note:{en:'Low cost of living, nature, Great Lakes',zh:'低生活成本、自然、五大湖',ja:'低コスト、自然、五大湖',ko:'낮은 생활비, 자연, 오대호',vi:'Chi phí thấp, thiên nhiên, Ngũ Đại Hồ'} },
+    { flag:'🇺🇸', key:'Arizona, USA', solo:2500, partner:3500, family:4700,
+      details:{rent:1200,food:400,transport:130,utilities:200,internet:65,entertainment:150,other:355},
+      note:{en:'Warm climate, growing cities, no state income tax on some',zh:'溫暖氣候、城市成長中',ja:'温暖な気候、成長する都市',ko:'따뜻한 기후, 성장하는 도시',vi:'Khí hậu ấm, các thành phố đang phát triển'} },
   ];
 
   function renderCountries() {
     const body = $('countriesBody');
     body.innerHTML = '';
     const hh = currentHousehold;
-    COUNTRIES.forEach(c => {
-      const tr = document.createElement('tr');
-      tr.className = 'country-row';
+    const detailLabels = {en:{rent:'Rent',food:'Food & Groceries',transport:'Transport',utilities:'Utilities',internet:'Internet/Phone',entertainment:'Entertainment',other:'Other / Misc'},zh:{rent:'房租',food:'飲食',transport:'交通',utilities:'水電瓦斯',internet:'網路/電話',entertainment:'娛樂',other:'其他'},ja:{rent:'家賃',food:'食費',transport:'交通費',utilities:'光熱費',internet:'ネット/電話',entertainment:'娯楽',other:'その他'},ko:{rent:'월세',food:'식비',transport:'교통비',utilities:'공과금',internet:'인터넷/전화',entertainment:'오락',other:'기타'},vi:{rent:'Thuê nhà',food:'Ăn uống',transport:'Đi lại',utilities:'Điện nước',internet:'Internet/ĐT',entertainment:'Giải trí',other:'Khác'}};
+    COUNTRIES.forEach((c, idx) => {
       const cost = hh === 'family' ? c.family : hh === 'partner' ? c.partner : c.solo;
       const note = c.note[currentLang] || c.note.en;
+      const tr = document.createElement('tr');
+      tr.className = 'country-row';
       tr.innerHTML = '<td><span class="country-flag">' + c.flag + '</span>' + c.key + '</td>'
         + '<td>$' + c.solo.toLocaleString() + '</td>'
         + '<td>$' + c.partner.toLocaleString() + '</td>'
         + '<td>$' + c.family.toLocaleString() + '</td>'
-        + '<td class="country-note">' + note + '</td>';
-      tr.onclick = () => {
+        + '<td class="country-note">' + note + '</td>'
+        + '<td><button class="detail-btn" data-idx="' + idx + '">Details</button></td>';
+      tr.querySelector('td:not(:last-child)').parentElement.addEventListener('click', function(e) {
+        if (e.target.classList.contains('detail-btn')) return;
         $('expensesBase').value = cost;
         syncExpenses();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
+      });
       body.appendChild(tr);
+
+      // Detail row (hidden by default)
+      if (c.details) {
+        const detailTr = document.createElement('tr');
+        detailTr.className = 'country-detail-row';
+        detailTr.id = 'detail-' + idx;
+        detailTr.style.display = 'none';
+        const labels = detailLabels[currentLang] || detailLabels.en;
+        const fmtLocal = (usd) => {
+          if (!c.fxRate) return '';
+          const local = Math.round(usd * c.fxRate);
+          return ' <span class="detail-local">/ ' + c.localSym + local.toLocaleString() + '</span>';
+        };
+        let detailHtml = '<td colspan="6"><div class="detail-grid">';
+        Object.keys(c.details).forEach(k => {
+          detailHtml += '<div class="detail-item"><span class="detail-label">' + (labels[k] || k) + '</span><span class="detail-value">$' + c.details[k].toLocaleString() + fmtLocal(c.details[k]) + '</span></div>';
+        });
+        const detailTotal = Object.values(c.details).reduce((a, b) => a + b, 0);
+        detailHtml += '<div class="detail-item detail-total"><span class="detail-label">Total</span><span class="detail-value">$' + detailTotal.toLocaleString() + fmtLocal(detailTotal) + '/mo</span></div>';
+        detailHtml += '</div></td>';
+        detailTr.innerHTML = detailHtml;
+        body.appendChild(detailTr);
+      }
+    });
+
+    // Attach detail button handlers
+    body.querySelectorAll('.detail-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const idx = this.dataset.idx;
+        const row = document.getElementById('detail-' + idx);
+        if (row) {
+          const isOpen = row.style.display !== 'none';
+          row.style.display = isOpen ? 'none' : 'table-row';
+          this.textContent = isOpen ? 'Details' : 'Hide';
+        }
+      });
     });
   }
 
@@ -2384,7 +2629,7 @@
     const allTotal = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
     const afterKids = allTotal - kidTotal;
     if (kidTotal > 0) {
-      noteEl.innerHTML = tFmt('kidExpNote', yearsLeft, Math.round(age + yearsLeft), '$' + Math.round(afterKids).toLocaleString());
+      noteEl.innerHTML = tFmt('kidExpNote', yearsLeft, Math.round(age + yearsLeft), fmt(afterKids));
       noteEl.classList.add('visible');
     } else {
       noteEl.classList.remove('visible');
@@ -2451,4 +2696,10 @@ document.getElementById('fb-form').addEventListener('submit',function(e){
   var f=this,b=document.getElementById('fb-submit');
   b.disabled=true;b.textContent='Sending...';
   fetch(f.action,{method:'POST',body:new FormData(f)})
-  .then(function(){document.getElementById('fb-form-wrap').querySelector('form').style.display='none';document.getElementById('
+  .then(function(){document.getElementById('fb-form-wrap').querySelector('form').style.display='none';document.getElementById('fb-form-wrap').querySelector('h3').style.display='none';document.getElementById('fb-form-wrap').querySelector('p').style.display='none';document.getElementById('fb-thanks').style.display='block';setTimeout(function(){document.getElementById('fb-overlay').classList.remove('open');document.getElementById('fb-form-wrap').querySelector('form').style.display='';document.getElementById('fb-form-wrap').querySelector('h3').style.display='';document.getElementById('fb-form-wrap').querySelector('p').style.display='';document.getElementById('fb-thanks').style.display='none';f.reset();b.disabled=false;b.textContent='Send Feedback'},2500)})
+  .catch(function(){b.disabled=false;b.textContent='Send Feedback';alert('Failed to send. Please try again.')})
+});
+</script>
+<!-- End Feedback Widget -->
+</body>
+</html>
