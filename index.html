@@ -17,7 +17,7 @@
       --fire2:     #ff9f0a;
       --fire3:     #ffcc02;
       --text:      #f0f0f5;
-      --muted:     #888899;
+      --muted:     #a0a0b3;
       --danger:    #ff4d4d;
       --success:   #34d399;
       --blue:      #60a5fa;
@@ -108,6 +108,21 @@
     @media (max-width: 700px) {
       .grid-2 { grid-template-columns: 1fr; }
       .grid-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      body { padding: 12px; }
+      .card { padding: 16px; }
+      input[type="number"] { font-size: 0.95rem; padding: 10px 12px; }
+      .prefix { left: 10px; }
+      .suffix { right: 10px; }
+      .mode-tabs { flex-direction: column; }
+      .mode-tab { text-align: left; padding: 12px; }
+      .mode-tab .tab-desc { white-space: normal; }
+      .stat-card { padding: 14px; }
+      .progress-pct { font-size: 2.4rem; }
+      .compare-table { font-size: 0.78rem; }
+      .compare-table th, .compare-table td { padding: 6px 8px; }
+      .hh-controls { flex-wrap: wrap; gap: 6px; }
     }
 
     .field { display: flex; flex-direction: column; gap: 6px; }
@@ -724,12 +739,12 @@
 <div class="container">
 
   <!-- Mode Tabs -->
-  <div class="mode-tabs">
-    <button class="mode-tab active" data-mode="perpetual" onclick="setMode('perpetual')">
+  <div class="mode-tabs" role="tablist" aria-label="FIRE strategy">
+    <button class="mode-tab active" data-mode="perpetual" onclick="setMode('perpetual')" role="tab" aria-selected="true" id="tab-perpetual">
       <span class="tab-title" data-i18n="modePerp">♾️ Never Run Out</span>
       <span class="tab-desc" data-i18n="modePerpDesc">Live off returns forever — keep your savings intact</span>
     </button>
-    <button class="mode-tab" data-mode="spenddown" onclick="setMode('spenddown')">
+    <button class="mode-tab" data-mode="spenddown" onclick="setMode('spenddown')" role="tab" aria-selected="false" id="tab-spenddown">
       <span class="tab-title" data-i18n="modeSpend">⏳ Spend It All</span>
       <span class="tab-desc" data-i18n="modeSpendDesc">Use all savings + returns until target age — $0 at the end</span>
     </button>
@@ -825,7 +840,7 @@
             <label data-i18n="lblReturn">Expected Annual Return</label>
             <span class="range-val" id="returnVal">7%</span>
           </div>
-          <input type="range" id="returnRate" min="0" max="100" step="0.5" value="7" />
+          <input type="range" id="returnRate" min="0" max="100" step="0.5" value="7" aria-label="Expected annual return percentage" />
           <div class="note" data-i18n="noteReturn"><strong>Tip:</strong> S&P 500 averages ~10%/yr before inflation. A conservative estimate is 6–8%.</div>
         </div>
 
@@ -834,7 +849,7 @@
             <label data-i18n="lblInflation">Inflation Rate</label>
             <span class="range-val" id="inflationVal">3%</span>
           </div>
-          <input type="range" id="inflationRate" min="0" max="8" step="0.5" value="3" />
+          <input type="range" id="inflationRate" min="0" max="8" step="0.5" value="3" aria-label="Annual inflation rate percentage" />
           <div class="note" data-i18n="noteInflation"><strong>Tip:</strong> Historically ~2–3%/yr. This erodes your purchasing power over time, so we account for it.</div>
         </div>
 
@@ -843,7 +858,7 @@
             <label data-i18n="lblIncomeGrowth">Annual Income Growth</label>
             <span class="range-val" id="incomeGrowthVal">3%</span>
           </div>
-          <input type="range" id="incomeGrowth" min="0" max="100" step="0.5" value="3" />
+          <input type="range" id="incomeGrowth" min="0" max="100" step="0.5" value="3" aria-label="Annual income growth percentage" />
           <div class="note" data-i18n="noteIncomeGrowth"><strong>Tip:</strong> Average salary growth is 3–5%/yr. Your savings contribution grows as income rises.</div>
         </div>
 
@@ -1102,6 +1117,8 @@
       alertExpenses: '⚠️ Enter monthly expenses greater than $0.',
       alertRetireNow: '🎉 You can retire now! Your savings ({0}) exceed the target ({1}).',
       alertNeedMore: '💡 You need {0} more to retire. Add monthly income to see how long it will take.',
+      alertDepleted: '⚠️ Heads up — at this spending pace, savings run out around age {0} (before your target life expectancy of {1}).',
+      alertAgeInvalid: '⚠️ Current age ({0}) must be less than life expectancy ({1}).',
       lgdPortfolio: 'Portfolio',
       lgdTarget: 'FIRE Target',
       lgdNestEgg: 'Retirement Nest Egg',
@@ -1212,6 +1229,8 @@
       alertExpenses: '⚠️ 請輸入大於 $0 的每月支出。',
       alertRetireNow: '🎉 你現在就可以退休了！你的存款（{0}）超過目標（{1}）。',
       alertNeedMore: '💡 你還需要 {0} 才能退休。填入每月收入來計算需要多久。',
+      alertDepleted: '⚠️ 注意 — 以此支出速度，存款會在約 {0} 歲時花完（早於預期壽命 {1} 歲）。',
+      alertAgeInvalid: '⚠️ 目前年齡（{0}）必須小於預期壽命（{1}）。',
       lgdPortfolio: '資產',
       lgdTarget: 'FIRE 目標',
       lgdNestEgg: '退休所需資金',
@@ -1322,6 +1341,8 @@
       alertExpenses: '⚠️ 月間支出を$0より大きい値で入力してください。',
       alertRetireNow: '🎉 今すぐリタイアできます！貯蓄（{0}）が目標（{1}）を超えています。',
       alertNeedMore: '💡 リタイアにはあと{0}必要です。月間収入を入力すると必要期間を計算します。',
+      alertDepleted: '⚠️ 注意 — このペースだと、貯蓄は約{0}歳で底をつきます（想定寿命{1}歳より前）。',
+      alertAgeInvalid: '⚠️ 現在の年齢（{0}）は想定寿命（{1}）より小さい必要があります。',
       lgdPortfolio: '資産',
       lgdTarget: 'FIRE目標',
       lgdNestEgg: 'リタイア必要資金',
@@ -1432,6 +1453,8 @@
       alertExpenses: '⚠️ 월 지출을 $0보다 크게 입력하세요.',
       alertRetireNow: '🎉 지금 바로 은퇴 가능! 저축({0})이 목표({1})를 초과합니다.',
       alertNeedMore: '💡 은퇴까지 {0} 더 필요합니다. 월 수입을 입력하면 기간을 계산합니다.',
+      alertDepleted: '⚠️ 주의 — 이 지출 속도면 저축은 약 {0}세에 소진됩니다 (예상 수명 {1}세보다 빠름).',
+      alertAgeInvalid: '⚠️ 현재 나이({0})는 예상 수명({1})보다 작아야 합니다.',
       lgdPortfolio: '자산',
       lgdTarget: 'FIRE 목표',
       lgdNestEgg: '은퇴 필요 자금',
@@ -1542,6 +1565,8 @@
       alertExpenses: '⚠️ Vui lòng nhập chi tiêu hàng tháng lớn hơn $0.',
       alertRetireNow: '🎉 Bạn có thể nghỉ hưu ngay! Tiết kiệm ({0}) vượt mục tiêu ({1}).',
       alertNeedMore: '💡 Bạn cần thêm {0} để nghỉ hưu. Nhập thu nhập hàng tháng để tính thời gian.',
+      alertDepleted: '⚠️ Lưu ý — với mức chi tiêu này, tiền tiết kiệm cạn vào khoảng {0} tuổi (sớm hơn tuổi thọ dự kiến {1}).',
+      alertAgeInvalid: '⚠️ Tuổi hiện tại ({0}) phải nhỏ hơn tuổi thọ ({1}).',
       lgdPortfolio: 'Tài sản',
       lgdTarget: 'Mục tiêu FIRE',
       lgdNestEgg: 'Quỹ nghỉ hưu',
@@ -1637,7 +1662,9 @@
   function setMode(mode) {
     currentMode = mode;
     document.querySelectorAll('.mode-tab').forEach(t => {
-      t.classList.toggle('active', t.dataset.mode === mode);
+      const isActive = t.dataset.mode === mode;
+      t.classList.toggle('active', isActive);
+      t.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
     calculate();
   }
@@ -1726,11 +1753,15 @@
     return Infinity;
   }
 
+  // Present value of an annuity: lump sum needed today to fund `annualExpense`
+  // for `years` years given `realReturn` (inflation-adjusted) per year.
+  // For positive realReturn this is LESS than annualExpense * years, because
+  // the remaining balance keeps earning while you draw it down.
   function pvAnnuity(annualExpense, realReturn, years) {
     if (years <= 0) return 0;
     if (Math.abs(realReturn) < 0.0001) return annualExpense * years;
-    const pv = annualExpense * (1 - Math.pow(1 + realReturn, -years)) / realReturn;
-    return Math.max(pv, annualExpense * years);
+    if (realReturn < 0) return annualExpense * years; // conservative when real return negative
+    return annualExpense * (1 - Math.pow(1 + realReturn, -years)) / realReturn;
   }
 
   function calculate() {
@@ -1804,28 +1835,65 @@
     const annualPassiveIncome = curSav * realReturn;
     const monthlyPassiveIncome = annualPassiveIncome / 12;
 
-    // Alert
+    // Estimate when (if ever) savings will deplete in spend-down mode.
+    // Returns the age at depletion, or null if savings last to lifeExp.
+    function estimateDepletionAge() {
+      if (annualExp <= 0) return null;
+      let bal;
+      if (canRetireNow) {
+        bal = curSav;
+      } else if (hasIncome && isFinite(yearsToRetire)) {
+        bal = curSav;
+        let sav = monthlySav;
+        const accumMonths = Math.ceil(yearsToRetire * 12);
+        for (let m = 0; m < accumMonths; m++) {
+          bal = bal * (1 + monthlyRealR) + sav;
+          if (m > 0 && m % 12 === 0) sav = sav * (1 + realIncGrowth);
+        }
+      } else {
+        return null;
+      }
+      const startAge = canRetireNow ? age : age + yearsToRetire;
+      const monthlyExpense = annualExp / 12;
+      const maxMonths = Math.ceil((lifeExp - startAge) * 12);
+      for (let m = 1; m <= maxMonths; m++) {
+        bal = bal * (1 + monthlyRealR) - monthlyExpense;
+        if (bal <= 0) return startAge + m / 12;
+      }
+      return null;
+    }
+
+    // Alert — chained, highest-priority message wins
     const alertEl = $('alert');
     alertEl.className = 'alert';
     alertEl.textContent = '';
 
-    if (expenses <= 0) {
+    if (age >= lifeExp) {
+      alertEl.className = 'alert warn';
+      alertEl.textContent = tFmt('alertAgeInvalid', age.toFixed(0), lifeExp.toFixed(0));
+    } else if (expenses <= 0) {
       alertEl.className = 'alert warn';
       alertEl.textContent = t('alertExpenses');
+    } else if (isPerp && realReturn <= 0) {
+      // Perpetual mode is mathematically impossible when inflation ≥ return
+      alertEl.className = 'alert warn';
+      alertEl.textContent = t('alertReturn');
     } else if (canRetireNow) {
       alertEl.className = 'alert info';
       alertEl.textContent = tFmt('alertRetireNow', fmt(curSav), fmt(target));
     } else if (!hasIncome) {
       alertEl.className = 'alert warn';
       alertEl.textContent = tFmt('alertNeedMore', fmt(gap));
-    }
-    if (realReturn <= 0 && expenses > 0) {
-      const warnEl = alertEl.className === 'alert' ? alertEl : document.createElement('div');
-      alertEl.className = 'alert warn';
-      alertEl.textContent = t('alertReturn');
+    } else if (!isPerp) {
+      // Spend-down mode: check whether savings actually last to lifeExp
+      const depletionAge = estimateDepletionAge();
+      if (depletionAge !== null && depletionAge < lifeExp - 0.5) {
+        alertEl.className = 'alert warn';
+        alertEl.textContent = tFmt('alertDepleted', depletionAge.toFixed(0), lifeExp.toFixed(0));
+      }
     }
 
-    const valid = expenses > 0;
+    const valid = expenses > 0 && age < lifeExp && !(isPerp && realReturn <= 0);
 
     // Summary card (top-right)
     if (hasIncome) {
@@ -2383,10 +2451,4 @@ document.getElementById('fb-form').addEventListener('submit',function(e){
   var f=this,b=document.getElementById('fb-submit');
   b.disabled=true;b.textContent='Sending...';
   fetch(f.action,{method:'POST',body:new FormData(f)})
-  .then(function(){document.getElementById('fb-form-wrap').querySelector('form').style.display='none';document.getElementById('fb-form-wrap').querySelector('h3').style.display='none';document.getElementById('fb-form-wrap').querySelector('p').style.display='none';document.getElementById('fb-thanks').style.display='block';setTimeout(function(){document.getElementById('fb-overlay').classList.remove('open');document.getElementById('fb-form-wrap').querySelector('form').style.display='';document.getElementById('fb-form-wrap').querySelector('h3').style.display='';document.getElementById('fb-form-wrap').querySelector('p').style.display='';document.getElementById('fb-thanks').style.display='none';f.reset();b.disabled=false;b.textContent='Send Feedback'},2500)})
-  .catch(function(){b.disabled=false;b.textContent='Send Feedback';alert('Failed to send. Please try again.')})
-});
-</script>
-<!-- End Feedback Widget -->
-</body>
-</html>
+  .then(function(){document.getElementById('fb-form-wrap').querySelector('form').style.display='none';document.getElementById('
