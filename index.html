@@ -954,9 +954,9 @@
             </button>
             <div class="hh-kids-wrap" id="kidsWrap" style="display:none;">
               <span class="hh-kids-label" data-i18n="hhKids">Kids:</span>
-              <input type="number" id="kidsCount" value="1" min="1" max="10" onchange="applyHousehold()" oninput="applyHousehold()" />
+              <input type="number" id="kidsCount" value="1" min="1" max="10" onchange="markEdited();applyHousehold()" oninput="markEdited();applyHousehold()" />
               <span class="hh-kids-label" data-i18n="hhSupportUntil" style="margin-left:10px;">Support until age:</span>
-              <input type="number" id="kidSupportAge" value="22" min="1" max="40" onchange="calculate()" oninput="calculate()" style="width:52px;" />
+              <input type="number" id="kidSupportAge" value="22" min="1" max="40" onchange="markEdited();calculate()" oninput="markEdited();calculate()" style="width:52px;" />
             </div>
           </div>
           <div class="expense-list" id="expenseList"></div>
@@ -1270,6 +1270,10 @@
       alertNeedMore: '💡 You need {0} more to retire. Add monthly income to see how long it will take.',
       alertDepleted: '⚠️ Heads up — at this spending pace, savings run out around age {0} (before your target life expectancy of {1}).',
       alertAgeInvalid: '⚠️ Current age ({0}) must be less than life expectancy ({1}).',
+      langSwitchTitle: 'Switch language?',
+      langSwitchBody: 'You\'ve changed some values. Want to keep your numbers, or load {0} defaults?',
+      langSwitchKeep: 'Keep my numbers',
+      langSwitchReset: 'Use {0} defaults',
       lgdPortfolio: 'Portfolio',
       lgdTarget: 'FIRE Target',
       lgdNestEgg: 'Retirement Nest Egg',
@@ -1382,6 +1386,10 @@
       alertNeedMore: '💡 你還需要 {0} 才能退休。填入每月收入來計算需要多久。',
       alertDepleted: '⚠️ 注意 — 以此支出速度，存款會在約 {0} 歲時花完（早於預期壽命 {1} 歲）。',
       alertAgeInvalid: '⚠️ 目前年齡（{0}）必須小於預期壽命（{1}）。',
+      langSwitchTitle: '切換語言？',
+      langSwitchBody: '你已修改部分數值。要保留你的數字，還是載入 {0} 的預設值？',
+      langSwitchKeep: '保留我的數字',
+      langSwitchReset: '使用 {0} 預設值',
       lgdPortfolio: '資產',
       lgdTarget: 'FIRE 目標',
       lgdNestEgg: '退休所需資金',
@@ -1494,6 +1502,10 @@
       alertNeedMore: '💡 リタイアにはあと{0}必要です。月間収入を入力すると必要期間を計算します。',
       alertDepleted: '⚠️ 注意 — このペースだと、貯蓄は約{0}歳で底をつきます（想定寿命{1}歳より前）。',
       alertAgeInvalid: '⚠️ 現在の年齢（{0}）は想定寿命（{1}）より小さい必要があります。',
+      langSwitchTitle: '言語を切り替えますか？',
+      langSwitchBody: '値を変更しています。数字を保持しますか、それとも{0}のデフォルトを読み込みますか？',
+      langSwitchKeep: '数字を保持',
+      langSwitchReset: '{0}のデフォルトを使用',
       lgdPortfolio: '資産',
       lgdTarget: 'FIRE目標',
       lgdNestEgg: 'リタイア必要資金',
@@ -1606,6 +1618,10 @@
       alertNeedMore: '💡 은퇴까지 {0} 더 필요합니다. 월 수입을 입력하면 기간을 계산합니다.',
       alertDepleted: '⚠️ 주의 — 이 지출 속도면 저축은 약 {0}세에 소진됩니다 (예상 수명 {1}세보다 빠름).',
       alertAgeInvalid: '⚠️ 현재 나이({0})는 예상 수명({1})보다 작아야 합니다.',
+      langSwitchTitle: '언어를 변경하시겠습니까?',
+      langSwitchBody: '값을 변경했습니다. 숫자를 유지할까요, 아니면 {0} 기본값을 불러올까요?',
+      langSwitchKeep: '내 숫자 유지',
+      langSwitchReset: '{0} 기본값 사용',
       lgdPortfolio: '자산',
       lgdTarget: 'FIRE 목표',
       lgdNestEgg: '은퇴 필요 자금',
@@ -1718,6 +1734,10 @@
       alertNeedMore: '💡 Bạn cần thêm {0} để nghỉ hưu. Nhập thu nhập hàng tháng để tính thời gian.',
       alertDepleted: '⚠️ Lưu ý — với mức chi tiêu này, tiền tiết kiệm cạn vào khoảng {0} tuổi (sớm hơn tuổi thọ dự kiến {1}).',
       alertAgeInvalid: '⚠️ Tuổi hiện tại ({0}) phải nhỏ hơn tuổi thọ ({1}).',
+      langSwitchTitle: 'Đổi ngôn ngữ?',
+      langSwitchBody: 'Bạn đã thay đổi một số giá trị. Giữ số của bạn, hoặc tải giá trị mặc định {0}?',
+      langSwitchKeep: 'Giữ số của tôi',
+      langSwitchReset: 'Dùng mặc định {0}',
       lgdPortfolio: 'Tài sản',
       lgdTarget: 'Mục tiêu FIRE',
       lgdNestEgg: 'Quỹ nghỉ hưu',
@@ -1799,19 +1819,72 @@
     document.querySelectorAll('.prefix, .exp-prefix').forEach(function(el) { el.textContent = sym; });
   }
 
-  function setLang(lang) {
+  // Tracks whether the user has touched any input since the last reset / lang switch.
+  // Used to decide whether changing language should silently reload defaults
+  // or prompt the user with a "keep my numbers / use {lang} defaults" choice.
+  let userHasEdited = false;
+  function markEdited() { userHasEdited = true; }
+
+  const LANG_LABELS = {en:'English', zh:'中文', ja:'日本語', ko:'한국어', vi:'Tiếng Việt'};
+
+  function applyTranslationsOnly(lang) {
     currentLang = lang;
-    currentCountry = lang;
     const langCodes = {en:'en',zh:'zh-TW',ja:'ja',ko:'ko',vi:'vi'};
     document.documentElement.lang = langCodes[lang] || 'en';
     localStorage.setItem('fire-lang', lang);
-    applyCountryDefaults();
-    updateCurrencySymbols();
     updateStaticText();
     retranslateExpenseItems();
     calculate();
     renderCountries();
     updateKidExpenseNote();
+  }
+
+  function applyLangAndDefaults(lang) {
+    currentCountry = lang;
+    applyTranslationsOnly(lang);
+    applyCountryDefaults();
+    updateCurrencySymbols();
+    userHasEdited = false; // freshly loaded defaults — clean slate
+    calculate();
+    updateKidExpenseNote();
+  }
+
+  // Public entry. Mode: 'auto' (default) shows prompt if user has edits,
+  // 'keep' translates UI only, 'reset' loads target language's defaults.
+  function setLang(lang, mode) {
+    mode = mode || 'auto';
+    if (mode === 'auto') {
+      // Clicking the currently-active lang is a no-op (don't wipe data).
+      if (lang === currentLang) return;
+      if (userHasEdited) {
+        showLangSwitchModal(lang);
+        return;
+      }
+      mode = 'reset';
+    }
+    if (mode === 'keep') {
+      applyTranslationsOnly(lang);
+    } else {
+      applyLangAndDefaults(lang);
+    }
+  }
+
+  function showLangSwitchModal(targetLang) {
+    const overlay = $('lang-overlay');
+    const targetName = LANG_LABELS[targetLang] || targetLang;
+    $('lang-modal-title').textContent = t('langSwitchTitle');
+    $('lang-modal-body').textContent  = tFmt('langSwitchBody', targetName);
+    $('lang-modal-keep').textContent  = t('langSwitchKeep');
+    $('lang-modal-reset').textContent = tFmt('langSwitchReset', targetName);
+    $('lang-modal-keep').onclick = function() {
+      overlay.classList.remove('open');
+      setLang(targetLang, 'keep');
+    };
+    $('lang-modal-reset').onclick = function() {
+      overlay.classList.remove('open');
+      setLang(targetLang, 'reset');
+    };
+    overlay.classList.add('open');
   }
 
   function retranslateExpenseItems() {
@@ -2261,20 +2334,23 @@
   // Slider labels
   $('returnRate').addEventListener('input', function() {
     $('returnVal').textContent = this.value + '%';
+    markEdited();
     calculate();
   });
   $('inflationRate').addEventListener('input', function() {
     $('inflationVal').textContent = this.value + '%';
+    markEdited();
     calculate();
   });
   $('incomeGrowth').addEventListener('input', function() {
     $('incomeGrowthVal').textContent = this.value + '%';
+    markEdited();
     calculate();
   });
 
   // All inputs
   ['age', 'income', 'savings', 'lifeExp'].forEach(id => {
-    $(id).addEventListener('input', calculate);
+    $(id).addEventListener('input', function() { markEdited(); calculate(); });
   });
   function syncExpenses() {
     const base = parseFloat($('expensesBase').value) || 0;
@@ -2290,9 +2366,10 @@
       expSynced = false;
       updateSyncUI();
     }
+    markEdited();
     syncExpenses();
   });
-  $('expensesMult').addEventListener('input', syncExpenses);
+  $('expensesMult').addEventListener('input', function() { markEdited(); syncExpenses(); });
 
   // --- Expense Breakdown ---
   const EXP_NAMES = {
@@ -2414,6 +2491,7 @@
 
   function setHousehold(mode) {
     currentHousehold = mode;
+    markEdited();
     document.querySelectorAll('.hh-btn').forEach(b => b.classList.toggle('active', b.dataset.hh === mode));
     $('kidsWrap').style.display = mode === 'family' ? 'inline-flex' : 'none';
     applyHousehold();
@@ -2450,6 +2528,7 @@
     const newItemNames = {en:'New item',zh:'新項目',ja:'新しい項目',ko:'새 항목',vi:'Mục mới'};
     const name = newItemNames[currentLang] || newItemNames.en;
     expenseItems.push({ name: name, amount: 0, mult: 1 });
+    markEdited();
     renderExpenseList();
     const list = $('expenseList');
     const lastRow = list.lastElementChild;
@@ -2458,6 +2537,7 @@
 
   function removeExpenseRow(i) {
     expenseItems.splice(i, 1);
+    markEdited();
     renderExpenseList();
   }
 
@@ -2465,16 +2545,19 @@
     expenseItems[i].name = val;
     delete expenseItems[i].key;
     delete expenseItems[i].kidNum;
+    markEdited();
   }
 
   function updateExpenseAmount(i, val) {
     expenseItems[i].amount = parseFloat(val) || 0;
+    markEdited();
     updateRowSubtotal(i);
     sumExpenses();
   }
 
   function updateExpenseMult(i, val) {
     expenseItems[i].mult = Math.max(parseFloat(val) || 1, 1);
+    markEdited();
     updateRowSubtotal(i);
     sumExpenses();
   }
@@ -2571,6 +2654,7 @@
       tr.querySelector('td:not(:last-child)').parentElement.addEventListener('click', function(e) {
         if (e.target.classList.contains('detail-btn')) return;
         $('expensesBase').value = cost;
+        markEdited();
         syncExpenses();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
@@ -2642,6 +2726,40 @@
   setLang(currentLang);
   syncExpenses();
 </script>
+
+<!-- Language Switch Modal -->
+<style>
+  #lang-overlay { display:none; position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,.6); align-items:center; justify-content:center; padding:16px; }
+  #lang-overlay.open { display:flex; }
+  #lang-modal {
+    background: var(--card, #15151c);
+    border: 1px solid var(--border, #2a2a36);
+    border-radius: 14px;
+    padding: 24px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    color: var(--text, #f0f0f5);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  #lang-modal h3 { margin:0 0 8px; font-size: 1.1rem; font-weight: 600; }
+  #lang-modal p { margin:0 0 18px; font-size: .9rem; line-height: 1.5; color: var(--muted, #a0a0b3); }
+  #lang-modal .btn-row { display:flex; flex-direction:column; gap:8px; }
+  #lang-modal button { padding:11px 16px; border-radius:10px; font-size:.9rem; font-weight:500; cursor:pointer; border:1px solid var(--border, #2a2a36); background:transparent; color:var(--text, #f0f0f5); transition:background .15s,border-color .15s; font-family:inherit; }
+  #lang-modal button.primary { background: var(--fire1, #ff9f0a); color:#1a1a1a; border-color: var(--fire1, #ff9f0a); font-weight:600; }
+  #lang-modal button:hover { background: rgba(255,159,10,.1); }
+  #lang-modal button.primary:hover { background: var(--fire2, #ffb84d); border-color: var(--fire2, #ffb84d); }
+</style>
+<div id="lang-overlay" onclick="if(event.target===this) document.getElementById('lang-overlay').classList.remove('open')">
+  <div id="lang-modal" role="dialog" aria-modal="true" aria-labelledby="lang-modal-title">
+    <h3 id="lang-modal-title"></h3>
+    <p id="lang-modal-body"></p>
+    <div class="btn-row">
+      <button id="lang-modal-keep" class="primary"></button>
+      <button id="lang-modal-reset"></button>
+    </div>
+  </div>
+</div>
 
 <!-- Feedback Widget -->
 <style>
