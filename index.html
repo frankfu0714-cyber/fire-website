@@ -536,11 +536,13 @@
     .expense-panel {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.35s ease, opacity 0.25s;
+      transition: max-height 0.45s ease, opacity 0.25s;
       opacity: 0;
     }
     .expense-panel.open {
-      max-height: 800px;
+      /* Generous ceiling so family mode (12+ rows + kid-note) doesn't clip.
+         Real content is far less; CSS still needs a numeric max for the transition. */
+      max-height: 3000px;
       opacity: 1;
     }
 
