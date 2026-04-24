@@ -2723,7 +2723,9 @@
   }
 
   initChart();
-  setLang(currentLang);
+  // Bootstrap: load persisted language's defaults + run all translations.
+  // Bypass the public setLang dispatcher because its same-lang guard would no-op here.
+  applyLangAndDefaults(currentLang);
   syncExpenses();
 </script>
 
