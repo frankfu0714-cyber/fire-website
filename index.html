@@ -1811,6 +1811,12 @@
     KID_EXPENSES.forEach(function(d) { if (cc.expenses[d.key] !== undefined) d.amount = cc.expenses[d.key]; });
     expenseItems = buildExpenseDefaults();
     renderExpenseList();
+    // Sync top-level monthly expense field to the new breakdown total so they
+    // stay coherent across languages (otherwise NT$41,500 breakdown + NT$4,200
+    // summary field disagree).
+    const total = expenseItems.reduce((s, item) => s + (item.amount * item.mult), 0);
+    $('expensesBase').value = total;
+    $('expensesMult').value = 1;
     syncExpenses();
   }
 
@@ -2357,7 +2363,7 @@
     const mult = parseFloat($('expensesMult').value) || 1;
     const final_ = Math.round(base * mult);
     $('expenses').value = final_;
-    $('expensesFinal').textContent = '$' + final_.toLocaleString();
+    $('expensesFinal').textContent = getCurrency().currency + final_.toLocaleString();
     calculate();
   }
 
