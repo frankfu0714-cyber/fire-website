@@ -485,12 +485,12 @@
       line-height: 1.8;
     }
 
-    .life-exp-row {
+    .life-exp-row, .fixed-plan-row {
       transition: opacity 0.3s, max-height 0.3s;
       overflow: hidden;
     }
-    .life-exp-row.hidden { opacity: 0; max-height: 0; margin: 0; padding: 0; }
-    .life-exp-row.visible { opacity: 1; max-height: 100px; }
+    .life-exp-row.hidden, .fixed-plan-row.hidden { opacity: 0; max-height: 0; margin: 0; padding: 0; }
+    .life-exp-row.visible, .fixed-plan-row.visible { opacity: 1; max-height: 240px; }
 
     .section-divider {
       display: flex;
@@ -887,6 +887,10 @@
       <span class="tab-title" data-i18n="modeSpend">⏳ Spend It All</span>
       <span class="tab-desc" data-i18n="modeSpendDesc">Use all savings + returns until target age — $0 at the end</span>
     </button>
+    <button class="mode-tab" data-mode="fixedplan" onclick="setMode('fixedplan')" role="tab" aria-selected="false" id="tab-fixedplan">
+      <span class="tab-title" data-i18n="modeFixed">💰 Fixed Saving Plan</span>
+      <span class="tab-desc" data-i18n="modeFixedDesc">Save a fixed amount monthly — see how your portfolio grows year by year</span>
+    </button>
   </div>
 
   <!-- Inputs + Summary -->
@@ -1011,6 +1015,27 @@
             <div class="note" data-i18n="noteLifeExp">Your savings will be drawn down to $0 by this age. Plan conservatively!</div>
           </div>
         </div>
+
+        <div class="fixed-plan-row hidden" id="fixedPlanRow">
+          <div class="grid-2">
+            <div class="field">
+              <label data-i18n="lblFixedSave">Monthly Savings (for Fixed Plan)</label>
+              <div class="input-wrap has-prefix">
+                <span class="prefix">$</span>
+                <input type="number" id="fixedSave" value="1000" min="0" />
+              </div>
+              <div class="note" data-i18n="noteFixedSave">How much you'll put away every month. Adjusted yearly by the income growth rate above.</div>
+            </div>
+            <div class="field">
+              <label data-i18n="lblFixedYears">Years to Invest</label>
+              <div class="input-wrap">
+                <input type="number" id="fixedYears" value="20" min="1" max="60" />
+                <span class="suffix" data-i18n="sufYrs3">yrs</span>
+              </div>
+              <div class="note" data-i18n="noteFixedYears">How long you'll keep contributing. Try 10, 20, 30 to compare.</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div id="alert" class="alert"></div>
@@ -1060,14 +1085,14 @@
       <div class="stat-sub" id="targetSub">—</div>
     </div>
     <div class="stat-card">
-      <span class="stat-icon">⏳</span>
-      <div class="stat-label" data-i18n="statYears">Years to Retirement</div>
+      <span class="stat-icon" id="yearsIcon">⏳</span>
+      <div class="stat-label" id="yearsLabel" data-i18n="statYears">Years to Retirement</div>
       <div class="stat-value" id="yearsToRetire">—</div>
       <div class="stat-sub" id="yearsToRetireSub">—</div>
     </div>
     <div class="stat-card">
-      <span class="stat-icon">🏖️</span>
-      <div class="stat-label" data-i18n="statRetireAge">Retirement Age</div>
+      <span class="stat-icon" id="retireAgeIcon">🏖️</span>
+      <div class="stat-label" id="retireAgeLabel" data-i18n="statRetireAge">Retirement Age</div>
       <div class="stat-value" id="retireAge">—</div>
       <div class="stat-sub" id="retireAgeSub">—</div>
     </div>
@@ -1085,7 +1110,7 @@
   </section>
 
   <!-- Comparison -->
-  <section class="card">
+  <section class="card" id="cmpSection">
     <div class="card-title" data-i18n="cmpTitle">Side-by-Side Comparison</div>
     <table class="compare-table">
       <thead>
@@ -1274,6 +1299,22 @@
       langSwitchBody: 'You\'ve changed some values. Want to keep your numbers, or load {0} defaults?',
       langSwitchKeep: 'Keep my numbers',
       langSwitchReset: 'Use {0} defaults',
+      modeFixed: '💰 Fixed Saving Plan',
+      modeFixedDesc: 'Save a fixed amount monthly — see how your portfolio grows year by year',
+      lblFixedSave: 'Monthly Savings (for Fixed Plan)',
+      noteFixedSave: 'How much you\'ll put away every month. Adjusted yearly by the income growth rate above.',
+      lblFixedYears: 'Years to Invest',
+      noteFixedYears: 'How long you\'ll keep contributing. Try 10, 20, 30 to compare.',
+      sufYrs3: 'yrs',
+      fixedFinal: 'Final Portfolio Value',
+      fixedFinalSub: 'after {0} years of saving',
+      fixedContributed: 'Total Contributed',
+      fixedContribSub: 'your own deposits ({0}/mo avg)',
+      fixedGrowth: 'Growth from Returns',
+      fixedGrowthSub: 'compounding did this work for you',
+      fixedRealValue: '≈ {0} in today\'s dollars',
+      lgdFixedBal: 'Portfolio balance',
+      lgdFixedContrib: 'Total contributed',
       lgdPortfolio: 'Portfolio',
       lgdTarget: 'FIRE Target',
       lgdNestEgg: 'Retirement Nest Egg',
@@ -1390,6 +1431,22 @@
       langSwitchBody: '你已修改部分數值。要保留你的數字，還是載入 {0} 的預設值？',
       langSwitchKeep: '保留我的數字',
       langSwitchReset: '使用 {0} 預設值',
+      modeFixed: '💰 定期定額',
+      modeFixedDesc: '每月存固定金額，看你的資產逐年成長',
+      lblFixedSave: '每月儲蓄金額（定期定額用）',
+      noteFixedSave: '你每月會存入的金額。每年依上方收入成長率調整。',
+      lblFixedYears: '投資年數',
+      noteFixedYears: '你會持續投入幾年。可以試試 10、20、30 年比較。',
+      sufYrs3: '年',
+      fixedFinal: '最終資產總值',
+      fixedFinalSub: '經過 {0} 年儲蓄後',
+      fixedContributed: '自己投入的總額',
+      fixedContribSub: '平均每月 {0}',
+      fixedGrowth: '報酬複利成長',
+      fixedGrowthSub: '複利幫你賺到的部分',
+      fixedRealValue: '≈ {0}（換算為今日購買力）',
+      lgdFixedBal: '資產餘額',
+      lgdFixedContrib: '累積投入',
       lgdPortfolio: '資產',
       lgdTarget: 'FIRE 目標',
       lgdNestEgg: '退休所需資金',
@@ -1506,6 +1563,22 @@
       langSwitchBody: '値を変更しています。数字を保持しますか、それとも{0}のデフォルトを読み込みますか？',
       langSwitchKeep: '数字を保持',
       langSwitchReset: '{0}のデフォルトを使用',
+      modeFixed: '💰 積立プラン',
+      modeFixedDesc: '毎月一定額を積立 — 資産が年々どう増えるかを確認',
+      lblFixedSave: '毎月の積立額（積立プラン用）',
+      noteFixedSave: '毎月積み立てる金額。上記の収入成長率に応じて毎年調整されます。',
+      lblFixedYears: '投資年数',
+      noteFixedYears: '積み立てを続ける年数。10、20、30年で比較してみてください。',
+      sufYrs3: '年',
+      fixedFinal: '最終資産額',
+      fixedFinalSub: '{0}年間の積立後',
+      fixedContributed: '自己拠出額の合計',
+      fixedContribSub: '平均で月{0}',
+      fixedGrowth: 'リターンによる成長',
+      fixedGrowthSub: '複利が稼いだ部分',
+      fixedRealValue: '≈ {0}（現在価値）',
+      lgdFixedBal: '資産残高',
+      lgdFixedContrib: '累計拠出額',
       lgdPortfolio: '資産',
       lgdTarget: 'FIRE目標',
       lgdNestEgg: 'リタイア必要資金',
@@ -1622,6 +1695,22 @@
       langSwitchBody: '값을 변경했습니다. 숫자를 유지할까요, 아니면 {0} 기본값을 불러올까요?',
       langSwitchKeep: '내 숫자 유지',
       langSwitchReset: '{0} 기본값 사용',
+      modeFixed: '💰 적립식 저축',
+      modeFixedDesc: '매월 일정 금액 저축 — 자산이 매년 어떻게 늘어나는지 확인',
+      lblFixedSave: '월 저축 금액 (적립식 저축용)',
+      noteFixedSave: '매달 저축할 금액. 위의 소득 증가율에 따라 매년 조정됩니다.',
+      lblFixedYears: '투자 기간',
+      noteFixedYears: '투자를 지속할 기간. 10, 20, 30년으로 비교해보세요.',
+      sufYrs3: '년',
+      fixedFinal: '최종 자산 가치',
+      fixedFinalSub: '{0}년 저축 후',
+      fixedContributed: '본인 납입 총액',
+      fixedContribSub: '평균 월 {0}',
+      fixedGrowth: '수익으로 인한 성장',
+      fixedGrowthSub: '복리가 만들어낸 부분',
+      fixedRealValue: '≈ {0} (현재 가치)',
+      lgdFixedBal: '자산 잔액',
+      lgdFixedContrib: '누적 납입액',
       lgdPortfolio: '자산',
       lgdTarget: 'FIRE 목표',
       lgdNestEgg: '은퇴 필요 자금',
@@ -1738,6 +1827,22 @@
       langSwitchBody: 'Bạn đã thay đổi một số giá trị. Giữ số của bạn, hoặc tải giá trị mặc định {0}?',
       langSwitchKeep: 'Giữ số của tôi',
       langSwitchReset: 'Dùng mặc định {0}',
+      modeFixed: '💰 Tiết Kiệm Định Kỳ',
+      modeFixedDesc: 'Tiết kiệm số tiền cố định mỗi tháng — xem danh mục lớn lên qua các năm',
+      lblFixedSave: 'Tiết kiệm hàng tháng (cho Kế hoạch cố định)',
+      noteFixedSave: 'Số tiền bạn sẽ tiết kiệm mỗi tháng. Điều chỉnh hàng năm theo tỷ lệ tăng thu nhập ở trên.',
+      lblFixedYears: 'Số năm đầu tư',
+      noteFixedYears: 'Bạn sẽ tiếp tục đóng góp trong bao lâu. Thử 10, 20, 30 để so sánh.',
+      sufYrs3: 'năm',
+      fixedFinal: 'Giá trị Danh mục Cuối',
+      fixedFinalSub: 'sau {0} năm tiết kiệm',
+      fixedContributed: 'Tổng Đóng góp',
+      fixedContribSub: 'trung bình {0}/tháng',
+      fixedGrowth: 'Tăng trưởng từ Lợi suất',
+      fixedGrowthSub: 'lãi kép đã làm việc cho bạn',
+      fixedRealValue: '≈ {0} (giá trị hôm nay)',
+      lgdFixedBal: 'Số dư danh mục',
+      lgdFixedContrib: 'Tổng đóng góp',
       lgdPortfolio: 'Tài sản',
       lgdTarget: 'Mục tiêu FIRE',
       lgdNestEgg: 'Quỹ nghỉ hưu',
@@ -1916,6 +2021,30 @@
       t.classList.toggle('active', isActive);
       t.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
+    // Show/hide mode-specific input rows
+    const isFixed = mode === 'fixedplan';
+    const lifeRow = $('lifeExpRow');
+    const fixedRow = $('fixedPlanRow');
+    if (lifeRow) {
+      lifeRow.classList.toggle('visible', !isFixed);
+      lifeRow.classList.toggle('hidden', isFixed);
+    }
+    if (fixedRow) {
+      fixedRow.classList.toggle('visible', isFixed);
+      fixedRow.classList.toggle('hidden', !isFixed);
+    }
+    // Side-by-side comparison only compares the two FIRE modes; hide it in Fixed Plan.
+    const cmp = $('cmpSection');
+    if (cmp) cmp.style.display = isFixed ? 'none' : '';
+    // Reset the stat-card icons + labels when leaving Fixed Plan (calculateFixedPlan
+    // overwrites them with 💵 / 📈 and custom text; FIRE-mode calculate() doesn't
+    // know to put the originals back).
+    if (!isFixed) {
+      if ($('yearsIcon')) $('yearsIcon').textContent = '⏳';
+      if ($('retireAgeIcon')) $('retireAgeIcon').textContent = '🏖️';
+      if ($('yearsLabel')) $('yearsLabel').textContent = t('statYears');
+      if ($('retireAgeLabel')) $('retireAgeLabel').textContent = t('statRetireAge');
+    }
     calculate();
   }
 
@@ -2014,7 +2143,94 @@
     return annualExpense * (1 - Math.pow(1 + realReturn, -years)) / realReturn;
   }
 
+  // Fixed Saving Plan mode: user contributes a fixed monthly amount for N years.
+  // Show how the portfolio grows, split into "what you put in" vs "what compounding added".
+  function calculateFixedPlan() {
+    const curSav         = parseFloat($('savings').value) || 0;
+    const monthlyContrib = Math.max(parseFloat($('fixedSave').value) || 0, 0);
+    const years          = Math.max(parseInt($('fixedYears').value) || 20, 1);
+    const annReturn      = parseFloat($('returnRate').value) / 100;
+    const inflation      = parseFloat($('inflationRate').value) / 100;
+    const incGrowth      = parseFloat($('incomeGrowth').value) / 100;
+
+    const monthlyR = Math.pow(1 + annReturn, 1/12) - 1;
+    const months = years * 12;
+
+    // Year-by-year simulation. Contribution grows once per year by income-growth rate.
+    let bal = curSav;
+    let contrib = monthlyContrib;
+    let totalContrib = 0;
+    const yearlyPoints = [{ year: 0, bal: bal, contrib: 0 }];
+    for (let m = 1; m <= months; m++) {
+      bal = bal * (1 + monthlyR) + contrib;
+      totalContrib += contrib;
+      if (m % 12 === 0) {
+        yearlyPoints.push({ year: m / 12, bal: bal, contrib: totalContrib });
+        contrib = contrib * (1 + incGrowth);
+      }
+    }
+
+    const finalBal = bal;
+    const growth = Math.max(finalBal - curSav - totalContrib, 0);
+    const realFinal = finalBal / Math.pow(1 + inflation, years);
+    const avgMonthly = months > 0 ? totalContrib / months : 0;
+
+    // Clear alerts (no FIRE-style warnings apply here)
+    const alertEl = $('alert');
+    alertEl.className = 'alert';
+    alertEl.textContent = '';
+
+    // Summary card (top-right) → Final Portfolio Value
+    $('summaryTitle').textContent = t('fixedFinal');
+    $('summaryBigNum').textContent = fmt(finalBal);
+    $('summaryBadge').textContent = tFmt('fixedFinalSub', years);
+    $('summaryMsg').textContent = tFmt('fixedRealValue', fmt(realFinal));
+
+    // Progress bar: show contributions-as-share-of-final
+    const contribShare = finalBal > 0 ? (curSav + totalContrib) / finalBal * 100 : 0;
+    $('progressPct').textContent = contribShare.toFixed(0) + '%';
+    $('progressBar').style.width = Math.min(contribShare, 100) + '%';
+    $('targetSmall').textContent = fmt(finalBal);
+
+    // Stat cards: repurpose the 3 cards
+    $('targetLabel').textContent = t('fixedFinal');
+    $('targetNum').textContent = fmt(finalBal);
+    $('targetSub').textContent = tFmt('fixedFinalSub', years);
+
+    if ($('yearsIcon')) $('yearsIcon').textContent = '💵';
+    $('yearsLabel').textContent = t('fixedContributed');
+    $('yearsToRetire').textContent = fmt(curSav + totalContrib);
+    $('yearsToRetireSub').textContent = tFmt('fixedContribSub', fmt(avgMonthly));
+
+    if ($('retireAgeIcon')) $('retireAgeIcon').textContent = '📈';
+    $('retireAgeLabel').textContent = t('fixedGrowth');
+    $('retireAge').textContent = fmt(growth);
+    $('retireAgeSub').textContent = t('fixedGrowthSub');
+
+    buildChartFixed(yearlyPoints);
+
+    // Legend
+    const lgdDot = (c) => '<span style="width:12px;height:3px;background:' + c + ';display:inline-block;border-radius:2px;"></span>';
+    const lgdItem = (dot, text) => '<span style="display:flex;align-items:center;gap:6px;">' + dot + text + '</span>';
+    $('chartLegend').innerHTML =
+      lgdItem(lgdDot('var(--fire2)'), t('lgdFixedBal')) +
+      lgdItem(lgdDot('rgba(96,165,250,0.6)'), t('lgdFixedContrib'));
+  }
+
+  function buildChartFixed(yearlyPoints) {
+    const labels = yearlyPoints.map(p => p.year + 'y');
+    const balData = yearlyPoints.map(p => p.bal);
+    const contribData = yearlyPoints.map(p => p.contrib);
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = balData;
+    chart.data.datasets[1].data = contribData;
+    chart.data.datasets[1].borderColor = 'rgba(96,165,250,0.8)';
+    chart.data.datasets[1].borderDash = [4, 4];
+    chart.update('active');
+  }
+
   function calculate() {
+    if (currentMode === 'fixedplan') return calculateFixedPlan();
     const age       = parseFloat($('age').value) || 28;
     const income    = parseFloat($('income').value) || 0;
     const expenses  = parseFloat($('expenses').value) || 0;
@@ -2243,6 +2459,8 @@
   }
 
   function buildChart(curSav, monthlySav, monthlyR, target, yearsToRetire, age, valid, isPerp, lifeExp, annualExp, realReturn, canRetireNow, hasIncome, realIncGrowth) {
+    // Reset target-line dash in case we're returning from Fixed Plan mode
+    chart.data.datasets[1].borderDash = [6, 4];
     if (!valid) {
       chart.data.labels = [];
       chart.data.datasets[0].data = [];
@@ -2355,7 +2573,7 @@
   });
 
   // All inputs
-  ['age', 'income', 'savings', 'lifeExp'].forEach(id => {
+  ['age', 'income', 'savings', 'lifeExp', 'fixedSave', 'fixedYears'].forEach(id => {
     $(id).addEventListener('input', function() { markEdited(); calculate(); });
   });
   function syncExpenses() {
