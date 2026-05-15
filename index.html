@@ -898,21 +898,21 @@
     <div class="card">
       <div class="card-title" data-i18n="profile">Your Financial Profile</div>
       <div class="grid-2">
-        <div class="field">
+        <div class="field" id="ageField">
           <label data-i18n="lblAge">Current Age</label>
           <div class="input-wrap">
             <input type="number" id="age" value="28" min="18" max="80" />
             <span class="suffix" data-i18n="sufYrs">yrs</span>
           </div>
         </div>
-        <div class="field">
+        <div class="field" id="savingsField">
           <label data-i18n="lblSavings">Current Savings / Investments</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="savings" value="45000" min="0" />
           </div>
         </div>
-        <div class="field">
+        <div class="field" id="incomeField">
           <label data-i18n="lblIncome">Monthly Income (optional — $0 if not working)</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
@@ -922,7 +922,7 @@
         </div>
       </div>
 
-      <div style="margin-top:14px;" class="field">
+      <div style="margin-top:14px;" class="field" id="expensesField">
         <label data-i18n="lblExpenses">Monthly Expenses</label>
         <div class="expense-row" style="margin-top:2px;">
           <div class="exp-input-wrap"><span class="exp-prefix">$</span>
@@ -2036,6 +2036,12 @@
     // Side-by-side comparison only compares the two FIRE modes; hide it in Fixed Plan.
     const cmp = $('cmpSection');
     if (cmp) cmp.style.display = isFixed ? 'none' : '';
+    // Hide FIRE-only inputs in Fixed Plan: current age, monthly income, expenses + breakdown.
+    // Keep current savings (used as starting balance) plus the sliders and fixed plan inputs.
+    ['ageField', 'incomeField', 'expensesField'].forEach(function(id) {
+      const el = $(id);
+      if (el) el.style.display = isFixed ? 'none' : '';
+    });
     // Reset the stat-card icons + labels when leaving Fixed Plan (calculateFixedPlan
     // overwrites them with 💵 / 📈 and custom text; FIRE-mode calculate() doesn't
     // know to put the originals back).
